@@ -20,8 +20,8 @@ next.
 ## Install
 
 ```
-/plugin marketplace add <github-owner>/english-exam-coach
-/plugin install english-exam-coach
+/plugin marketplace add OleksiiDotsenko/english-exam-coach
+/plugin install english-exam-coach@english-exam-coach
 ```
 
 Requires Python 3 on PATH for progress tracking (standard library only — no
