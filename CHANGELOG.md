@@ -1,0 +1,23 @@
+# Changelog
+
+## 0.1.2 — 2026-07-09
+
+- README: example session walkthrough, security & privacy section, CI badge.
+- plugin.json: `homepage` and `repository` metadata.
+- No functional changes to skills, commands, or scripts.
+
+## 0.1.1 — 2026-07-09 (initial public release)
+
+- 8 skills organized by macro-skill (exam differences live in reference
+  data, not code): exam-router, writing-evaluator, speaking-coach,
+  reading-use-of-english, listening-trainer, vocabulary-builder,
+  study-planner, progress-tracker.
+- 6 commands: /start-prep (guided entry), /mock-exam, /daily-drill,
+  /assess-level, /session-report, /progress.
+- Exam format data verified against official sources as of July 2026:
+  TOEFL iBT 2026 redesign (1–6 band scale, adaptive Reading/Listening,
+  new task types), IELTS computer-delivered, CEFR B1–C2 (Cambridge)
+  specifications.
+- Append-only progress log (attempts.jsonl) + derived Markdown reports
+  with CEFR-normalized cross-exam trends; Python stdlib only; 26 tests.
+- CI: unittest suite + strict manifest validation on push/PR.

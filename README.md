@@ -1,5 +1,7 @@
 # English Exam Coach
 
+[![tests](https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml/badge.svg)](https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml)
+
 A Claude Code plugin — a bundle of Agent Skills — for preparing for
 standardized English exams: **IELTS (Academic & General)**, **TOEFL iBT**,
 and the **CEFR-level exams B1–C2** (B1 Preliminary, B2 First, C1 Advanced,
@@ -42,6 +44,31 @@ third-party packages).
 A typical loop: task is generated → you answer → the skill scores it →
 the attempt is appended to your log → reports show trends and the next
 recommended drill.
+
+## Example session
+
+```text
+You:    /start-prep
+Claude: Which exam are you preparing for? (IELTS Academic / IELTS General /
+        TOEFL iBT / CEFR B1–C2)
+You:    TOEFL, writing
+Claude: TOEFL iBT Writing has three task types: Build a Sentence,
+        Write an Email (7 min), Academic Discussion (10 min).
+        Practice a new task, or get feedback on something you wrote?
+You:    new email task
+Claude: [original Write-an-Email task: scenario + 3 required content
+        points, 7-minute timer starts when you say go]
+You:    [your email]
+Claude: Band estimate: 4.5–5.0 / 6 (≈ B2, borderline C1).
+        All 3 content points covered; register consistent.
+        Priority fixes: (1) …, (2) …, (3) … — each shown as a rewrite
+        of your own sentences. Attempt logged.
+You:    /session-report
+Claude: [table of today's attempts, time on task, weakest task type,
+        one recommended next drill]
+```
+
+Estimates are indicative self-practice feedback, not official scores.
 
 ## Supported exams
 
@@ -101,6 +128,21 @@ extra code.
 Listening drills are text-first in v0.1: on macOS the built-in `say` command
 is used for audio when available; otherwise drills degrade gracefully to
 script-based practice. No third-party TTS dependency.
+
+## Security & privacy
+
+- **No network access.** The plugin makes no network calls and sends no
+  telemetry; everything runs locally in your Claude session.
+- **No MCP servers, no hooks, no background processes** — only Markdown
+  skills/commands and two Python scripts invoked explicitly.
+- **Writes only to your progress directory** (`--base` flag,
+  `$EXAM_COACH_HOME`, or `~/english-exam-coach/`) — nothing else on disk
+  is touched. The attempt log is opened in append mode only and is never
+  rewritten or truncated by the tooling.
+- **Standard library only.** The scripts import nothing outside Python's
+  stdlib, so there is no supply-chain surface.
+- Optional audio for listening drills uses the built-in macOS `say`
+  command when present; there is no third-party TTS dependency.
 
 ## Content and IP policy
 
