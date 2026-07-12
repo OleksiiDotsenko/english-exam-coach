@@ -46,11 +46,20 @@ thing to drill next.
 You need [Claude Code](https://claude.com/claude-code) and Python 3
 (preinstalled on macOS and most Linux; Windows: [python.org](https://www.python.org/downloads/)).
 
-**1.** Add the marketplace and install — inside Claude Code, run:
+**1.** Add the marketplace and install. In the **terminal** version of
+Claude Code, run:
 
 ```
 /plugin marketplace add OleksiiDotsenko/english-exam-coach
 /plugin install english-exam-coach@english-exam-coach
+```
+
+Using the **desktop or web app** (or seeing *"/plugin isn't available in
+this environment"*)? Run the same thing from any terminal instead:
+
+```bash
+claude plugin marketplace add OleksiiDotsenko/english-exam-coach
+claude plugin install english-exam-coach@english-exam-coach
 ```
 
 **2.** Start a new session, then type:
@@ -166,6 +175,17 @@ not an official measurement.
 
 Start a new Claude Code session (or restart the app) — plugins load at
 session start.
+</details>
+
+<details>
+<summary><b>"/plugin isn't available in this environment"</b></summary>
+
+The <code>/plugin</code> dialog only exists in the terminal version of
+Claude Code. In the desktop or web app, run the equivalent commands from
+any terminal: <code>claude plugin marketplace add
+OleksiiDotsenko/english-exam-coach</code>, then <code>claude plugin
+install english-exam-coach@english-exam-coach</code>. The plugin then
+works in every Claude Code surface on that machine.
 </details>
 
 <details>
