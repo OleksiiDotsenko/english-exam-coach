@@ -180,7 +180,8 @@ or bring your own audio/podcast and it builds questions for that.
 <summary><b>How do I update or uninstall?</b></summary>
 
 Update: <code>/plugin marketplace update english-exam-coach</code>, then
-<code>/plugin update english-exam-coach</code>. Uninstall:
+<code>/plugin update english-exam-coach@english-exam-coach</code> (the full
+<code>name@marketplace</code> form is required here). Uninstall:
 <code>/plugin uninstall english-exam-coach</code>. Your progress files are
 yours and are never touched by either.
 </details>
