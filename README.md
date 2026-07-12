@@ -55,10 +55,14 @@ claude
 *(New to Claude Code? [Install it first](https://claude.com/claude-code),
 then run `claude` from any folder.)*
 
-**2.** Inside Claude Code, add the marketplace and install the plugin:
+**2.** Inside Claude Code, run these two commands **one at a time** —
+paste the first, press Enter, wait for the ✔, then paste the second:
 
 ```
 /plugin marketplace add OleksiiDotsenko/english-exam-coach
+```
+
+```
 /plugin install english-exam-coach@english-exam-coach
 ```
 
@@ -185,6 +189,18 @@ not an official measurement.
 
 Start a new Claude Code session (or restart the app) — plugins load at
 session start.
+</details>
+
+<details>
+<summary><b>"SSH authentication failed" when adding the marketplace</b></summary>
+
+Two common causes. (1) Both install lines were pasted at once — the second
+line becomes extra arguments of the first and mangles the repository
+address. Run the commands one at a time. (2) If a clean, single command
+still tries SSH, add the marketplace by its HTTPS URL instead:
+<code>/plugin marketplace add
+https://github.com/OleksiiDotsenko/english-exam-coach</code>. No SSH key
+is ever required — the repository is public.
 </details>
 
 <details>
