@@ -46,23 +46,33 @@ thing to drill next.
 You need [Claude Code](https://claude.com/claude-code) and Python 3
 (preinstalled on macOS and most Linux; Windows: [python.org](https://www.python.org/downloads/)).
 
-**1.** Add the marketplace and install. In the **terminal** version of
-Claude Code, run:
+**1.** Open a terminal and start Claude Code:
+
+```bash
+claude
+```
+
+*(New to Claude Code? [Install it first](https://claude.com/claude-code),
+then run `claude` from any folder.)*
+
+**2.** Inside Claude Code, add the marketplace and install the plugin:
 
 ```
 /plugin marketplace add OleksiiDotsenko/english-exam-coach
 /plugin install english-exam-coach@english-exam-coach
 ```
 
-Using the **desktop or web app** (or seeing *"/plugin isn't available in
-this environment"*)? Run the same thing from any terminal instead:
+> Using the **desktop or web app** — or seeing *"/plugin isn't available
+> in this environment"*? Skip step 1 and run both commands from a plain
+> terminal instead, prefixed with `claude`:
+>
+> ```bash
+> claude plugin marketplace add OleksiiDotsenko/english-exam-coach
+> claude plugin install english-exam-coach@english-exam-coach
+> ```
 
-```bash
-claude plugin marketplace add OleksiiDotsenko/english-exam-coach
-claude plugin install english-exam-coach@english-exam-coach
-```
-
-**2.** Start a new session, then type:
+**3.** Restart Claude Code (type `/exit`, then `claude` again — or just
+open a new session in the app) and type:
 
 ```
 /start-prep
