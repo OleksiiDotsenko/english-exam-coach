@@ -25,6 +25,7 @@ writing task in a named exam format, OR asked how to improve exam writing.
 1. **Identify** exam + level + task type. If unclear, ask once. Load:
    - `data/exam-formats/<exam-id>.md` (format, word count, timing, criteria names)
    - `data/cefr/writing-descriptors.md` (assessment anchors)
+   - `data/cefr/calibration-anchors.md` (leveled reference samples)
    - `skills/writing-evaluator/references/task-anatomy.md` (structure and
      register expectations per task type)
 
@@ -41,7 +42,11 @@ writing task in a named exam format, OR asked how to improve exam writing.
    organisation, language use for TOEFL), anchored in the paraphrased CEFR
    descriptors. Check task-specific requirements first: word count, all
    content points covered, register, format conventions (greeting/sign-off,
-   headings for reports/proposals).
+   headings for reports/proposals). Then CALIBRATE before fixing the range:
+   compare the text with the leveled samples in
+   `data/cefr/calibration-anchors.md` and pick the nearest anchor per
+   criterion — criteria may land on different levels (say so if they do).
+   Never show anchor texts to the user as model answers.
 
 4. **Return, in this order:**
    - (a) estimate as a RANGE (e.g. "IELTS ~6.5–7.0", "on track for a C1
