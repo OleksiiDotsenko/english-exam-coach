@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.3 — 2026-07-09
+## 0.1.3 — 2026-07-12
 
 - Scoring consistency: new `data/cefr/calibration-anchors.md` — four
   original leveled answers (B1/B2/C1/C2) to one shared prompt, each with
