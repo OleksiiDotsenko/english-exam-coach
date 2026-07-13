@@ -116,6 +116,65 @@ class LogAttemptTests(unittest.TestCase):
         self.assertEqual(row["level"], "C1")
         self.assertEqual(row["cefr_estimate"], "B2")
 
+    def test_nan_score_rejected_without_touching_log(self):
+        result = log_attempt(self.base, score="nan", max=10)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("finite", result.stderr)
+        self.assertEqual(read_log_lines(self.base), [])
+
+    def test_infinite_seconds_rejected(self):
+        result = log_attempt(self.base, score=7, max=10, seconds="inf")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("finite", result.stderr)
+        self.assertEqual(read_log_lines(self.base), [])
+
+    def test_blank_session_rejected(self):
+        result = log_attempt(self.base, score=7, max=10, session="   ")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("--session", result.stderr)
+        self.assertEqual(read_log_lines(self.base), [])
+
+    def test_whitespace_band_estimate_is_not_a_result(self):
+        result = log_attempt(self.base, **{"band-estimate": "   ", "score": None})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("--score or --band-estimate", result.stderr)
+        self.assertEqual(read_log_lines(self.base), [])
+
+    def test_max_without_score_rejected(self):
+        result = log_attempt(self.base, max=10,
+                             **{"band-estimate": "4-5", "score": None})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("--max is only meaningful together with --score",
+                      result.stderr)
+        self.assertEqual(read_log_lines(self.base), [])
+
+    def test_invalid_cefr_estimate_rejected(self):
+        result = log_attempt(self.base, score=7, max=10,
+                             **{"cefr-estimate": "Z9"})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("--cefr-estimate", result.stderr)
+        self.assertEqual(read_log_lines(self.base), [])
+
+    def test_a2_level_is_accepted(self):
+        result = log_attempt(self.base, level="A2", score=5, max=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(parsed_log(self.base)[0]["level"], "A2")
+
+    def test_unicode_fields_round_trip_unescaped(self):
+        result = log_attempt(self.base, score=7, max=8,
+                             **{"task-type": "résumé-übung", "session": "séance-1"})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        line = read_log_lines(self.base)[0]
+        self.assertIn("résumé-übung", line)  # ensure_ascii=False keeps UTF-8
+        self.assertEqual(parsed_log(self.base)[0]["session"], "séance-1")
+
+    def test_ts_without_session_derives_session_from_ts_not_now(self):
+        # A back-dated attempt must land in the session of its own timestamp.
+        result = log_attempt(self.base, score=7, max=10, session=None,
+                             ts="2025-03-04T15:00:00")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(parsed_log(self.base)[0]["session"], "2025-03-04-pm")
+
 
 if __name__ == "__main__":
     unittest.main()

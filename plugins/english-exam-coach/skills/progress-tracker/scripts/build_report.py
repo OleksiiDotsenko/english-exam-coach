@@ -121,9 +121,14 @@ def read_log(log_path):
 
 def parse_ts(row):
     try:
-        return datetime.fromisoformat(str(row.get("ts")))
+        parsed = datetime.fromisoformat(str(row.get("ts")))
     except ValueError:
         return None
+    if parsed.tzinfo is not None:
+        # Normalize timezone-aware timestamps to naive local time so a log
+        # mixing both forms never breaks date comparisons in the reports.
+        parsed = parsed.astimezone().replace(tzinfo=None)
+    return parsed
 
 
 def band_midpoint(band_estimate):
@@ -162,7 +167,10 @@ def cefr_value(row):
 
     if exam.startswith("ielts"):
         band = band_midpoint(row.get("band_estimate"))
-        if band is None and isinstance(score, (int, float)) and max_score in (None, 9):
+        if band is None and isinstance(score, (int, float)) \
+                and max_score in (None, 9) and 0 <= float(score) <= 9:
+            # Only treat a bare score as a band when it is band-shaped; a raw
+            # item count logged without --max must not be read as a band 9.
             band = float(score)
         if band is not None:
             return from_cuts(band, IELTS_BAND_TO_CEFR)
@@ -187,15 +195,18 @@ def cefr_value(row):
         pct = float(score) / float(max_score)
         if pct >= 0.8:
             return anchor
+        # Never drop below A1; a low score at a low anchor stays on-scale.
         if pct >= 0.6:
-            return anchor - 0.5
-        return anchor - 1.0
+            return max(CEFR_NUM["A1"], anchor - 0.5)
+        return max(CEFR_NUM["A1"], anchor - 1.0)
     return None
 
 
 def cefr_label(value):
     if value is None:
         return "?"
+    if value < CEFR_NUM["A1"]:
+        return "<A1"
     if value in NUM_CEFR:
         return NUM_CEFR[value]
     lower, upper = NUM_CEFR.get(value - 0.5), NUM_CEFR.get(value + 0.5)
@@ -205,18 +216,34 @@ def cefr_label(value):
 
 
 def quality(row):
-    """Comparable 0..1 quality for ranking task types, or None."""
+    """Level-relative attainment in 0..1 for ranking task types, or None.
+
+    1.0 = performing at or above the task's target (anchor) level; each
+    half-level below subtracts 0.25. Putting band-scored and objective
+    tasks on one CEFR-relative axis keeps the 'weakest task type' ranking
+    from being biased by which scoring scale a task happens to use.
+    """
+    anchor = CEFR_NUM.get(str(row.get("level") or "").strip().upper())
+    achieved = cefr_value(row)
+    if anchor is not None and achieved is not None:
+        return max(0.0, min(1.0, 1.0 + (achieved - anchor) / 2.0))
+    # No anchor/CEFR available: fall back to a raw objective percentage.
     score, max_score = row.get("score"), row.get("max")
     if isinstance(score, (int, float)) and isinstance(max_score, (int, float)) \
             and max_score > 0:
-        return float(score) / float(max_score)
-    band = band_midpoint(row.get("band_estimate"))
-    if band is not None and str(row.get("exam", "")).startswith("ielts"):
-        return band / 9.0
-    value = cefr_value(row)
-    if value is not None:
-        return value / 6.0
+        return max(0.0, min(1.0, float(score) / float(max_score)))
     return None
+
+
+def attainment_phrase(avg):
+    """Describe an average attainment (0..1) relative to the target level."""
+    if avg >= 0.9:
+        return "at or above your target level"
+    if avg >= 0.7:
+        return "about half a level below target"
+    if avg >= 0.4:
+        return "about a level below target"
+    return "well below your target level"
 
 
 def fmt_num(value):
@@ -240,7 +267,7 @@ def fmt_time(seconds):
         seconds = float(seconds)
     except (TypeError, ValueError):
         return "?"
-    if seconds < 60:
+    if round(seconds) < 60:
         return "%ds" % round(seconds)
     minutes = seconds / 60.0
     return "%gm" % round(minutes, 1) if minutes < 10 else "%dm" % round(minutes)
@@ -270,14 +297,22 @@ def group_by(rows, key):
     return grouped
 
 
+def plural(count, singular, suffix="s"):
+    return "%d %s%s" % (count, singular, "" if count == 1 else suffix)
+
+
 def rank_task_types(rows):
-    """[(task_type, avg_quality, attempts)] sorted weakest first."""
+    """[(task_type, avg_quality, attempts)] sorted weakest first.
+
+    Ties break on task_type name so the ranking (and every report and test
+    that depends on it) is deterministic.
+    """
     ranked = []
     for task_type, task_rows in group_by(rows, "task_type").items():
         avg = mean([quality(r) for r in task_rows])
         if avg is not None:
             ranked.append((task_type, avg, len(task_rows)))
-    ranked.sort(key=lambda item: item[1])
+    ranked.sort(key=lambda item: (item[1], item[0]))
     return ranked
 
 
@@ -315,11 +350,11 @@ def recommendation(rows):
     task_type, avg, _count = ranked[0]
     sample = next(r for r in rows if str(r.get("task_type")) == task_type)
     where = "%s at %s" % (display_task(task_type), sample.get("level", "?"))
-    if avg < 0.8:
-        return ("%s is your weakest area (avg %d%%) — drill 10 more, "
-                "then re-test." % (where, round(avg * 100)))
-    return ("All task types are at 80%%+ — keep the balance and try a "
-            "full timed mock next (weakest: %s)." % where)
+    if avg < 0.9:
+        return ("%s is your weakest area (%s) — drill 10 more, "
+                "then re-test." % (where, attainment_phrase(avg)))
+    return ("All task types are at their target level — keep the balance and "
+            "try a full timed mock next (weakest: %s)." % where)
 
 
 def attempts_table(rows):
@@ -352,7 +387,13 @@ def report_date(rows):
 
 
 def total_minutes(rows):
-    seconds = sum(float(r.get("seconds") or 0) for r in rows)
+    seconds = 0.0
+    for row in rows:
+        try:
+            seconds += float(row.get("seconds") or 0)
+        except (TypeError, ValueError):
+            # A malformed seconds value must not abort the whole report.
+            continue
     return int(round(seconds / 60.0))
 
 
@@ -390,8 +431,8 @@ def build_session_report(rows, session):
     ranked = rank_task_types(rows)
     if ranked:
         weakest, avg, _ = ranked[0]
-        parts.append("**Weakest:** %s — %d%% average." % (
-            display_task(weakest), round(avg * 100)))
+        parts.append("**Weakest:** %s — %s." % (
+            display_task(weakest), attainment_phrase(avg)))
     parts += ["**Next:** %s" % recommendation(rows), "", DISCLAIMER, ""]
     return "\n".join(parts)
 
@@ -428,10 +469,9 @@ def exam_lines(rows):
     lines = []
     for exam, exam_rows in sorted(group_by(rows, "exam").items()):
         avg = mean([quality(r) for r in exam_rows])
-        detail = " · avg %d%%" % round(avg * 100) if avg is not None else ""
-        lines.append("- **%s:** %d attempt%s%s" % (
-            display_exam(exam), len(exam_rows),
-            "" if len(exam_rows) == 1 else "s", detail))
+        detail = " · %s" % attainment_phrase(avg) if avg is not None else ""
+        lines.append("- **%s:** %s%s" % (
+            display_exam(exam), plural(len(exam_rows), "attempt"), detail))
     return lines
 
 
@@ -442,15 +482,23 @@ def build_overview_report(rows):
     sessions = {str(r.get("session")) for r in rows}
     days = {ts.date() for ts in (parse_ts(r) for r in rows) if ts}
 
+    streak = streak_days(rows)
+    recent = max(days) if days else None
+    # "current" only if practice reaches into today or yesterday; otherwise the
+    # run has lapsed and calling it current would be misleading.
+    streak_label = "current streak"
+    if recent is not None and recent < datetime.now().date() - timedelta(days=1):
+        streak_label = "last streak"
+
     parts = [
         frontmatter("progress-overview", date, len(rows), minutes, exams),
         "",
         "# Progress Overview — through %s" % human_date(date),
         "",
-        "**%d attempts · %d sessions · %d days practised · "
-        "%d min on task · current streak: %d day%s**" % (
-            len(rows), len(sessions), len(days), minutes,
-            streak_days(rows), "" if streak_days(rows) == 1 else "s"),
+        "**%s · %s · %s practised · %d min on task · %s: %s**" % (
+            plural(len(rows), "attempt"), plural(len(sessions), "session"),
+            plural(len(days), "day"), minutes,
+            streak_label, plural(streak, "day")),
         "",
     ]
 
@@ -465,12 +513,12 @@ def build_overview_report(rows):
         parts += ["## Task types", ""]
         best = ranked[-1]
         worst = ranked[0]
-        parts.append("- **Strongest:** %s — %d%% over %d attempt%s" % (
-            display_task(best[0]), round(best[1] * 100), best[2],
-            "" if best[2] == 1 else "s"))
-        parts.append("- **Weakest:** %s — %d%% over %d attempt%s" % (
-            display_task(worst[0]), round(worst[1] * 100), worst[2],
-            "" if worst[2] == 1 else "s"))
+        parts.append("- **Strongest:** %s — %s over %s" % (
+            display_task(best[0]), attainment_phrase(best[1]),
+            plural(best[2], "attempt")))
+        parts.append("- **Weakest:** %s — %s over %s" % (
+            display_task(worst[0]), attainment_phrase(worst[1]),
+            plural(worst[2], "attempt")))
         parts.append("")
 
     levels = level_summary(rows)

@@ -14,7 +14,7 @@ seeds; in a live drill, reveal answers only after the learner has responded.
 
 **Key:** 1 over/in/during · 2 into · 3 however/though · 4 a
 
-## Key word transformations (B2/C1 format: 2–6 words including the key word)
+## Key word transformations (B2: 2–5 words · C1: 3–6 · C2: 3–8, always including the key word)
 
 > 1. "I regret selling my bicycle," said Marco. — **WISHES**
 >    Marco ____ his bicycle.
@@ -51,14 +51,16 @@ seeds; in a live drill, reveal answers only after the learner has responded.
 ## Complete the Words (TOEFL 2026 reading format: C-test cloze)
 
 > Community gardens have become popular in many cities. People without a
-> garden of th\_\_\_ own can rent a sm\_\_\_ plot and gr\_\_\_ vegetables or
-> flo\_\_\_. Many gardeners s\_\_\_ that the bigg\_\_\_ benefit is n\_\_\_ the
-> harvest its\_\_\_ but the peo\_\_\_ they meet the\_\_\_.
+> garden of the\_\_ own can rent a sma\_\_ plot and gr\_\_ vegetables or
+> flo\_\_\_. Most gardeners agr\_\_ that the bigg\_\_\_ benefit is no\_ the
+> harvest its\_\_\_ but the peo\_\_\_ they meet.
 
-**Key:** their · small · grow · flowers · say · biggest · not · itself ·
-people · there
-*(Format note: roughly every other word loses its second half; the learner
-types the missing letters. Keep gaps unambiguous in context.)*
+**Key:** their · small · grow · flowers · agree · biggest · not · itself ·
+people
+*(Format note: the second half of every other word is deleted, so the visible
+stem is the first half (not just the first letter). Choose words the context
+makes unambiguous, and when scoring, credit any answer that fits both the
+context and the visible letters.)*
 
 ## Inference multiple choice (TOEFL reading format)
 

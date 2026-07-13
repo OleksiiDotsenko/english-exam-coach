@@ -35,6 +35,8 @@ Assessed on content, communicative achievement, organisation and language
 
 ## Listening — ~40 min · 4 parts · 30 questions
 
+Recordings are heard twice.
+
 | Part | Items | Task type |
 |---|---|---|
 | 1 | 6 | Three short extracts: 3-option multiple choice |

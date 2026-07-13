@@ -2,8 +2,8 @@
 name: writing-evaluator
 description: >
   Use when the user wants feedback on English exam writing (IELTS Task 1/2,
-  TOEFL email and academic-discussion tasks, B1–C2 essays, emails,
-  letters, articles, reports, reviews, proposals) or wants an original
+  TOEFL email, academic-discussion, and build-a-sentence tasks, B1–C2 essays,
+  emails, letters, articles, reports, reviews, proposals) or wants an original
   writing prompt in a specific exam format. Evaluates against paraphrased
   public CEFR descriptors and the exam's criteria structure; returns a
   band/score estimate as a range, a CEFR level, and prioritized rewrites
@@ -22,7 +22,14 @@ writing task in a named exam format, OR asked how to improve exam writing.
 
 ## Steps
 
-1. **Identify** exam + level + task type. If unclear, ask once. Load:
+1. **Identify** exam + level + task type. If unclear, ask once.
+   **When EVALUATING pasted writing, also obtain the exact task prompt as it
+   was set** — the IELTS question, the two given points for a B2 essay, the
+   TOEFL email's three content points, the letter's bullets — plus whether it
+   was written timed and in how long. Task fulfilment (were the required
+   points covered, right genre, word count) is the first-ranked criterion and
+   caps the band; without the prompt, say so and mark Task Achievement
+   provisionally rather than guessing. Load:
    - `data/exam-formats/<exam-id>.md` (format, word count, timing, criteria names)
    - `data/cefr/writing-descriptors.md` (assessment anchors)
    - `data/cefr/calibration-anchors.md` (leveled reference samples)
@@ -59,14 +66,20 @@ writing task in a named exam format, OR asked how to improve exam writing.
 5. **Log the attempt** (silently, right after scoring):
    ```bash
    python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/log_attempt.py" \
-     --exam <exam-id> --skill writing-evaluator --task-type <task-type> \
+     --exam <exam-id> --skill writing-evaluator --task-type <slug> \
      --level <anchor> --band-estimate "<low>-<high>" --cefr-estimate <cefr> \
      --seconds <time-on-task>
    ```
+   Use the exact `--task-type` slug from `data/task-types.md`.
    Use `--score`/`--max` instead of `--band-estimate` only when the exam
    truly uses a numeric scale for the task (e.g. TOEFL: `--score 4.5
    --max 6` on the 1–6 band scale).
-   If time on task is unknown, ask or use the task's standard timing.
+   If time on task is unknown, ask the user — never substitute the task's
+   nominal time limit, which would corrupt the "min on task" totals.
+
+**TOEFL Build a Sentence** is objective, not band-scored: present the 10
+scrambled items, mark each correct/incorrect, and log with
+`--task-type toefl-build-a-sentence --score <n> --max 10`.
 
 ## Boundaries
 

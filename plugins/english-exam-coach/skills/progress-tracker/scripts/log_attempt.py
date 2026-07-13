@@ -18,6 +18,7 @@ Example:
 
 import argparse
 import json
+import math
 import os
 import sys
 from datetime import datetime
@@ -48,9 +49,10 @@ def build_parser():
     parser.add_argument("--skill", required=True,
                         help="source skill, e.g. writing-evaluator")
     parser.add_argument("--task-type", required=True, dest="task_type",
-                        help="e.g. key-word-transformation, task-2-essay")
+                        help="canonical slug from data/task-types.md, "
+                             "e.g. key-word-transformation, ielts-task2-essay")
     parser.add_argument("--level", required=True,
-                        help="CEFR anchor of the task: B1, B2, C1 or C2")
+                        help="CEFR anchor of the task: A1, A2, B1, B2, C1 or C2")
     parser.add_argument("--score", type=float, default=None,
                         help="raw numeric score, when applicable")
     parser.add_argument("--max", type=float, default=None, dest="max_score",
@@ -87,7 +89,15 @@ def validate(args):
         errors.append("--level must be one of %s (got %r)"
                       % ("/".join(CEFR_LEVELS), args.level))
 
-    if args.score is None and not args.band_estimate:
+    # Reject NaN/Infinity up front: they slip past every ordered comparison
+    # below and would be written to the append-only log as invalid JSON.
+    for flag, value in (("--score", args.score), ("--max", args.max_score),
+                        ("--seconds", args.seconds)):
+        if isinstance(value, float) and not math.isfinite(value):
+            errors.append("%s must be a finite number (got %r)" % (flag, value))
+
+    band = (args.band_estimate or "").strip()
+    if args.score is None and not band:
         errors.append("at least one of --score or --band-estimate is required")
 
     if args.score is not None and args.score < 0:
@@ -109,6 +119,9 @@ def validate(args):
 
     if args.seconds < 0:
         errors.append("--seconds must be >= 0")
+
+    if args.session is not None and not args.session.strip():
+        errors.append("--session must not be blank (omit it to auto-derive one)")
 
     if args.ts is not None:
         try:
@@ -138,12 +151,18 @@ def build_record(args, now):
         record["score"] = as_number(args.score)
     if args.max_score is not None:
         record["max"] = as_number(args.max_score)
-    if args.band_estimate:
+    if args.band_estimate and args.band_estimate.strip():
         record["band_estimate"] = args.band_estimate.strip()
     if args.cefr_estimate:
         record["cefr_estimate"] = args.cefr_estimate.strip().upper()
     record["seconds"] = as_number(args.seconds)
-    record["session"] = (args.session or default_session(now)).strip()
+    if args.session and args.session.strip():
+        record["session"] = args.session.strip()
+    else:
+        # Derive the session from the attempt's own timestamp (not wall-clock
+        # now) so a back-dated --ts and its session id never disagree.
+        stamp = datetime.fromisoformat(args.ts) if args.ts else now
+        record["session"] = default_session(stamp)
     return record
 
 
@@ -161,7 +180,9 @@ def main(argv=None):
 
     now = datetime.now()
     record = build_record(args, now)
-    line = json.dumps(record, ensure_ascii=False)
+    # allow_nan=False is a last-line defense: strict JSON only, so the
+    # append-only log can never hold NaN/Infinity that a reader would choke on.
+    line = json.dumps(record, ensure_ascii=False, allow_nan=False)
 
     try:
         base.mkdir(parents=True, exist_ok=True)

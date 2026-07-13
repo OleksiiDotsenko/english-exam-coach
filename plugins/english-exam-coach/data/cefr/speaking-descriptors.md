@@ -1,8 +1,10 @@
 # CEFR speaking descriptors (paraphrased)
 
-Paraphrased in original wording from the public CEFR framework's qualitative
-aspects of spoken language (Council of Europe). Not an official mark scheme.
-Assess along five aspects: range, accuracy, fluency, interaction, coherence.
+Condensed and adapted, in our own wording, from the public CEFR framework's
+qualitative aspects of spoken language (© Council of Europe, freely
+published); some short phrases stay close to the source because the
+descriptors are concise. Not an official mark scheme. Assess along five
+aspects: range, accuracy, fluency, interaction, coherence.
 
 ## B1
 

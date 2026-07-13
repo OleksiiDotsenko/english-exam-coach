@@ -31,18 +31,24 @@ wants exam-style questions on it.
    its questions. Show the questions FIRST — real tests give preview time —
    and keep the script hidden.
 
-3. **Deliver the audio, best available mode:**
+3. **Deliver the audio, best available mode.** First, set the **number of
+   plays from the exam**: IELTS and TOEFL iBT play each recording **once**;
+   the CEFR B1–C2 (Cambridge) exams play each recording **twice** (their
+   format files say so). Honor that count in every mode below — "once"
+   means once for IELTS/TOEFL and twice for `cefr-b1`…`cefr-c2`.
    - **TTS (optional, macOS):** if the `say` command exists
-     (`command -v say`), write the script to a temp file and play it once at
-     natural speed, e.g.
+     (`command -v say`), write the script to a temp file and play it at
+     natural speed for the exam's number of plays, e.g.
      `say -f script.txt` (or `say -o audio.aiff -f script.txt && afplay audio.aiff`).
      Vary voices per speaker with `-v` when available.
    - **User-side audio:** the user has any TTS or a practice partner → give
-     them the script to synthesize/have read aloud, listening only once.
-   - **Fallback (always works):** timed read-once — reveal the script,
-     instruct the user to read it once at natural pace without scrolling
-     back, then hide-and-answer. Say plainly this trains reading-listening
-     hybrid comprehension, not pure listening.
+     them the script to synthesize/have read aloud, for the exam's number of
+     plays.
+   - **Fallback (always works):** timed read-through — reveal the script,
+     instruct the user to read it (once for IELTS/TOEFL, twice for the CEFR
+     exams) at natural pace without scrolling back, then hide-and-answer.
+     Say plainly this trains reading-listening hybrid comprehension, not
+     pure listening.
 
 4. **Score and explain:** one mark per item; quote the exact script line
    that decides each answer; point out the distractor trap where relevant
@@ -55,9 +61,10 @@ wants exam-style questions on it.
 6. **Log the attempt** (silently):
    ```bash
    python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/log_attempt.py" \
-     --exam <exam-id> --skill listening-trainer --task-type <task-type> \
+     --exam <exam-id> --skill listening-trainer --task-type <slug> \
      --level <anchor> --score <n> --max <total> --seconds <time>
    ```
+   Use the exact `--task-type` slug from `data/task-types.md`.
 
 ## Boundaries
 

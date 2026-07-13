@@ -35,15 +35,23 @@ shell profile to persist the choice).
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/log_attempt.py" \
   --exam <exam-id> --skill <source-skill> --task-type <task-type> \
-  --level <B1|B2|C1|C2> \
+  --level <A1|A2|B1|B2|C1|C2> \
   [--score <n> --max <m> | --band-estimate "<low>-<high>"] \
   [--cefr-estimate <level>] --seconds <time-on-task> [--session <id>]
 ```
 
+- If `python3` is not found (common on Windows), run the same command with
+  `python` or `py` — the scripts are stdlib-only and version-agnostic.
+- Use the **exact `--task-type` slug** from
+  `data/task-types.md` for the exam, so results aggregate correctly across
+  sessions (the "weakest task type" stat groups by this string).
+- `--level` is the task's CEFR anchor, `A1`–`C2` (TOEFL tasks can reach A1).
 - At least one of `--score` / `--band-estimate` is required; the script
   validates and exits non-zero without writing if the record is malformed.
-- `--session` defaults to `<date>-am/pm`; pass an explicit id to group a
-  themed sitting (reuse the same id for every attempt in that sitting).
+- `--session` defaults to `<date>-am/pm`. For one continuous sitting, pick a
+  single session id at the first log and pass the same `--session` on every
+  attempt in that sitting — otherwise a session that crosses noon would
+  split into `-am`/`-pm` halves and the session report would show only one.
 - `--seconds` is real time on task — measure it (note the start time when a
   task is issued); ask the user rather than inventing a number.
 - The script only ever appends. Never edit `attempts.jsonl` by hand or with

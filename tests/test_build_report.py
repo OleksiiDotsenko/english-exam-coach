@@ -99,16 +99,18 @@ class BuildReportTests(unittest.TestCase):
         seed_two_sessions(self.base)
         result = self.build("--scope", "all")
         self.assertIn("type: progress-overview", result.stdout)
-        self.assertIn("4 attempts · 2 sessions · 1 days practised", result.stdout)
-        self.assertIn("current streak: 1 day", result.stdout)
-        self.assertIn("**Weakest:** Open cloze — 50%", result.stdout)
+        self.assertIn("4 attempts · 2 sessions · 1 day practised", result.stdout)
+        # Seed dates are in the past, so the run has lapsed: "last", not "current".
+        self.assertIn("last streak: 1 day", result.stdout)
+        self.assertIn("**Weakest:** Open cloze — about a level below target",
+                      result.stdout)
         self.assertTrue((self.base / "reports" / "progress-overview.md").exists())
 
     def test_weakest_task_type_drives_recommendation(self):
         seed_two_sessions(self.base)
         result = self.build("--scope", "all")
-        self.assertIn("Open cloze at C1 is your weakest area (avg 50%)",
-                      result.stdout)
+        self.assertIn("Open cloze at C1 is your weakest area "
+                      "(about a level below target)", result.stdout)
 
     def test_malformed_lines_skipped_without_crash(self):
         seed_two_sessions(self.base)

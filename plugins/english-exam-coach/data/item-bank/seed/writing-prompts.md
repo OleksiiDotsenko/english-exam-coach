@@ -16,10 +16,12 @@ never reuse a seed verbatim in a drill; generate a fresh item in its shape.
 > | Country B (2005 → 2025) | 12% → 15% | 55% → 48% | 20% → 27% |
 > | Country C (2005 → 2025) | 41% → 44% | 9% → 13% | 8% → 19% |
 >
-> Summarise the information by selecting and reporting the main features, and
-> make comparisons where relevant.
+> Describe the main patterns in the data in your own words, comparing the
+> countries and the two years where useful.
 
-*(When a chart cannot be rendered, present the data as a table like this.)*
+*(When a chart cannot be rendered, present the data as a table like this. The
+real exam words the rubric slightly differently; this is an original
+paraphrase, not the official instruction.)*
 
 ## IELTS General Training — Task 1 (letter, ≥150 words, 20 min)
 
@@ -31,9 +33,8 @@ never reuse a seed verbatim in a drill; generate a fresh item in its shape.
 ## IELTS / general — Task 2 (essay, ≥250 words, 40 min)
 
 > Some people believe that public libraries should focus on digital services
-> rather than physical books. To what extent do you agree or disagree? Give
-> reasons for your answer and include any relevant examples from your own
-> knowledge or experience.
+> rather than physical books. How far do you agree? Support your view with
+> reasons and examples from your own knowledge or experience.
 
 ## TOEFL iBT (2026 format) — Write an Email (7 min, 3 content points)
 
@@ -77,11 +78,21 @@ never reuse a seed verbatim in a drill; generate a fresh item in its shape.
 > points from both texts, using your own words throughout.
 >
 > **Text 1 — The case for slow news.** Rolling coverage rewards speed over
-> understanding. A daily digest, edited with hindsight, gives readers
-> proportion: what mattered, what merely happened. Slower rhythms may be the
-> only cure for a public exhausted by alerts. *(≈60 words)*
+> understanding, and the race to publish first too often means publishing
+> before the facts are clear. A daily digest, edited with the benefit of
+> hindsight, gives readers a sense of proportion: it separates what genuinely
+> mattered from what merely happened to occur that day. Constant alerts, by
+> contrast, leave people anxious and strangely uninformed, mistaking the
+> volume of updates for real knowledge. Slower, more considered rhythms may
+> be the only durable cure for an audience that is exhausted by notifications
+> yet no better able to say what is actually going on in the world. *(≈100 words)*
 >
 > **Text 2 — Speed is a public service.** During emergencies, minutes matter,
-> and instant reporting has saved lives. The answer to shallow coverage is
-> better editing, not artificial delay; readers can choose their own pace,
-> and it is patronising to choose it for them. *(≈60 words)*
+> and instant reporting has demonstrably saved lives — warning communities of
+> floods, fires, and fast-moving threats while there is still time to act. The
+> honest answer to shallow coverage is better editing and clearer sourcing,
+> not artificial delay imposed from above. Readers are not children: they can
+> weigh a developing story, follow corrections, and choose their own pace
+> through the day's events. To slow the news deliberately is to decide on
+> their behalf what they are ready to know, and that quiet paternalism is a
+> poor trade for the speed a free press can offer. *(≈100 words)*

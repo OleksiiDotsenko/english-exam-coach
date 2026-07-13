@@ -1,8 +1,9 @@
 # CEFR reading descriptors (paraphrased)
 
-Paraphrased in original wording from the public CEFR framework (Council of
-Europe). Not an official mark scheme. Use to set text difficulty when
-generating passages and to interpret drill results.
+Condensed and adapted, in our own wording, from the public CEFR framework
+(© Council of Europe, freely published); some short phrases stay close to the
+source because the descriptors are concise. Not an official mark scheme. Use
+to set text difficulty when generating passages and to interpret drill results.
 
 ## B1
 

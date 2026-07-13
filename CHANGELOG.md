@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.1.4 — 2026-07-13
+
+Fixes from an exhaustive multi-agent quality audit (48 adversarially
+verified findings across scripts, skills, data, docs, and UX).
+
+**Progress-tracker scripts (correctness):**
+- `build_report.py` no longer crashes on a log that mixes timezone-aware and
+  naive timestamps, on a non-numeric `seconds` field, or on wrong-shape JSON
+  rows — the append-only log can never be permanently broken by one bad line.
+- `log_attempt.py` rejects NaN/Infinity, whitespace-only `--band-estimate`,
+  and whitespace-only `--session`; writes strict JSON (`allow_nan=False`).
+- A bare IELTS score logged without `--max` is no longer misread as a band 9
+  (was inflating the CEFR estimate to C2); low scores stay on the CEFR scale
+  instead of rendering as `~?`.
+- "Weakest task type" now ranks every task on one CEFR-relative attainment
+  axis, so band-scored writing/speaking are no longer systematically ranked
+  below easier objective drills; reports no longer print bands as `%`.
+- Streak shown as "last streak" once a run has lapsed; report counts are
+  pluralized; sub-minute times round correctly.
+- A back-dated `--ts` now derives its session id from that timestamp.
+
+**Skills & data:**
+- New `data/task-types.md` canonical slug registry; every scoring skill logs
+  with the exact slug so progress aggregates across sessions.
+- Vocabulary Leitner schedule made consistent between the skill and its seed.
+- Listening trainer now plays recordings twice for the CEFR B1–C2 exams
+  (once for IELTS/TOEFL), matching the format files.
+- Writing evaluator now asks for the original task prompt before judging task
+  achievement; TOEFL Build-a-Sentence and Listen-and-Repeat are covered.
+- Level diagnostic hardened (8 items, stop rule, "not measured" note); added
+  `--level A1/A2` support and a Windows `python`/`py` note.
+- New A1/A2 can-do rows and speaking calibration anchors; corrected seed item
+  keys, word counts, and CEFR terminology; reworded near-verbatim boilerplate.
+
+**Tests:** 26 → 54, covering every fix above.
+
 ## 0.1.3 — 2026-07-12
 
 - Scoring consistency: new `data/cefr/calibration-anchors.md` — four

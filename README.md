@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/OleksiiDotsenko/english-exam-coach/tests.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
-  <img src="https://img.shields.io/badge/version-0.1.2-F97316?style=flat-square" alt="version 0.1.2">
+  <img src="https://img.shields.io/badge/version-0.1.4-F97316?style=flat-square" alt="version 0.1.4">
   <img src="https://img.shields.io/badge/license-MIT-FB923C?style=flat-square" alt="MIT license">
   <img src="https://img.shields.io/badge/python-stdlib%20only-FDBA74?style=flat-square" alt="python stdlib only">
   <img src="https://img.shields.io/badge/network%20calls-zero-EA580C?style=flat-square" alt="zero network calls">
@@ -262,9 +262,10 @@ yours and are never touched by either.
   official mark schemes anywhere in this repository. All practice items are
   original, generated to match public *format facts* (task types, counts,
   timings, scales — facts are not copyrightable).
-- **Public descriptors only.** Evaluation anchors are paraphrased from the
-  public CEFR framework (Council of Europe); criterion *names* are used
-  nominatively.
+- **Public descriptors only.** Evaluation anchors are condensed and adapted
+  from the public CEFR framework (© Council of Europe, freely published);
+  criterion *names* are used nominatively. Some short phrases stay close to
+  the concise source wording.
 - **Brand-neutral naming.** Files and identifiers are named by CEFR level
   where possible; trademarks appear only nominatively, with no claim of
   affiliation or endorsement.

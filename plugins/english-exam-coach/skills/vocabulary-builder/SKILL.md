@@ -32,18 +32,23 @@ kept.
    like the Academic Word List may be referenced nominatively.
 
 2. **Persist for review:** append new items to `<base>/vocab-box.json`
-   (create if missing) as
-   `{"item": ..., "level": ..., "box": 1, "added": <date>, "due": <date>}`.
-   Boxes: 1 = review next session, 2 = daily, 3 = every 3 days, 4 = weekly,
-   5 = retired. This file is working state and MAY be rewritten — unlike
-   `attempts.jsonl`, which this skill never touches directly.
+   (create if missing). The file is a JSON array; each element is
+   `{"item": ..., "level": ..., "box": 1, "added": "YYYY-MM-DD", "due": "YYYY-MM-DD"}`
+   with ISO dates. New items enter **box 1** with `due` = today, so they
+   surface in the next review round.
+   **Canonical Leitner intervals (must match `vocabulary-sets.md`):**
+   box 1 = next session · box 2 = 1 day · box 3 = 3 days · box 4 = 7 days ·
+   box 5 = 30 days (mature). This file is working state and MAY be
+   rewritten — unlike `attempts.jsonl`, which this skill never touches
+   directly.
 
 3. **Review ("quiz me"):** read `vocab-box.json`, select items with
    `due <= today` (oldest first, max ~12 per round). Quiz actively — ask for
    the word from a definition/gap sentence, or a collocation completion; a
-   plain "do you remember this?" is not a test. Correct → box+1, new due
-   date; wrong → box 1, due next session. Rewrite the file once at the end
-   of the round.
+   plain "do you remember this?" is not a test. Correct → box +1 (max 5),
+   set `due` = today + the new box's interval above; wrong → back to box 1,
+   `due` = today (next session). Rewrite the file once at the end of the
+   round.
 
 4. **Score the round** (n correct / n asked) and show which items fell back
    to box 1.

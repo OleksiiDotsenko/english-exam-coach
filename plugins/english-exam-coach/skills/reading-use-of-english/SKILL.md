@@ -5,8 +5,9 @@ description: >
   tasks: IELTS (matching headings, True/False/Not Given, Yes/No/Not Given),
   TOEFL iBT reading (complete-the-words cloze, daily-life texts, short
   academic passages), or
-  B1-C2 tasks (open cloze, multiple-choice cloze, key word transformation,
-  word formation, gapped text, multiple matching). Generates an original
+  B1-C2 tasks (open cloze, multiple-choice cloze, gapped text, multiple
+  matching; plus key word transformation and word formation in the B2-C2
+  exams only). Generates an original
   passage and items, scores answers objectively, explains every answer, and
   logs the attempt with score and time.
 ---
@@ -40,7 +41,7 @@ a reading answer is what it is.
    how long they took.
 
 4. **Score objectively** — one mark per item, no partial credit unless the
-   exam gives it (key word transformations are marked out of 2 in the B1–C2
+   exam gives it (key word transformations are marked out of 2 in the B2–C2
    exams: award 1 for a half-correct split). Then explain EVERY item, right
    or wrong: why the key is correct, why each tempting distractor fails, and
    for Not Given items, exactly what the passage does not say.
@@ -48,9 +49,11 @@ a reading answer is what it is.
 5. **Log the attempt** (silently):
    ```bash
    python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/log_attempt.py" \
-     --exam <exam-id> --skill reading-use-of-english --task-type <task-type> \
+     --exam <exam-id> --skill reading-use-of-english --task-type <slug> \
      --level <anchor> --score <n> --max <total> --seconds <time>
    ```
+   Use the exact `--task-type` slug from `data/task-types.md` so attempts
+   aggregate across sessions.
    Then offer one of: re-drill the same type, step up a level, or switch to
    the weakest type from the log.
 

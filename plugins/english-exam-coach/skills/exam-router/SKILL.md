@@ -45,12 +45,28 @@ to this SKILL.md file, two directories up).
    listening → `listening-trainer`, vocabulary → `vocabulary-builder`,
    study plan / exam date → `study-planner`, results → `progress-tracker`.
 4. **Level diagnostic** (when asked "what's my level" or via /assess-level):
-   run a compact probe — 5 reading/use-of-english items of graded difficulty,
-   one short writing sample (80–120 words), optionally 3 can-do
-   self-assessments from `${CLAUDE_PLUGIN_ROOT}/data/cefr/can-do-statements.md`.
-   Estimate a CEFR level as a range (e.g. "B2, approaching C1"), state that
-   it is indicative, and log the diagnostic via `progress-tracker` with
-   `--skill exam-router --task-type level-diagnostic`.
+   - **Items:** 8 use-of-english items, 2 per level B1–C2 (mix open cloze,
+     multiple-choice cloze, one inference item), presented easiest-first.
+     **Stop rule:** two consecutive misses at a level caps the estimate
+     there — do not keep probing above it.
+   - **Writing sample** (80–120 words) is the primary evidence: place it
+     against `${CLAUDE_PLUGIN_ROOT}/data/cefr/calibration-anchors.md` per
+     criterion; the items refine, they don't outvote it.
+   - Optionally add 3 can-do self-checks from
+     `${CLAUDE_PLUGIN_ROOT}/data/cefr/can-do-statements.md`.
+   - **Report** a CEFR range (e.g. "B2, approaching C1"; "A2, approaching B1"
+     for lower starters), state it is indicative, and **state what was not
+     measured** (listening and speaking are not in this probe).
+   - **Log it** with every required field, using `--cefr-estimate` (that is
+     what feeds cross-exam trends — a bare `--band-estimate "B2-C1"` has no
+     numbers and normalizes to nothing):
+     ```bash
+     python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/log_attempt.py" \
+       --exam <target exam or cefr-XX> --skill exam-router \
+       --task-type level-diagnostic --level <nearest anchor> \
+       --cefr-estimate <estimated level> --score <items correct> --max 8 \
+       --seconds <measured>
+     ```
 5. **Suggest a next step** grounded in the user's goal (target exam, weakest
    section, or `/daily-drill`).
 

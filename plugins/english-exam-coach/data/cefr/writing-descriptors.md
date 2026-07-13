@@ -1,8 +1,9 @@
 # CEFR writing descriptors (paraphrased)
 
-Paraphrased in original wording from the public CEFR framework (Council of
-Europe). Not an official mark scheme of any exam board. Use these to anchor
-feedback and level estimates for written work.
+Condensed and adapted, in our own wording, from the public CEFR framework
+(© Council of Europe, freely published); some short phrases stay close to the
+source because the descriptors are concise. Not an official mark scheme of any
+exam board. Use these to anchor feedback and level estimates for written work.
 
 ## B1
 

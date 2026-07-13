@@ -67,7 +67,7 @@ position — and virtually no errors.
 > inconvenienced deliveries — are real but soluble, and treating them as
 > decisive mistakes friction for impossibility.
 
-**Why C2:** full rhetorical control (the cleft opening, the weighed
+**Why C2:** full rhetorical control (the fronted subject that-clause, the weighed
 parenthesis), metaphor deployed with purpose (*colonised, renegotiates the
 contract*), meaning compressed with precision (*mistakes friction for
 impossibility*) — the language shapes the argument rather than merely

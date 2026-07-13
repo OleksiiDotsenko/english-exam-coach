@@ -13,3 +13,8 @@ the most recent session in the log).
 Show the report body to the user and mention where it was written
 (`<base>/reports/session-<id>.md`). If the script reports no attempts yet,
 offer `/daily-drill` instead of improvising numbers.
+
+If no session id was given and the most recent session in the log is **not
+from today**, say so explicitly ("no attempts logged today — this is your
+last session, from <date>") before showing it, and offer `/daily-drill`, so
+a stale session is never presented as if it were today's.
