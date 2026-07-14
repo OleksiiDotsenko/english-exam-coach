@@ -48,6 +48,25 @@ seeds; in a live drill, reveal answers only after the learner has responded.
 >    the passage says fruit is free to pickers but says nothing about a market
 >    or selling.)*
 
+*T/F/NG tests statements against **facts** in the text. Contrast with the
+next task, which tests statements against the **writer's views** — note the
+opinion-bearing passage and the Yes/No labels.*
+
+## Yes / No / Not Given (IELTS reading format)
+
+> **Passage (extract):** In my view, cities have been far too timid about
+> rooftop gardens. The engineering objections are real but soluble, and the
+> benefits — cooler buildings, stronger neighbourhoods — plainly outweigh the
+> cost. What holds councils back, I suspect, is simple caution rather than any
+> serious doubt about the idea.
+>
+> 1. The writer believes cities should do more to promote rooftop gardens.
+>    *(Yes — "far too timid" expresses that view.)*
+> 2. The writer thinks the engineering problems cannot be overcome. *(No —
+>    the writer calls them "real but soluble".)*
+> 3. The writer argues rooftop gardens increase property values. *(Not Given —
+>    no claim about property values is made.)*
+
 ## Complete the Words (TOEFL 2026 reading format: C-test cloze)
 
 > Community gardens have become popular in many cities. People without a

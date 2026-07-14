@@ -30,6 +30,18 @@ no numbers) → 2 body paragraphs of grouped, quantified comparisons. Penalise
 in feedback: missing overview, mechanical listing of every figure, opinion
 or speculation, copied prompt wording.
 
+IELTS Academic T1 also has two non-data variants:
+- **Process/diagram:** describe stages in sequence (mostly present simple
+  passive: *the beans are roasted, then …*); overview = number of stages +
+  where the process starts/ends; penalise wrong sequencing, active-for-passive
+  slips, missing overview.
+- **Map:** describe change between two layouts (past vs present, or a plan)
+  using location language and *had been / was replaced by*; overview = the
+  overall character of the change.
+Because the terminal has no image channel, present a process as labelled text
+stages and a map as a described before/after layout; say the visual is
+rendered as text.
+
 ### Letter/email family (IELTS General T1, B1 email, B2/C1 email or letter)
 Purpose stated early; one paragraph per content point; register consistent
 with the named recipient (friend vs. manager vs. stranger); conventional

@@ -79,21 +79,67 @@ class ReportEdgeCaseTests(unittest.TestCase):
         result = self.build("--scope", "session", "--session", "s1")
         self.assertIn("~B2 (speaking)", result.stdout)
 
-    def test_toefl_no_max_boundary_between_band_and_legacy_scales(self):
-        # score 6 with no max -> new 1-6 band scale -> C2
-        log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "reading-use-of-english",
-                                  "task-type": "toefl-read-academic", "level": "C1",
-                                  "score": 6, "seconds": 300,
+    def test_toefl_band_and_legacy_scales_apply_only_to_holistic_skills(self):
+        # A holistic (speaking) TOEFL band 6 -> new 1-6 scale -> C2.
+        log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "speaking-coach",
+                                  "task-type": "toefl-take-an-interview", "level": "C1",
+                                  "score": 6, "max": 6, "seconds": 300,
                                   "ts": "2026-07-08T09:00:00", "session": "band"})
         band = self.build("--scope", "session", "--session", "band")
-        self.assertIn("~C2 (reading)", band.stdout)
-        # score 24 with no max on a speaking task -> legacy 0-30 cut -> B2
+        self.assertIn("~C2 (speaking)", band.stdout)
+        # A holistic (speaking) legacy 24/30 section score -> legacy cut -> B2.
         log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "speaking-coach",
                                   "task-type": "toefl-take-an-interview", "level": "C1",
                                   "score": 24, "seconds": 300,
                                   "ts": "2026-07-08T10:00:00", "session": "legacy"})
         legacy = self.build("--scope", "session", "--session", "legacy")
         self.assertIn("~B2 (speaking)", legacy.stdout)
+
+    def test_objective_item_count_of_6_is_not_misread_as_a_toefl_band(self):
+        # THE CRITICAL FIX: a 6-item reading drill scored 5 must read as 83%
+        # at its B2 anchor (-> B2), NOT as TOEFL band 5 (-> C1).
+        log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "reading-use-of-english",
+                                  "task-type": "toefl-read-academic", "level": "B2",
+                                  "score": 5, "max": 6, "seconds": 300,
+                                  "ts": "2026-07-08T09:00:00", "session": "s1"})
+        result = self.build("--scope", "session", "--session", "s1")
+        self.assertIn("~B2 (reading)", result.stdout)
+        self.assertNotIn("C1", result.stdout)
+
+    def test_objective_item_count_of_9_is_not_misread_as_an_ielts_band(self):
+        # A 9-item IELTS reading drill scored 8 -> 89% at C1 -> C1, not band 8.
+        log_attempt(self.base, **{"exam": "ielts-academic", "skill": "reading-use-of-english",
+                                  "task-type": "ielts-tf-not-given", "level": "C1",
+                                  "score": 8, "max": 9, "seconds": 300,
+                                  "ts": "2026-07-08T09:00:00", "session": "s1"})
+        result = self.build("--scope", "session", "--session", "s1")
+        self.assertIn("~C1 (reading)", result.stdout)
+
+    def test_total_failure_is_distinguished_from_a_near_miss(self):
+        log_attempt(self.base, **{"exam": "cefr-c1", "skill": "reading-use-of-english",
+                                  "task-type": "open-cloze", "level": "C1",
+                                  "score": 0, "max": 10, "seconds": 300,
+                                  "ts": "2026-07-08T09:00:00", "session": "zero"})
+        zero = self.build("--scope", "session", "--session", "zero")
+        log_attempt(self.base, **{"exam": "cefr-c1", "skill": "reading-use-of-english",
+                                  "task-type": "open-cloze", "level": "C1",
+                                  "score": 5, "max": 10, "seconds": 300,
+                                  "ts": "2026-07-08T10:00:00", "session": "half"})
+        half = self.build("--scope", "session", "--session", "half")
+        # 0/10 lands below B2; 5/10 lands at ~B2 — they must not be identical.
+        self.assertNotEqual(
+            [l for l in zero.stdout.splitlines() if "Estimated level" in l],
+            [l for l in half.stdout.splitlines() if "Estimated level" in l])
+
+    def test_a1_near_total_failure_is_not_reported_at_level(self):
+        # At the A1 floor the CEFR value can't drop, but a 1/10 must not read
+        # as "at or above your target level" — quality is capped by the raw %.
+        log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "reading-use-of-english",
+                                  "task-type": "toefl-read-daily-life", "level": "A1",
+                                  "score": 1, "max": 10, "seconds": 200,
+                                  "ts": "2026-07-08T09:00:00", "session": "s1"})
+        result = self.build("--scope", "all")
+        self.assertNotIn("at or above your target level", result.stdout)
 
     def test_low_score_stays_on_the_cefr_scale(self):
         # An A2-anchored task scored poorly must not render as "~?".

@@ -31,6 +31,9 @@ heard once only. Each question = 1 mark; raw score converts to a band.
 
 ## Reading — 60 min · 3 passages · 40 questions
 
+**Passage lengths (for generating original items):** each of the 3 passages
+~700–900 words (~2,150–2,750 total), ~13–14 questions each.
+
 Three long academic texts (journals, books, magazines, newspapers),
 increasing in difficulty. Question types: matching headings, True/False/Not
 Given, Yes/No/Not Given, matching information/features/sentence endings,

@@ -70,14 +70,15 @@ class BuildReportTests(unittest.TestCase):
         self.assertIn("| Reading/UoE | Key word transformation | CEFR C1 "
                       "| 7/10 | 9m |", result.stdout)
 
-    def test_cefr_normalization_ielts_band_and_toefl_cuts(self):
+    def test_cefr_normalization_ielts_band_and_objective_reading(self):
         seed_two_sessions(self.base)
         result = self.build("--scope", "session", "--session", "2026-07-08-am")
-        # writing: IELTS band 6.75 -> B2; reading: KWT 70% at C1 -> B2/C1
-        # borderline (4.5) averaged with TOEFL reading 24/30 -> C1 (5.0),
-        # mean 4.75 rounds to 5.0 -> C1.
+        # writing: IELTS band 6.75 -> B2. reading: KWT 70% at C1 -> B2/C1 (4.5)
+        # averaged with the TOEFL reading drill 24/30 at B2, now correctly
+        # scored as an objective 80% -> B2 (4.0), not misread as a legacy band;
+        # mean 4.25 -> B2.
         self.assertIn("~B2 (writing)", result.stdout)
-        self.assertIn("~C1 (reading)", result.stdout)
+        self.assertIn("~B2 (reading)", result.stdout)
 
     def test_cefr_normalization_toefl_2026_band_scale(self):
         log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "speaking-coach",

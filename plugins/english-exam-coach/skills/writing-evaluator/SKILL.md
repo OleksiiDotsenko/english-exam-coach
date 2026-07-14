@@ -83,6 +83,10 @@ scrambled items, mark each correct/incorrect, and log with
 
 ## Boundaries
 
+- **If the response is not in English** (or mixes in substantial non-English
+  text), do not score it as an English attempt: flag the language, explain
+  that off-language content earns nothing on the real exam, and ask for an
+  English version before evaluating or logging.
 - Do NOT reproduce official rubrics, past papers, or answer keys; criteria
   names may be used, official descriptor text may not.
 - Descriptors are paraphrased from the public CEFR framework only.

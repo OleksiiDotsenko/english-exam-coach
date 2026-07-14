@@ -47,17 +47,22 @@ in the same PR — never invent an ad-hoc variant at log time.
 | Slug | Exams | Task |
 |---|---|---|
 | `ielts-matching-headings` | ielts-academic, ielts-general | Match headings to paragraphs |
-| `ielts-tf-not-given` | ielts-academic, ielts-general | True/False/Not Given |
-| `ielts-yn-not-given` | ielts-academic, ielts-general | Yes/No/Not Given |
+| `ielts-tf-not-given` | ielts-academic, ielts-general | True/False/Not Given (facts) |
+| `ielts-yn-not-given` | ielts-academic, ielts-general | Yes/No/Not Given (writer's views) |
+| `ielts-matching-information` | ielts-academic, ielts-general | Locate information / match features |
+| `ielts-sentence-completion` | ielts-academic, ielts-general | Sentence / note / table / summary completion |
+| `ielts-short-answer` | ielts-academic, ielts-general | Short-answer questions |
 | `toefl-complete-the-words` | toefl-ibt | C-test cloze |
 | `toefl-read-daily-life` | toefl-ibt | Practical short texts, MCQ |
 | `toefl-read-academic` | toefl-ibt | Short academic passage, MCQ |
-| `multiple-choice-cloze` | cefr-b1…cefr-c2 | Multiple-choice cloze |
+| `reading-multiple-choice` | cefr-b1…cefr-c2, ielts | Long-text reading comprehension, multiple choice |
+| `multiple-choice-cloze` | cefr-b1…cefr-c2 | Multiple-choice cloze (gap-fill) |
 | `open-cloze` | cefr-b1…cefr-c2 | Open cloze |
 | `word-formation` | cefr-b2…cefr-c2 | Word formation |
 | `key-word-transformation` | cefr-b2…cefr-c2 | Key word transformation |
 | `gapped-text` | cefr-b1…cefr-c2 | Gapped text |
-| `multiple-matching` | cefr-b1…cefr-c2 | Multiple matching |
+| `cross-text-matching` | cefr-c1 | Cross-text multiple matching (compare four texts' opinions) |
+| `multiple-matching` | cefr-b1…cefr-c2 | Multiple matching (locate information) |
 
 ## Listening
 

@@ -13,6 +13,11 @@ always face-to-face with an examiner.
 
 ## Reading — 45 min · 6 parts · 32 questions
 
+**Passage lengths (base text, for generating original items):** P1 signs
+~10–40 words each · P2 eight short texts ~40–60 each · P3 ~350–400 · P4
+gapped text ~250–300 base (5 gaps, **8 sentence options — 3 extra
+distractors**) · P5–P6 cloze ~150–180.
+
 | Part | Items | Task type |
 |---|---|---|
 | 1 | 5 | Short real-world texts (signs, messages): 3-option multiple choice |

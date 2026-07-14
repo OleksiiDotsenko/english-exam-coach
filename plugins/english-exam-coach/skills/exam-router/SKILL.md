@@ -72,6 +72,12 @@ to this SKILL.md file, two directories up).
 
 ## Boundaries
 
+- **The plugin's practical floor is B1.** Drills, descriptors and
+  calibration anchors start at B1; A1/A2 exist only as diagnostic *labels*.
+  If a diagnostic lands below B1 (or a user asks for A1/A2 practice), say
+  the estimate plainly, explain that guided practice here begins at B1, and
+  frame B1 as the working target rather than routing to content that
+  doesn't exist.
 - Formats come from the reference files, not memory; if a file and the user
   disagree, flag it rather than guessing.
 - Level estimates are indicative, never official.

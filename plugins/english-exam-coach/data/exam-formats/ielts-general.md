@@ -16,6 +16,11 @@ since mid-2026; One Skill Retake available).
 
 ## Reading — 60 min · 3 sections · 40 questions
 
+**Passage lengths (for generating original items):** Section 1 two–three
+short texts (~200–400 words total), Section 2 two workplace texts (~350–500
+each), Section 3 one longer general-interest text ~700–800 words;
+~2,150–2,750 words total.
+
 Texts are everyday rather than academic, increasing in difficulty:
 
 | Section | Sources | Focus |

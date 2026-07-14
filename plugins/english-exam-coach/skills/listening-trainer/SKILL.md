@@ -29,7 +29,11 @@ wants exam-style questions on it.
 
 2. **Generate an ORIGINAL script** (dialogue or monologue per the part) and
    its questions. Show the questions FIRST — real tests give preview time —
-   and keep the script hidden.
+   and keep the script hidden. **Match the script to the recording's real
+   duration**: a spoken passage runs ~130–160 words per minute, so a ~4-min
+   monologue/interview is ~550–650 words and a short 30–40 s exchange is
+   ~80–110 words. A script that is too short makes the drill easier than the
+   real test.
 
 3. **Deliver the audio, best available mode.** First, set the **number of
    plays from the exam**: IELTS and TOEFL iBT play each recording **once**;
@@ -73,4 +77,14 @@ wants exam-style questions on it.
 - TTS is strictly optional — every drill must work with no audio stack; when
   falling back to read-once mode, state the limitation instead of
   pretending it measures listening.
+- **Never invent a transcript or claim to have heard audio you cannot
+  access:** if a user-supplied audio file cannot be transcribed in this
+  environment, ask for a transcript instead of fabricating one.
+- **Visual-dependent formats can't be delivered here.** IELTS Part 2
+  map/plan/diagram labelling and B1 Preliminary Listening Part 1
+  picture-choice need images the terminal can't render — say so and offer a
+  non-visual part of the same exam instead of faking it.
+- Partial answers: score against what was actually attempted; if the user
+  stopped early, don't count unseen items as wrong (mirror the reading
+  trainer's rule). Never fabricate answers.
 - Scores are indicative practice results, not official marks.

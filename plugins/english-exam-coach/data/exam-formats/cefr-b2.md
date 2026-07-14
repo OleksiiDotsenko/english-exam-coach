@@ -14,6 +14,12 @@ always face-to-face with an examiner.
 
 ## Reading & Use of English — 75 min · 7 parts · 52 questions
 
+**Passage lengths (base text, for generating original items):** P1–P3
+cloze/word-formation ~150–200 words · P5 long text ~500–700 · P6 gapped text
+~500–600 base (6 sentence gaps, **7 options — 1 extra distractor**) · P7
+multiple matching ~600–700. (P4 key word transformations are standalone
+sentence pairs, no passage.)
+
 | Part | Items | Task type |
 |---|---|---|
 | 1 | 8 | Multiple-choice cloze (vocabulary, collocation) |

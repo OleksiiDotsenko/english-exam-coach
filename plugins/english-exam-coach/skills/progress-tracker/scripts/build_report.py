@@ -66,6 +66,11 @@ SKILL_MACRO = {
     "vocabulary-builder": "vocabulary",
 }
 
+# Holistically scored skills log band/CEFR estimates; the band and legacy-0-30
+# scales apply ONLY to these. Objective skills log raw item counts via
+# --score/--max, so a count of 6, 9 or 30 must never be read as a band.
+HOLISTIC_SKILLS = ("writing-evaluator", "speaking-coach")
+
 SKILL_DISPLAY = {
     "writing-evaluator": "Writing",
     "speaking-coach": "Speaking",
@@ -164,41 +169,47 @@ def cefr_value(row):
     exam = str(row.get("exam") or "")
     skill = str(row.get("skill") or "")
     score, max_score = row.get("score"), row.get("max")
+    # Band / legacy-section scales apply only to holistic skills; a raw item
+    # count from an objective drill must never be reinterpreted as a band.
+    holistic = skill in HOLISTIC_SKILLS
 
     if exam.startswith("ielts"):
         band = band_midpoint(row.get("band_estimate"))
-        if band is None and isinstance(score, (int, float)) \
+        if band is None and holistic and isinstance(score, (int, float)) \
                 and max_score in (None, 9) and 0 <= float(score) <= 9:
-            # Only treat a bare score as a band when it is band-shaped; a raw
-            # item count logged without --max must not be read as a band 9.
             band = float(score)
         if band is not None:
             return from_cuts(band, IELTS_BAND_TO_CEFR)
 
     if exam == "toefl-ibt":
         band = band_midpoint(row.get("band_estimate"))
-        if band is None and isinstance(score, (int, float)):
-            # New 1-6 band scale: explicit max of 6, or an unambiguous
-            # band-sized score with no max.
+        if band is None and holistic and isinstance(score, (int, float)):
+            # New 1-6 band scale: explicit max of 6, or a band-sized bare score.
             if max_score == 6 or (max_score is None and 0 < float(score) <= 6):
                 band = float(score)
         if band is not None:
             return from_cuts(band, TOEFL_BAND_TO_CEFR)
         macro = SKILL_MACRO.get(skill)
-        if macro in TOEFL_LEGACY_CUTS and isinstance(score, (int, float)) \
-                and max_score in (None, 30):
+        if holistic and macro in TOEFL_LEGACY_CUTS \
+                and isinstance(score, (int, float)) and max_score in (None, 30):
             return from_cuts(float(score), TOEFL_LEGACY_CUTS[macro])
 
     anchor = CEFR_NUM.get(str(row.get("level") or "").strip().upper())
     if anchor and isinstance(score, (int, float)) \
             and isinstance(max_score, (int, float)) and max_score > 0:
         pct = float(score) / float(max_score)
+        floor = CEFR_NUM["A1"]
+        # Finer than three buckets so a total failure is distinguishable from a
+        # near-miss, and aspirational above-level practice is not over-credited.
         if pct >= 0.8:
             return anchor
-        # Never drop below A1; a low score at a low anchor stays on-scale.
         if pct >= 0.6:
-            return max(CEFR_NUM["A1"], anchor - 0.5)
-        return max(CEFR_NUM["A1"], anchor - 1.0)
+            return max(floor, anchor - 0.5)
+        if pct >= 0.4:
+            return max(floor, anchor - 1.0)
+        if pct >= 0.2:
+            return max(floor, anchor - 1.5)
+        return max(floor, anchor - 2.0)
     return None
 
 
@@ -225,12 +236,19 @@ def quality(row):
     """
     anchor = CEFR_NUM.get(str(row.get("level") or "").strip().upper())
     achieved = cefr_value(row)
-    if anchor is not None and achieved is not None:
-        return max(0.0, min(1.0, 1.0 + (achieved - anchor) / 2.0))
-    # No anchor/CEFR available: fall back to a raw objective percentage.
     score, max_score = row.get("score"), row.get("max")
-    if isinstance(score, (int, float)) and isinstance(max_score, (int, float)) \
-            and max_score > 0:
+    is_objective = isinstance(score, (int, float)) \
+        and isinstance(max_score, (int, float)) and max_score > 0
+    if anchor is not None and achieved is not None:
+        att = max(0.0, min(1.0, 1.0 + (achieved - anchor) / 2.0))
+        if is_objective:
+            # At the A1 floor the CEFR value can't fall further, so also cap by
+            # the raw percentage (80% = at level) — a near-total failure must
+            # not read as "at level" just because A1 is the bottom of the scale.
+            att = max(0.0, min(att, float(score) / float(max_score) / 0.8))
+        return att
+    # No anchor/CEFR available: fall back to a raw objective percentage.
+    if is_objective:
         return max(0.0, min(1.0, float(score) / float(max_score)))
     return None
 

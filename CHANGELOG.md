@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.1.5 — 2026-07-13
+
+Fixes from a second, generation-based audit (22 adversarially verified
+findings) that *exercises* the plugin rather than only reading it.
+
+**Scoring correctness:**
+- **Critical:** raw item counts of 6, 9, or 30 were misread as TOEFL/IELTS
+  proficiency *bands*, inflating a realistic drill by 1–3 CEFR levels. Band
+  scales now apply only to the holistic skills (writing/speaking); objective
+  drills are always percentage-scored.
+- Sub-60% scores get finer resolution, so a total failure is distinguishable
+  from a near-miss and aspirational above-level practice isn't over-credited.
+- At the A1 floor a near-total failure no longer reads as "at target level".
+
+**Task sizing (generated content now matches authentic length):**
+- Added authentic passage/script word-count targets — and gapped-text
+  distractor-option counts — to every Cambridge/IELTS reading section and a
+  length directive to the reading and listening skills. A C2 Part 6 gapped
+  text was generating ~450w (−71%); it now targets ~700–800w.
+
+**Coverage & format authenticity:**
+- New slugs for reading-comprehension multiple choice, C1 cross-text
+  matching, and IELTS reading question types; the reading skill now advertises
+  them. T/F/Not Given vs Yes/No/Not Given distinction stated, with a new
+  worked seed. IELTS Task 1 process/map anatomy added. Visual-dependent
+  listening tasks are now honestly scoped as undeliverable in a terminal.
+
+**Robustness & difficulty:**
+- Guards for off-format task requests, partial answer sets, un-transcribable
+  audio, non-English submissions, and sub-B1 estimates.
+- New `data/cefr/reading-calibration-anchors.md` so generated passages sit at
+  the claimed CEFR level.
+
+**Tests:** 54 → 58.
+
 ## 0.1.4 — 2026-07-13
 
 Fixes from an exhaustive multi-agent quality audit (48 adversarially
