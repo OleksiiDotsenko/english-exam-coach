@@ -35,8 +35,10 @@ aspects: range, accuracy, fluency, interaction, coherence.
 
 ## C1
 
-- **Range:** broad command of language allowing precise formulation, emphasis
-  and elimination of ambiguity across complex topics.
+- **Range:** good command of a broad range of language, enough to select a
+  suitable formulation and appropriate style across a wide range of topics
+  without having to restrict what they want to say. (Deliberate *emphasis* and
+  *elimination of ambiguity* are C2 features — keep them out of C1.)
 - **Accuracy:** consistently high accuracy; errors are rare, hard to spot and
   usually corrected in passing.
 - **Fluency:** expresses ideas fluently and almost effortlessly; only a

@@ -117,7 +117,9 @@ def read_log(log_path):
             except ValueError:
                 skipped += 1
                 continue
-            if not isinstance(row, dict) or "ts" not in row or "session" not in row:
+            if not isinstance(row, dict) or "ts" not in row or "session" not in row \
+                    or not all(row.get(k) for k in ("exam", "skill", "task_type")):
+                # Missing core fields → cannot render meaningfully; skip, never crash.
                 skipped += 1
                 continue
             attempts.append(row)

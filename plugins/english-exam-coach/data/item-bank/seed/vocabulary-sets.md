@@ -37,6 +37,8 @@ Word List headwords, used nominatively) — never proprietary vocabulary banks.
 
 ## Spaced-repetition usage
 
-Store review state per item in `<base>/vocab-box.json` (Leitner boxes 1–5:
-new → every session → daily → every 3 days → weekly). Quiz items due today;
-a correct recall moves the item up one box, a miss returns it to box 1.
+Store review state per item in `<base>/vocab-box.json` (Leitner boxes 1–5
+with review intervals next session → 1 day → 3 days → 7 days → 30 days
+(mature); this must match `vocabulary-builder/SKILL.md`). New items enter box
+1, due next session. Quiz items due today; a correct recall moves the item up
+one box, a miss returns it to box 1.

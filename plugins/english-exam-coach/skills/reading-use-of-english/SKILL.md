@@ -55,9 +55,10 @@ a reading answer is what it is.
    too short. Use the exam's figure from `data/exam-formats/<exam-id>.md`
    ("Passage lengths"); as a fallback:
    - Gapped text / long-text multiple choice / multiple matching: **B2
-     ~500–600, C1 ~600–780, C2 ~700–800 words** of base text (IELTS reading
-     passages ~700–900 words **each**). A too-short passage is the most
-     common failure — a C2 Part 6 gapped text must be ~750 words, not ~450.
+     ~500–600, C1 ~600–780, C2 ~700–800 words** of base text (IELTS Academic
+     passages ~700–900 words **each**; IELTS General Training sections vary —
+     see `ielts-general.md`). A too-short passage is the most common failure —
+     a C2 Part 6 gapped text must be ~750 words, not ~450.
    - Cloze / word formation: ~150–220 words. TOEFL academic passage ~200;
      TOEFL daily-life texts 15–150.
    - **Gapped text always has ONE more option than gaps** (B2/C1/C2) or three

@@ -32,7 +32,12 @@ answer they spoke (pasted as transcript or provided as an audio file).
 
 2. **Generate the task** with the exam's real prep/speaking times (e.g.
    IELTS Part 2: 1 min prep, 1–2 min talk; TOEFL interview answers: 45 s
-   each with no preparation time).
+   each with no preparation time). **Pitch the prompt's demand to the level**
+   (B1 concrete/personal; B2 opinion on a familiar topic; C1 abstract, asks
+   the speaker to weigh/hypothesise; C2 nuanced) — `speaking-calibration-
+   anchors.md` shows an at-level answer to aim the prompt at. Visual-dependent
+   tasks (IELTS Part 2 comparing two photos) can't be rendered here; say so and
+   offer a non-visual part instead of faking it.
    Tell the user how to respond, in order of preference:
    - **record themselves** (any voice recorder) and paste an accurate
      transcript, noting hesitations/self-corrections honestly;

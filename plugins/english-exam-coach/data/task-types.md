@@ -20,8 +20,8 @@ in the same PR — never invent an ad-hoc variant at log time.
 | `toefl-build-a-sentence` | toefl-ibt | Arrange words into a sentence |
 | `toefl-write-email` | toefl-ibt | Write an email (3 content points) |
 | `toefl-academic-discussion` | toefl-ibt | Contribute to a class discussion |
-| `essay` | cefr-b1…cefr-c2 | Compulsory essay (Part 1) |
-| `article` | cefr-b1…cefr-c2 | Article |
+| `essay` | cefr-b2…cefr-c2 | Compulsory essay (Part 1; B1 has no essay — its Part 1 is an email) |
+| `article` | cefr-b1, cefr-b2, cefr-c2 | Article (C1 Advanced has no article task) |
 | `email-letter` | cefr-b1…cefr-c2 | Email or letter |
 | `report` | cefr-b2…cefr-c2 | Report |
 | `review` | cefr-b2…cefr-c2 | Review |
@@ -55,7 +55,7 @@ in the same PR — never invent an ad-hoc variant at log time.
 | `toefl-complete-the-words` | toefl-ibt | C-test cloze |
 | `toefl-read-daily-life` | toefl-ibt | Practical short texts, MCQ |
 | `toefl-read-academic` | toefl-ibt | Short academic passage, MCQ |
-| `reading-multiple-choice` | cefr-b1…cefr-c2, ielts | Long-text reading comprehension, multiple choice |
+| `reading-multiple-choice` | cefr-b1…cefr-c2, ielts-academic, ielts-general | Long-text reading comprehension, multiple choice |
 | `multiple-choice-cloze` | cefr-b1…cefr-c2 | Multiple-choice cloze (gap-fill) |
 | `open-cloze` | cefr-b1…cefr-c2 | Open cloze |
 | `word-formation` | cefr-b2…cefr-c2 | Word formation |

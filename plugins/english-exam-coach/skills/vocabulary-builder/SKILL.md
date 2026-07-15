@@ -27,9 +27,14 @@ kept.
 1. **New set:** identify level (B1–C2) and theme (topic, exam register,
    e.g. "hedging for C1 writing"). Follow the structure in
    `data/item-bank/seed/vocabulary-sets.md`: 5–8 items per set, each with
-   collocations and one original example sentence. Prefer high-utility exam
-   vocabulary (linking, hedging, precision verbs, topic lexis); open lists
-   like the Academic Word List may be referenced nominatively.
+   collocations and one original example sentence. **Level the words, not just
+   the theme:** pick items whose frequency/register fits the level — B1
+   high-frequency everyday; B2 common academic (roughly the AWL mid-bands);
+   C1 lower-frequency and abstract; C2 idiomatic/precise nuance — and write the
+   example sentence at that level too, so the set carries level-appropriate
+   language beyond the headword. Note that hedging and precision-verb sets sit
+   at C1/C2, not B1–B2. Open lists like the Academic Word List may be
+   referenced nominatively.
 
 2. **Persist for review:** append new items to `<base>/vocab-box.json`
    (create if missing). The file is a JSON array; each element is

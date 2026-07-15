@@ -28,8 +28,12 @@ wants exam-style questions on it.
    shapes: `data/item-bank/seed/listening-scripts.md`.
 
 2. **Generate an ORIGINAL script** (dialogue or monologue per the part) and
-   its questions. Show the questions FIRST — real tests give preview time —
-   and keep the script hidden. **Match the script to the recording's real
+   its questions. **Preview timing is exam-conditional:** IELTS and the CEFR
+   B1–C2 (Cambridge) exams give time to read the questions before the audio,
+   so show the questions first; **TOEFL iBT does not** — the questions come
+   after the recording (listen/take notes → then answer), so for TOEFL keep
+   the questions hidden until playback ends. Keep the script hidden until the
+   drill is scored. **Match the script to the recording's real
    duration**: a spoken passage runs ~130–160 words per minute, so a ~4-min
    monologue/interview is ~550–650 words and a short 30–40 s exchange is
    ~80–110 words. A script that is too short makes the drill easier than the

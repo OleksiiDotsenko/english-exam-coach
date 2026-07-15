@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.1.6 — 2026-07-14
+
+Fixes from Audit 3 — a comprehensive, per-file + full-matrix pass (one
+reviewer per file and per exam×task, adversarially verified). The sizing
+work from 0.1.5 held up: 116 of 121 generation probes now pass.
+
+**Correctness:**
+- `log_attempt.py` now accepts UTC timestamps ending in `Z` on Python < 3.11
+  (the macOS system default), and guards against concatenating a record onto
+  a previous partial line.
+- `build_report.py` skips log rows missing core fields instead of rendering
+  `| None |`.
+- Writing-evaluator `--level` is now unambiguously the task's target level
+  (performance goes only in `--cefr-estimate`), so the report's attainment
+  and weakest-task signal is no longer overwritten.
+
+**Content accuracy:**
+- Fixed a broken C-test seed stem (`flo___` → `flow___` for "flowers"),
+  reconciled the vocabulary Leitner schedule between skill and seed, corrected
+  the C1 speaking Range descriptor (was defined with C2-only features), made
+  IELTS General reading section lengths sum to the stated total, and fixed
+  task-type slug scoping (no B1 essay, no C1 article).
+- Listening question-preview timing is now exam-conditional (TOEFL hides
+  questions until after the audio); mock-exam splits elapsed time across task
+  types; assess-level reports a single blended estimate.
+
+**Generation leveling:** the writing, speaking, and vocabulary generate steps
+now pitch *prompt/item* difficulty to the target level (not just format),
+referencing the calibration anchors — closing a cluster of mis-leveling gaps.
+
+**Tests:** 58 → 61.
+
 ## 0.1.5 — 2026-07-13
 
 Fixes from a second, generation-based audit (22 adversarially verified

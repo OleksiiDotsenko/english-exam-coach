@@ -71,7 +71,7 @@ opinion-bearing passage and the Yes/No labels.*
 
 > Community gardens have become popular in many cities. People without a
 > garden of the\_\_ own can rent a sma\_\_ plot and gr\_\_ vegetables or
-> flo\_\_\_. Most gardeners agr\_\_ that the bigg\_\_\_ benefit is no\_ the
+> flow\_\_\_. Most gardeners agr\_\_ that the bigg\_\_\_ benefit is no\_ the
 > harvest its\_\_\_ but the peo\_\_\_ they meet.
 
 **Key:** their · small · grow · flowers · agree · biggest · not · itself ·

@@ -59,6 +59,15 @@ class ReportEdgeCaseTests(unittest.TestCase):
         self.assertIn("skipped 4 malformed line", result.stderr)
         self.assertIn("1 attempt ", result.stdout)
 
+    def test_rows_missing_core_fields_are_skipped_not_rendered_as_none(self):
+        log_attempt(self.base, score=7, max=10, seconds=300,
+                    ts="2026-07-09T09:00:00", session="s1")
+        # valid JSON, has ts+session, but no exam/skill/task_type
+        self.append_raw('{"ts":"2026-07-09T10:00:00","session":"s1","score":5}')
+        result = self.build("--scope", "all")
+        self.assertIn("skipped 1 malformed line", result.stderr)
+        self.assertNotIn("| None |", result.stdout)
+
     # --- CEFR normalization correctness -----------------------------------
 
     def test_ielts_raw_count_without_max_is_not_read_as_band(self):

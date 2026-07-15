@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/OleksiiDotsenko/english-exam-coach/tests.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
-  <img src="https://img.shields.io/badge/version-0.1.5-F97316?style=flat-square" alt="version 0.1.5">
+  <img src="https://img.shields.io/badge/version-0.1.6-F97316?style=flat-square" alt="version 0.1.6">
   <img src="https://img.shields.io/badge/license-MIT-FB923C?style=flat-square" alt="MIT license">
   <img src="https://img.shields.io/badge/python-stdlib%20only-FDBA74?style=flat-square" alt="python stdlib only">
   <img src="https://img.shields.io/badge/network%20calls-zero-EA580C?style=flat-square" alt="zero network calls">

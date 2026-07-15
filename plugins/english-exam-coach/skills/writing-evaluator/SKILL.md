@@ -39,8 +39,13 @@ writing task in a named exam format, OR asked how to improve exam writing.
 2. **If GENERATING a prompt:** produce an ORIGINAL prompt matching the
    format's structure, word count and timing (seed examples:
    `data/item-bank/seed/writing-prompts.md` — imitate shape, never reuse
-   content). State the time limit and word target. Offer to time the attempt:
-   note the start time, and compute elapsed seconds when the answer arrives.
+   content). **Pitch the prompt's cognitive/topic demand to the level**, not
+   just its length: B1 concrete/personal; B2 a familiar issue to take a stance
+   on; C1 abstract, requiring evaluation/weighing; C2 nuanced or
+   counter-intuitive. (`calibration-anchors.md` shows what an at-level *answer*
+   looks like — aim the prompt so a level-appropriate answer lands there.)
+   State the time limit and word target. Offer to time the attempt: note the
+   start time, and compute elapsed seconds when the answer arrives.
 
 3. **If EVALUATING:** assess against that exam's criteria structure (e.g.
    Task Achievement/Response, Coherence & Cohesion, Lexical Resource,
@@ -67,9 +72,13 @@ writing task in a named exam format, OR asked how to improve exam writing.
    ```bash
    python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/log_attempt.py" \
      --exam <exam-id> --skill writing-evaluator --task-type <slug> \
-     --level <anchor> --band-estimate "<low>-<high>" --cefr-estimate <cefr> \
+     --level <target-level> --band-estimate "<low>-<high>" --cefr-estimate <cefr> \
      --seconds <time-on-task>
    ```
+   **`--level` is the task's TARGET level from step 1** (e.g. C1 for a cefr-c1
+   essay; the exam's anchor for IELTS/TOEFL) — NOT the level the writing landed
+   at. The calibrated performance goes ONLY in `--cefr-estimate`. Confusing the
+   two collapses the report's attainment and weakest-task signal.
    Use the exact `--task-type` slug from `data/task-types.md`.
    Use `--score`/`--max` instead of `--band-estimate` only when the exam
    truly uses a numeric scale for the task (e.g. TOEFL: `--score 4.5

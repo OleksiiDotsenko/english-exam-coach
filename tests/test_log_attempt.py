@@ -168,6 +168,25 @@ class LogAttemptTests(unittest.TestCase):
         self.assertIn("résumé-übung", line)  # ensure_ascii=False keeps UTF-8
         self.assertEqual(parsed_log(self.base)[0]["session"], "séance-1")
 
+    def test_utc_z_suffix_timestamp_is_accepted(self):
+        # datetime.fromisoformat only learned 'Z' in 3.11; must work on older.
+        result = log_attempt(self.base, score=7, max=10,
+                             ts="2026-07-10T10:00:00Z")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("2026-07-10T10:00:00+00:00", parsed_log(self.base)[0]["ts"])
+
+    def test_append_after_a_partial_last_line_stays_valid(self):
+        path = self.base / "attempts.jsonl"
+        self.base.mkdir(parents=True, exist_ok=True)
+        path.write_text('{"ts":"2026-07-09T09:00:00","exam":"cefr-c1",'
+                        '"skill":"reading-use-of-english","task_type":"open-cloze",'
+                        '"level":"C1","score":7,"max":10,"seconds":300,'
+                        '"session":"s1"}', encoding="utf-8")  # NO trailing newline
+        result = log_attempt(self.base, score=6, max=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        rows = parsed_log(self.base)  # must parse as two distinct records
+        self.assertEqual(len(rows), 2)
+
     def test_ts_without_session_derives_session_from_ts_not_now(self):
         # A back-dated attempt must land in the session of its own timestamp.
         result = log_attempt(self.base, score=7, max=10, session=None,

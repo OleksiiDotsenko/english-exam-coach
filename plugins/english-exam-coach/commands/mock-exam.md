@@ -18,9 +18,12 @@ Run a timed mock exam section: $ARGUMENTS
    no answer key until the section is finished.
 4. When the user submits (or declares time up), score the whole section,
    give per-part feedback and explanations, and log ONE attempt per task
-   type via the `progress-tracker` skill with the real elapsed time and
-   `--session mock-<exam-id>-<date>` (use the canonical `--task-type` slugs
-   from `data/task-types.md`).
+   type via the `progress-tracker` skill under `--session
+   mock-<exam-id>-<date>` (use the canonical `--task-type` slugs from
+   `data/task-types.md`). A section runs under ONE clock, so **split the real
+   elapsed time across the task types** (e.g. proportional to item count) — do
+   not log the full section time on every row, or the report's "min on task"
+   will be inflated N-fold.
    - **If the user quits mid-section:** offer to score only the fully
      completed parts and log those task types with the real elapsed time
      and the same session id. Never fabricate answers for unattempted items.

@@ -39,6 +39,15 @@ def default_session(now):
     return "{:%Y-%m-%d}-{}".format(now, "am" if now.hour < 12 else "pm")
 
 
+def normalize_ts(ts):
+    """Accept a trailing 'Z' UTC suffix on Python < 3.11 too (fromisoformat
+    only learned to parse 'Z' in 3.11; the macOS system python is often older).
+    Returns an ISO string fromisoformat can parse on any supported version."""
+    if ts and ts.endswith("Z"):
+        return ts[:-1] + "+00:00"
+    return ts
+
+
 def build_parser():
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -125,7 +134,7 @@ def validate(args):
 
     if args.ts is not None:
         try:
-            datetime.fromisoformat(args.ts)
+            datetime.fromisoformat(normalize_ts(args.ts))
         except ValueError:
             errors.append("--ts must be an ISO 8601 timestamp (got %r)" % args.ts)
 
@@ -141,7 +150,7 @@ def as_number(value):
 
 def build_record(args, now):
     record = {
-        "ts": args.ts or now.isoformat(timespec="seconds"),
+        "ts": normalize_ts(args.ts) or now.isoformat(timespec="seconds"),
         "exam": args.exam.strip(),
         "skill": args.skill.strip(),
         "task_type": args.task_type.strip(),
@@ -161,7 +170,7 @@ def build_record(args, now):
     else:
         # Derive the session from the attempt's own timestamp (not wall-clock
         # now) so a back-dated --ts and its session id never disagree.
-        stamp = datetime.fromisoformat(args.ts) if args.ts else now
+        stamp = datetime.fromisoformat(normalize_ts(args.ts)) if args.ts else now
         record["session"] = default_session(stamp)
     return record
 
@@ -186,9 +195,17 @@ def main(argv=None):
 
     try:
         base.mkdir(parents=True, exist_ok=True)
+        # If a prior write left the file without a trailing newline, our append
+        # would concatenate onto that partial line and corrupt both records.
+        prefix = ""
+        if log_path.exists() and log_path.stat().st_size > 0:
+            with open(log_path, "rb") as fh:
+                fh.seek(-1, 2)
+                if fh.read(1) != b"\n":
+                    prefix = "\n"
         # Append mode only — the log must never be truncated or rewritten.
         with open(log_path, "a", encoding="utf-8") as log:
-            log.write(line + "\n")
+            log.write(prefix + line + "\n")
     except OSError as exc:
         print("error: could not write %s: %s" % (log_path, exc), file=sys.stderr)
         return 1

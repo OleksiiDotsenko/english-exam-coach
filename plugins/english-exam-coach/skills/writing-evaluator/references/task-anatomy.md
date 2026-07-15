@@ -15,7 +15,7 @@ about formats only; no official content.
 | B1 email | ~100 | ~20 min | Friendly | Answers all 4 notes; opening/closing formulas |
 | B1 article/story | ~100 | ~25 min | Informal-neutral | Title (article) / given first line respected (story) |
 | B2 essay | 140–190 | ~40 min | Formal-neutral | Both given points + own point; conclusion |
-| B2/C1 article | in range | — | Engaging | Title, hook, direct address to reader |
+| B1/B2/C2 article | in range | — | Engaging | Title, hook, direct address to reader (C1 has no article task) |
 | B2/C1 report / C1 proposal | in range | — | Formal, impersonal | Section headings; recommendation(s) at the end; proposal argues for future action |
 | B2/C1 review | in range | — | Semi-formal | What is reviewed + evaluation + recommendation |
 | C1 essay | 220–260 | ~45 min | Formal | Summarise + EVALUATE 2 of 3 input points; own stance |
