@@ -34,7 +34,7 @@ standalone sentence pairs.)
 | Part | Words | Task |
 |---|---|---|
 | 1 | 240–280 | Essay: summarise and evaluate the key points of two ~100-word input texts (compulsory) |
-| 2 | 280–320 | Choice: article, letter, report or review (a set-text option may appear) |
+| 2 | 280–320 | Choice: article, letter, report or review |
 
 Assessed on content, communicative achievement, organisation and language
 (criterion names are public).

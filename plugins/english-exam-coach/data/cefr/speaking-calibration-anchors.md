@@ -69,9 +69,15 @@ without visible strain — the language serves the idea completely.
 
 1. Match the learner's transcript to the nearest anchor **per aspect** — a
    speaker can be C1 for range but B2 for fluency; say so explicitly.
-2. Judge fluency only from a transcript that preserves fillers and
+2. These monologue anchors do **not** calibrate the **interaction** aspect:
+   every anchor answers a single-speaker prompt, so none shows turn-taking,
+   holding the floor, or responding to a partner. For interactive tasks
+   (IELTS Part 1/3, Cambridge collaborative discussion) judge interaction
+   directly from the interaction descriptors in `speaking-descriptors.md`,
+   and against a paired sample when one is available.
+3. Judge fluency only from a transcript that preserves fillers and
    self-corrections; if it does not, say fluency is assessed provisionally.
-3. Derive the CEFR estimate from anchor proximity, then convert to the
+4. Derive the CEFR estimate from anchor proximity, then convert to the
    exam's scale; report a range, not a point.
-4. Never present the anchor transcripts to the learner as model answers to
+5. Never present the anchor transcripts to the learner as model answers to
    imitate — they calibrate the coach, not the learner.

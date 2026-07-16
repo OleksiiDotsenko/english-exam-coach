@@ -6,6 +6,7 @@ Build the all-time progress overview.
 
 Run:
 `python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/build_report.py" --scope all`
+(If `python3` is not found — common on Windows — run the same command with `python` or `py`.)
 
 Show the report body (CEFR trend per skill, exams practised, best/worst task
 types, streak, recommendation) and mention where it was written

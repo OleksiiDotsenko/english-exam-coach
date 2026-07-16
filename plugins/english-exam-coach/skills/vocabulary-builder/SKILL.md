@@ -65,6 +65,12 @@ kept.
      --skill vocabulary-builder --task-type spaced-review \
      --level <level> --score <n> --max <asked> --seconds <time>
    ```
+   (On Windows without `python3`, use `python` or `py` instead.)
+   A due-based round often mixes levels, but the log takes one `--level` and
+   one `--exam`: set `--level` to the modal (most common) level of the items
+   quizzed and `--exam` to the user's target exam (or the `cefr-<level>` file
+   matching that modal level) — for a mixed round the review level is only a
+   rough anchor.
    For a new-set study session without a quiz, do not log — only tested
    recall counts as an attempt.
 

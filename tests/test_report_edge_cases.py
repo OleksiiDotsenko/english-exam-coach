@@ -266,6 +266,85 @@ class ReportEdgeCaseTests(unittest.TestCase):
         result = self.build("--scope", "all")
         self.assertIn("Log a few scored attempts", result.stdout)
 
+    # --- audit-fix regressions: objective task types under holistic skills --
+
+    def test_build_a_sentence_is_objective_even_under_a_holistic_skill(self):
+        # A 5/6 build-a-sentence at a B1 anchor is an item count: 83% at
+        # level -> ~B1. It must NOT be read as TOEFL band 5 -> C1 just
+        # because writing-evaluator is a holistic skill.
+        log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "writing-evaluator",
+                                  "task-type": "toefl-build-a-sentence", "level": "B1",
+                                  "score": 5, "max": 6, "seconds": 300,
+                                  "ts": "2026-07-08T09:00:00", "session": "s1"})
+        result = self.build("--scope", "session", "--session", "s1")
+        self.assertIn("~B1 (writing)", result.stdout)
+        self.assertNotIn("C1", result.stdout)
+
+    # --- audit-fix regressions: skill trend ordering and rounding ----------
+
+    def test_identical_rounded_trend_labels_read_steady(self):
+        # First-half mean 4.83, second-half mean 5.0: both display as C1, so
+        # the arrow must come from the same rounded values and read 'steady'.
+        # 'C1 -> C1 (improving)' would be a self-contradictory line.
+        scores = (8, 8, 7, 8, 8, 8)  # at C1: 5.0 5.0 4.5 | 5.0 5.0 5.0
+        for hour, score in enumerate(scores):
+            log_attempt(self.base, **{"exam": "cefr-c1",
+                                      "skill": "reading-use-of-english",
+                                      "task-type": "open-cloze", "level": "C1",
+                                      "score": score, "max": 10, "seconds": 300,
+                                      "ts": "2026-07-08T%02d:00:00" % (9 + hour),
+                                      "session": "s1"})
+        result = self.build("--scope", "all")
+        self.assertIn("C1 → C1 (steady", result.stdout)
+        self.assertNotIn("improving", result.stdout)
+        self.assertNotIn("slipping", result.stdout)
+
+    def test_rows_appended_out_of_order_trend_uses_chronology(self):
+        # The later attempt (9/10 -> B2) is appended FIRST, the back-dated
+        # earlier one (4/10 -> B1) second. Chronologically the skill improved;
+        # append order must not flip the direction to 'slipping'.
+        log_attempt(self.base, **{"exam": "cefr-b2", "skill": "writing-evaluator",
+                                  "task-type": "essay", "level": "B2",
+                                  "score": 9, "max": 10, "seconds": 300,
+                                  "ts": "2026-07-08T09:00:00", "session": "s2"})
+        log_attempt(self.base, **{"exam": "cefr-b2", "skill": "writing-evaluator",
+                                  "task-type": "essay", "level": "B2",
+                                  "score": 4, "max": 10, "seconds": 300,
+                                  "ts": "2026-07-06T09:00:00", "session": "s1"})
+        result = self.build("--scope", "all")
+        self.assertIn("B1 → B2 (improving", result.stdout)
+        self.assertNotIn("slipping", result.stdout)
+
+    # --- audit-fix regressions: overview extremes and diagnostics ----------
+
+    def test_single_task_type_is_not_both_strongest_and_weakest(self):
+        log_attempt(self.base, score=7, max=10, seconds=300,
+                    ts="2026-07-08T09:00:00", session="s1")
+        result = self.build("--scope", "all")
+        self.assertNotIn("**Strongest:**", result.stdout)
+        self.assertNotIn("**Weakest:**", result.stdout)
+        self.assertIn("- **Key word transformation:**", result.stdout)
+
+    def test_level_diagnostic_rows_are_never_ranked_or_recommended(self):
+        # Two weak diagnostic probes plus one mid normal task: the diagnostic
+        # would rank weakest if included, but it is a level-establishing probe,
+        # not a drillable task, so only the normal task may be ranked.
+        for hour in (9, 10):
+            log_attempt(self.base, **{"exam": "toefl-ibt", "skill": "exam-router",
+                                      "task-type": "level-diagnostic", "level": "B2",
+                                      "score": 2, "max": 10, "seconds": 300,
+                                      "ts": "2026-07-08T%02d:00:00" % hour,
+                                      "session": "s1"})
+        log_attempt(self.base, **{"exam": "cefr-c1",
+                                  "skill": "reading-use-of-english",
+                                  "task-type": "open-cloze", "level": "C1",
+                                  "score": 6, "max": 10, "seconds": 300,
+                                  "ts": "2026-07-08T11:00:00", "session": "s1"})
+        result = self.build("--scope", "all")
+        self.assertIn("Open cloze at C1 is your weakest area", result.stdout)
+        self.assertIn("- **Open cloze:**", result.stdout)
+        self.assertNotIn("Level diagnostic", result.stdout)
+
     def test_skill_trend_reports_improving_direction(self):
         # Two writing attempts at a B2 target: below-level then at-level.
         log_attempt(self.base, **{"exam": "cefr-b2", "skill": "writing-evaluator",

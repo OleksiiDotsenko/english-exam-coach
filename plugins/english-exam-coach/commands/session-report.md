@@ -9,6 +9,8 @@ Run:
 `python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/build_report.py" --scope session`
 (append `--session $ARGUMENTS` if a session id was given; otherwise it uses
 the most recent session in the log).
+If `python3` is not found (common on Windows), run the same command with
+`python` or `py` instead.
 
 Show the report body to the user and mention where it was written
 (`<base>/reports/session-<id>.md`). If the script reports no attempts yet,

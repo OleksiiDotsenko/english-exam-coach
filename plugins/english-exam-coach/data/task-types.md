@@ -68,12 +68,18 @@ in the same PR — never invent an ad-hoc variant at log time.
 
 | Slug | Exams | Task |
 |---|---|---|
-| `ielts-listening-part1`…`part4` | ielts-academic, ielts-general | Parts 1–4 |
+| `ielts-listening-part1` | ielts-academic, ielts-general | Part 1 — everyday conversation |
+| `ielts-listening-part2` | ielts-academic, ielts-general | Part 2 — everyday monologue |
+| `ielts-listening-part3` | ielts-academic, ielts-general | Part 3 — study-context discussion |
+| `ielts-listening-part4` | ielts-academic, ielts-general | Part 4 — academic monologue |
 | `toefl-listen-choose-response` | toefl-ibt | Pick the natural reply |
 | `toefl-listen-conversation` | toefl-ibt | Campus conversation |
 | `toefl-listen-announcement` | toefl-ibt | Announcement |
 | `toefl-listen-academic-talk` | toefl-ibt | Academic talk |
-| `listening-part1`…`part4` | cefr-b1…cefr-c2 | Parts 1–4 |
+| `listening-part1` | cefr-b1…cefr-c2 | Part 1 |
+| `listening-part2` | cefr-b1…cefr-c2 | Part 2 |
+| `listening-part3` | cefr-b1…cefr-c2 | Part 3 |
+| `listening-part4` | cefr-b1…cefr-c2 | Part 4 |
 
 ## Vocabulary & diagnostics
 

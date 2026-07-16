@@ -13,7 +13,8 @@ description: >
 
 Turns a target exam + date into a week-by-week plan, then keeps it honest
 against the progress log. Paths are relative to `${CLAUDE_PLUGIN_ROOT}` (if
-unset, resolve relative to this file). The plan lives in the user's progress
+unset, resolve relative to the plugin root — the `english-exam-coach`
+directory two levels above this file). The plan lives in the user's progress
 directory (`$EXAM_COACH_HOME` or `~/english-exam-coach/plan.md`), NOT in the
 plugin.
 
@@ -32,6 +33,10 @@ a study schedule, or asks "am I on track?".
    sections to cover.
 
 2. **Build the plan** working back from the exam date:
+   - **First check the window is real:** if the exam date is in the past,
+     today, or leaves under ~1 week, say so plainly and offer a compressed
+     triage plan (a timed mock section plus review of the weakest skills, no
+     new material) instead of a normal week-by-week schedule.
    - Every section of the exam appears every week; the weakest two skills
      (from log evidence) get double weight.
    - Each week = concrete, loggable drills ("2× key-word-transformation set",
@@ -48,11 +53,12 @@ a study schedule, or asks "am I on track?".
    summarize what changed.
 
 4. **"Am I on track?"** — compare the current week's planned drills against
-   the log (`build_report.py --scope all` or read the log): what was done,
-   what was skipped, whether CEFR trend per skill is moving toward the
-   target. Adjust the coming weeks rather than piling missed work forward;
-   say plainly if the target looks out of reach at the current pace and
-   what pace would suffice.
+   the log (run `python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/build_report.py" --scope all`,
+   or read the log): what was done, what was skipped, whether CEFR trend per
+   skill is moving toward the target. Adjust the coming weeks rather than
+   piling missed work forward; say plainly if the target looks out of reach
+   at the current pace and what pace would suffice. (On Windows, if `python3`
+   isn't found, use `python` or `py`.)
 
 ## Boundaries
 

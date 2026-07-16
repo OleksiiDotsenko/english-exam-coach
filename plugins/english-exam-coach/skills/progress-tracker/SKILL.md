@@ -18,11 +18,15 @@ Markdown reports in `reports/` are derived and regenerable. Scripts live at
 unset, resolve relative to this SKILL.md).
 
 The base directory is resolved by the scripts themselves:
-`--base` flag → `$EXAM_COACH_HOME` → `~/english-exam-coach/`. On the very
-first log of a session, if no base exists yet, ask once whether the user
+`--base` flag → `$EXAM_COACH_HOME` → `~/english-exam-coach/`. Because
+attempts are usually logged inline by another skill — which silently creates
+`~/english-exam-coach/` on first write — the default-vs-custom choice must be
+surfaced at the first real entry point (`/start-prep`, or exam-router before
+its diagnostic) **before any attempt is logged**: ask once whether the user
 wants the default (`~/english-exam-coach/`) or a custom path such as an
-Obsidian vault folder (then suggest exporting `EXAM_COACH_HOME` in their
-shell profile to persist the choice).
+Obsidian vault folder, then suggest exporting `EXAM_COACH_HOME` in their
+shell profile to persist the choice. If this skill is nonetheless the first
+to log and no base exists yet, ask that same question before the first write.
 
 ## When to use
 
@@ -73,8 +77,9 @@ yourself; the script's aggregation is authoritative.
 
 ## What the reports contain
 
-- **Session:** tasks, time on task, per-skill results table, estimated CEFR
-  level this session, weakest task type, one prioritized next step.
+- **Session:** tasks, time on task, a per-attempt results table (one row per
+  logged attempt), estimated CEFR level this session, weakest task type, one
+  prioritized next step.
 - **Overview (all):** CEFR trend per skill, attempts per exam, best/worst
   task types, days practised and current streak, one recommendation.
 - Cross-exam comparison uses CEFR normalization only (explicit

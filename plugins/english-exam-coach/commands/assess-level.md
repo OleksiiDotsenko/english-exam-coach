@@ -13,7 +13,7 @@ calibration anchors in `${CLAUDE_PLUGIN_ROOT}/data/cefr/`.
 Report a SINGLE blended CEFR range (e.g. "B2, approaching C1"), consistent
 with the exam-router diagnostic's method (the writing sample is the primary
 evidence, the items refine it), say clearly that it is an indicative
-self-practice estimate and that listening and speaking were not measured, log
-the diagnostic via the `progress-tracker` skill, and — if the user named a
-target exam — state the gap to that exam's typical pass level and suggest the
-first drill.
+self-practice estimate and that listening and speaking were not measured, and
+— if the user named a target exam — state the gap to that exam's typical pass
+level and suggest the first drill. The diagnostic is logged exactly once by
+exam-router step 4; do not log it again here.

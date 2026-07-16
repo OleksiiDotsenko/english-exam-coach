@@ -52,7 +52,7 @@ Recordings are heard twice.
 
 | Part | Time | Format |
 |---|---|---|
-| 1 | 2–3 min | Interview: personal questions |
-| 2 | 2–3 min | Extended turn: describe a colour photograph (~1 min each) |
-| 3 | 2–3 min | Collaborative discussion based on a picture scenario |
-| 4 | 3 min | General discussion linked to Part 3 topic |
+| 1 | ~2 min | Interview: personal questions |
+| 2 | ~3 min | Extended turn: describe a colour photograph (~1 min each) |
+| 3 | ~4 min | Collaborative discussion based on a picture scenario |
+| 4 | ~3 min | General discussion linked to Part 3 topic |

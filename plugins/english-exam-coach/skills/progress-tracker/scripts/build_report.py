@@ -14,9 +14,12 @@ CEFR normalization is intentionally coarse and clearly indicative:
   2. IELTS band midpoints map via the public IELTS/CEFR alignment;
   3. TOEFL iBT bands (1-6 scale, tests from Jan 2026) map via the official
      ETS CEFR alignment; legacy 0-30 section scores (pre-2026 logs and the
-     TOEFL iBT Australia carve-out) map via the published legacy cut scores;
+     TOEFL iBT Australia carve-out) map via the published legacy cut scores,
+     which apply only to the holistic writing/speaking sections;
   4. otherwise an objective score/max at a task's anchor level maps by
-     percentage: >=80%% at level, 60-79%% borderline, <60%% below level.
+     percentage in half-level steps: >=80% at level, 60-79% ~half a level
+     below, 40-59% ~one level below, 20-39% ~1.5 levels below, <20% ~2 levels
+     below (never below A1).
 Raw values are never merged across exams; only CEFR is compared.
 
 Base directory resolution (first match wins):
@@ -50,10 +53,11 @@ TOEFL_BAND_TO_CEFR = ((6.0, "C2"), (5.0, "C1"), (4.0, "B2"),
                       (3.0, "B1"), (2.0, "A2"), (0.0, "A1"))
 
 # Published ETS section score -> CEFR minimums for the legacy 0-30 scale
-# (logs from before Jan 2026 and the TOEFL iBT Australia carve-out).
+# (logs from before Jan 2026 and the TOEFL iBT Australia carve-out). The legacy
+# branch below is gated on `holistic`, so only the writing/speaking sections
+# ever reach these cuts; objective reading/listening drills are graded by
+# percentage and never by a 0-30 section cut, so those rows are omitted.
 TOEFL_LEGACY_CUTS = {
-    "reading":   ((29, "C2"), (24, "C1"), (18, "B2"), (4, "B1")),
-    "listening": ((28, "C2"), (22, "C1"), (17, "B2"), (9, "B1")),
     "speaking":  ((28, "C2"), (25, "C1"), (20, "B2"), (16, "B1")),
     "writing":   ((29, "C2"), (24, "C1"), (17, "B2"), (13, "B1")),
 }
@@ -70,6 +74,13 @@ SKILL_MACRO = {
 # scales apply ONLY to these. Objective skills log raw item counts via
 # --score/--max, so a count of 6, 9 or 30 must never be read as a band.
 HOLISTIC_SKILLS = ("writing-evaluator", "speaking-coach")
+
+# Objective (item-count) task types that happen to be owned by a holistic
+# skill: TOEFL build-a-sentence (writing-evaluator, --max 10) and listen-and-
+# repeat (speaking-coach, --max 7) are graded on items right, not a 1-6 band.
+# Band interpretation must therefore key on task type, not just skill, so a
+# stray bare --score (or --max 6) on these can never be misread as a band.
+OBJECTIVE_TASK_TYPES = {"toefl-build-a-sentence", "toefl-listen-and-repeat"}
 
 SKILL_DISPLAY = {
     "writing-evaluator": "Writing",
@@ -170,10 +181,14 @@ def cefr_value(row):
 
     exam = str(row.get("exam") or "")
     skill = str(row.get("skill") or "")
+    task_type = str(row.get("task_type") or "")
     score, max_score = row.get("score"), row.get("max")
     # Band / legacy-section scales apply only to holistic skills; a raw item
     # count from an objective drill must never be reinterpreted as a band.
-    holistic = skill in HOLISTIC_SKILLS
+    # Some objective task types (TOEFL build-a-sentence, listen-and-repeat) are
+    # owned by a holistic skill, so they are excluded here and always graded by
+    # percentage regardless of --max.
+    holistic = skill in HOLISTIC_SKILLS and task_type not in OBJECTIVE_TASK_TYPES
 
     if exam.startswith("ielts"):
         band = band_midpoint(row.get("band_estimate"))
@@ -325,8 +340,13 @@ def rank_task_types(rows):
     """[(task_type, avg_quality, attempts)] sorted weakest first.
 
     Ties break on task_type name so the ranking (and every report and test
-    that depends on it) is deterministic.
+    that depends on it) is deterministic. Level diagnostics (exam-router /
+    level-diagnostic) are level-establishing probes, not drillable tasks, so
+    they are excluded and never surface as a 'weakest task type' to drill.
     """
+    rows = [r for r in rows
+            if str(r.get("task_type")) != "level-diagnostic"
+            and str(r.get("skill")) != "exam-router"]
     ranked = []
     for task_type, task_rows in group_by(rows, "task_type").items():
         avg = mean([quality(r) for r in task_rows])
@@ -470,17 +490,27 @@ def trend_arrow(first, last):
 def skill_trends(rows):
     lines = []
     for skill, skill_rows in sorted(group_by(rows, "skill").items()):
-        values = [cefr_value(r) for r in skill_rows]
+        # Order chronologically so 'first half' / 'last half' mean earlier /
+        # later, regardless of the order rows were appended to the log (--ts
+        # back-dating is a supported input). Undated rows sort last.
+        ordered = sorted(
+            skill_rows,
+            key=lambda r: (parse_ts(r) is None, parse_ts(r) or datetime.min))
+        values = [cefr_value(r) for r in ordered]
         values = [v for v in values if v is not None]
         if len(values) < 2:
             continue
         half = max(1, len(values) // 2)
-        first, last = mean(values[:half]), mean(values[half:])
-        arrow = trend_arrow(round(first, 2), round(last, 2))
+        # Round to the nearest half CEFR level BEFORE deriving the arrow so the
+        # direction word is computed from the same values that are displayed;
+        # identical start/end labels can then never read as improving/slipping.
+        first = round(mean(values[:half]) * 2) / 2
+        last = round(mean(values[half:]) * 2) / 2
+        arrow = trend_arrow(first, last)
         lines.append("- **%s:** %s → %s (%s, %d attempts)" % (
             display_skill(skill),
-            cefr_label(round(first * 2) / 2),
-            cefr_label(round(last * 2) / 2),
+            cefr_label(first),
+            cefr_label(last),
             arrow, len(skill_rows)))
     return lines
 
@@ -533,12 +563,19 @@ def build_overview_report(rows):
         parts += ["## Task types", ""]
         best = ranked[-1]
         worst = ranked[0]
-        parts.append("- **Strongest:** %s — %s over %s" % (
-            display_task(best[0]), attainment_phrase(best[1]),
-            plural(best[2], "attempt")))
-        parts.append("- **Weakest:** %s — %s over %s" % (
-            display_task(worst[0]), attainment_phrase(worst[1]),
-            plural(worst[2], "attempt")))
+        if len(ranked) > 1 and best[0] != worst[0]:
+            parts.append("- **Strongest:** %s — %s over %s" % (
+                display_task(best[0]), attainment_phrase(best[1]),
+                plural(best[2], "attempt")))
+            parts.append("- **Weakest:** %s — %s over %s" % (
+                display_task(worst[0]), attainment_phrase(worst[1]),
+                plural(worst[2], "attempt")))
+        else:
+            # One task type only: naming it both strongest and weakest reads as
+            # a contradiction, so emit a single neutral line.
+            parts.append("- **%s:** %s over %s" % (
+                display_task(worst[0]), attainment_phrase(worst[1]),
+                plural(worst[2], "attempt")))
         parts.append("")
 
     levels = level_summary(rows)

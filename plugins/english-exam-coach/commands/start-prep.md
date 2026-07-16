@@ -11,12 +11,20 @@ the arguments or the conversation.
 
 1. **Returning learner check.** Run
    `python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/build_report.py" --scope all --no-write`
-   (ignore errors if the log does not exist yet). If there is history, open
+   (ignore errors if the log does not exist yet; on Windows, if `python3`
+   isn't found, use `python` or `py`). If there is history, open
    with a one-line status — last session date, current weakest task type —
    and offer "pick up where you left off" (drill the weakest task type) as
    the first option before asking anything else.
 
-2. **Exam.** Ask which exam they are preparing for:
+2. **Progress storage (first-time setup).** If step 1 found no history,
+   this is a fresh learner: mention that progress is saved to
+   `~/english-exam-coach/` by default, and offer a custom location — set the
+   `EXAM_COACH_HOME` environment variable to any folder (e.g. an Obsidian
+   vault) to keep the log there instead. Settle this before the first
+   attempt is logged. Skip silently for returning learners.
+
+3. **Exam.** Ask which exam they are preparing for:
    IELTS Academic (`ielts-academic`), IELTS General Training
    (`ielts-general`), TOEFL iBT (`toefl-ibt`), or a CEFR-level exam:
    B1 (`cefr-b1`), B2 (`cefr-b2`), C1 (`cefr-c1`), C2 (`cefr-c2`).
@@ -24,22 +32,22 @@ the arguments or the conversation.
    migration, work, general proof of level) and recommend one, using the
    `exam-router` skill's knowledge.
 
-3. **Level.** For `cefr-*` exams the level is implied — skip this question.
+4. **Level.** For `cefr-*` exams the level is implied — skip this question.
    For IELTS/TOEFL ask for their current working level (B1/B2/C1/C2) or
    target band/score; if they do not know, offer the 15-minute diagnostic
    (`/assess-level`) and use its result.
 
-4. **Section.** Ask what to work on: Writing, Speaking,
+5. **Section.** Ask what to work on: Writing, Speaking,
    Reading / Use of English, Listening, or Vocabulary — or a full timed
    section (point to `/mock-exam <exam-id> <section>`) or a week-by-week
    plan toward an exam date (hand off to the `study-planner` skill).
 
-5. **Mode.** Ask whether they want to (a) practice a new task, (b) get
+6. **Mode.** Ask whether they want to (a) practice a new task, (b) get
    feedback on something they already wrote or recorded, or (c) first see
    how the section works — for (c), explain the format from
    `${CLAUDE_PLUGIN_ROOT}/data/exam-formats/<exam-id>.md`, then offer (a).
 
-6. **Hand off.** Route to the matching skill via the `exam-router` skill
+7. **Hand off.** Route to the matching skill via the `exam-router` skill
    (writing-evaluator, speaking-coach, reading-use-of-english,
    listening-trainer, or vocabulary-builder) with the chosen exam, level,
    and task type. The skill generates or evaluates, scores, and logs the

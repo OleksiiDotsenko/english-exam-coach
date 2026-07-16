@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/OleksiiDotsenko/english-exam-coach/tests.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
-  <img src="https://img.shields.io/badge/version-0.1.6-F97316?style=flat-square" alt="version 0.1.6">
+  <img src="https://img.shields.io/badge/version-0.1.7-F97316?style=flat-square" alt="version 0.1.7">
   <img src="https://img.shields.io/badge/license-MIT-FB923C?style=flat-square" alt="MIT license">
   <img src="https://img.shields.io/badge/python-stdlib%20only-FDBA74?style=flat-square" alt="python stdlib only">
   <img src="https://img.shields.io/badge/network%20calls-zero-EA580C?style=flat-square" alt="zero network calls">
@@ -43,8 +43,12 @@ thing to drill next.
 
 ## 🚀 Get started in 2 minutes
 
-You need [Claude Code](https://claude.com/claude-code) and Python 3
-(preinstalled on macOS and most Linux; Windows: [python.org](https://www.python.org/downloads/)).
+You need [Claude Code](https://claude.com/claude-code) and Python 3. Most
+Linux distros include it; on macOS you may be prompted to install the
+Command Line Tools the first time (`xcode-select --install`) or grab it from
+[python.org](https://www.python.org/downloads/); on Windows, install from
+[python.org](https://www.python.org/downloads/) and use `py -3 …` (or
+`python …`) if `python3` isn't found.
 
 **1.** Open a terminal and start Claude Code:
 
@@ -236,10 +240,14 @@ yours and are never touched by either.
 
 - **No network access.** No network calls, no telemetry; everything runs
   locally in your Claude session.
-- **No MCP servers, no hooks, no background processes** — only Markdown
-  skills/commands and two Python scripts invoked explicitly.
-- **Writes only to your progress directory** — nothing else on disk is
-  touched, and the attempt log is opened in append mode only.
+- **No MCP servers, no hooks, no background processes** — just Markdown
+  skills/commands, two Python scripts invoked explicitly, and (only for
+  optional macOS listening audio) the built-in `say`/`afplay`.
+- **Persistent data goes only to your progress directory** — the attempt
+  log is opened in append mode only, and nothing else on disk is modified.
+  The optional macOS listening feature additionally writes a short-lived
+  temporary script/audio file (via the built-in `say`/`afplay`) used only
+  for playback.
 - **Standard library only.** The scripts import nothing outside Python's
   stdlib, so there is no supply-chain surface.
 

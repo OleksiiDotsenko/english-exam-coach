@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Skills for CEFR-based English exam preparation.",
-    "version": "0.1.0"
+    "version": "0.1.7"
   },
   "plugins": [
     {

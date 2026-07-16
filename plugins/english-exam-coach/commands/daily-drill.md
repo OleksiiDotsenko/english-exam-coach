@@ -7,6 +7,7 @@ Run today's drill: $ARGUMENTS
 
 1. Find the weakest task type: run
    `python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/build_report.py" --scope all --no-write`
+   (on Windows, if `python3` isn't found, use `python` or `py`)
    and read the "Weakest" line. If the user passed an argument, drill that
    instead. If the log is empty, run a quick level diagnostic via the
    `exam-router` skill and drill whatever it finds shakiest.

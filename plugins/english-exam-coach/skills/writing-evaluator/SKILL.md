@@ -13,7 +13,9 @@ description: >
 # Writing Evaluator
 
 Generates original writing prompts and evaluates responses. Paths are
-relative to `${CLAUDE_PLUGIN_ROOT}` (if unset, resolve relative to this file).
+relative to `${CLAUDE_PLUGIN_ROOT}` (if unset, resolve relative to the plugin
+root — the directory two levels up from this file, i.e. the folder containing
+`data/` and `skills/`).
 
 ## When to use
 
@@ -66,7 +68,10 @@ writing task in a named exam format, OR asked how to improve exam writing.
    - (b) 3–5 prioritized fixes, each shown as *your sentence → improved
      sentence* using the user's own text;
    - (c) one model upgrade: a single paragraph rewritten at the next level up,
-     with a one-line explanation of what changed.
+     with a one-line explanation of what changed. If the writing is already at
+     C2 (the ceiling), instead sharpen a paragraph WITHIN C2 — tightening
+     precision, idiom and economy toward the top of the band — and note there
+     is no higher CEFR level.
 
 5. **Log the attempt** (silently, right after scoring):
    ```bash
@@ -75,14 +80,17 @@ writing task in a named exam format, OR asked how to improve exam writing.
      --level <target-level> --band-estimate "<low>-<high>" --cefr-estimate <cefr> \
      --seconds <time-on-task>
    ```
+   (On Windows, if `python3` isn't found, run the same command with `python`
+   or `py`.)
    **`--level` is the task's TARGET level from step 1** (e.g. C1 for a cefr-c1
    essay; the exam's anchor for IELTS/TOEFL) — NOT the level the writing landed
    at. The calibrated performance goes ONLY in `--cefr-estimate`. Confusing the
    two collapses the report's attainment and weakest-task signal.
    Use the exact `--task-type` slug from `data/task-types.md`.
-   Use `--score`/`--max` instead of `--band-estimate` only when the exam
-   truly uses a numeric scale for the task (e.g. TOEFL: `--score 4.5
-   --max 6` on the 1–6 band scale).
+   Use `--band-estimate` (a range) for holistic band/CEFR judgements — IELTS,
+   TOEFL and the Cambridge B1–C2 essays — where a single number would be false
+   precision. Use `--score`/`--max` only for objective item counts (e.g. the
+   TOEFL Build a Sentence task, `--max 10`).
    If time on task is unknown, ask the user — never substitute the task's
    nominal time limit, which would corrupt the "min on task" totals.
 
@@ -96,6 +104,11 @@ scrambled items, mark each correct/incorrect, and log with
   text), do not score it as an English attempt: flag the language, explain
   that off-language content earns nothing on the real exam, and ask for an
   English version before evaluating or logging.
+- **If the writing is clearly below B1** (the descriptors and calibration
+  anchors floor at B1): say so explicitly rather than snapping it up to the B1
+  anchor, give concrete B1 targets to aim for instead of a false in-range
+  band, and log `--cefr-estimate A2` (or `A1`) while keeping the task's target
+  `--level` unchanged.
 - Do NOT reproduce official rubrics, past papers, or answer keys; criteria
   names may be used, official descriptor text may not.
 - Descriptors are paraphrased from the public CEFR framework only.

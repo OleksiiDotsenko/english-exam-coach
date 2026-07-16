@@ -3,7 +3,8 @@ name: reading-use-of-english
 description: >
   Use when the user wants to practice English exam reading or use-of-english
   tasks: IELTS (matching headings, True/False/Not Given, Yes/No/Not Given,
-  matching information, sentence/summary completion, short answer),
+  matching information, sentence/summary completion, short answer,
+  multiple choice),
   TOEFL iBT reading (complete-the-words cloze, daily-life texts, short
   academic passages), or
   B1-C2 tasks (reading-comprehension multiple choice, open cloze,
@@ -17,7 +18,8 @@ description: >
 # Reading & Use of English
 
 Objective drills: generate → answer → score → explain → log. Paths are
-relative to `${CLAUDE_PLUGIN_ROOT}` (if unset, resolve relative to this file).
+relative to `${CLAUDE_PLUGIN_ROOT}` (if unset, resolve relative to the plugin
+root — the directory two levels above this file, i.e. `../../` from here).
 
 ## When to use
 
@@ -54,11 +56,12 @@ a reading answer is what it is.
    words before presenting: left to instinct these passages come out ~30–40%
    too short. Use the exam's figure from `data/exam-formats/<exam-id>.md`
    ("Passage lengths"); as a fallback:
-   - Gapped text / long-text multiple choice / multiple matching: **B2
-     ~500–600, C1 ~600–780, C2 ~700–800 words** of base text (IELTS Academic
-     passages ~700–900 words **each**; IELTS General Training sections vary —
-     see `ielts-general.md`). A too-short passage is the most common failure —
-     a C2 Part 6 gapped text must be ~750 words, not ~450.
+   - Gapped text: **B2 ~500–600, C1 ~550–780, C2 ~700–800 words** of base text.
+   - Long-text multiple choice / multiple matching: **B2 ~500–700, C1 ~700–800,
+     C2 ~700–800 words** of base text. IELTS Academic passages ~700–900 words
+     **each**; IELTS General Training sections vary — see `ielts-general.md`. A
+     too-short passage is the most common failure — a C2 Part 6 gapped text must
+     be ~750 words, not ~450.
    - Cloze / word formation: ~150–220 words. TOEFL academic passage ~200;
      TOEFL daily-life texts 15–150.
    - **Gapped text always has ONE more option than gaps** (B2/C1/C2) or three
@@ -71,7 +74,11 @@ a reading answer is what it is.
 
 4. **Score objectively** — one mark per item, no partial credit unless the
    exam gives it (key word transformations are marked out of 2 in the B2–C2
-   exams: award 1 for a half-correct split). **If the user answered only
+   exams: award 1 for a half-correct split). **For open-ended item types**
+   (open cloze, sentence/summary completion, short answer, word formation),
+   credit ANY answer that is valid and correctly spelled — one that fits the
+   context and, for cloze, the visible letters and the word limit; the printed
+   key is one acceptable answer, not the only one. **If the user answered only
    some items:** if they ran out of time or stopped early, log against the
    number actually attempted (`--max <attempted>`), not the full set; if they
    genuinely gave up, count blanks as wrong; if nothing was attempted, log
@@ -86,7 +93,13 @@ a reading answer is what it is.
      --level <anchor> --score <n> --max <total> --seconds <time>
    ```
    Use the exact `--task-type` slug from `data/task-types.md` so attempts
-   aggregate across sessions.
+   aggregate across sessions. (On Windows, if `python3` isn't found, use
+   `python` or `py`.)
+   For out-of-2 task types (key word transformation), `--max` is **2 ×** the
+   number of items scored and `--score` is the sum of the 0/1/2 marks — e.g. a
+   6-item KWT set is `--max 12`, a 4-item partial attempt is `--max 8`.
+   `log_attempt.py` rejects a `--score` above `--max` and writes nothing, so
+   an under-sized `--max` silently drops the attempt.
    Then offer one of: re-drill the same type, step up a level, or switch to
    the weakest type from the log.
 

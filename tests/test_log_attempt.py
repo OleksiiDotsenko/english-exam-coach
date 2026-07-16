@@ -46,7 +46,10 @@ class LogAttemptTests(unittest.TestCase):
         log_attempt(self.base, score=7.0, max=10.0, seconds=540.0)
         line = read_log_lines(self.base)[0]
         self.assertIn('"score": 7,', line + ",")
-        self.assertNotIn("7.0", line)
+        self.assertIn('"max": 10,', line + ",")
+        self.assertIn('"seconds": 540,', line + ",")
+        for float_repr in ("7.0", "10.0", "540.0"):
+            self.assertNotIn(float_repr, line)
 
     def test_band_estimate_without_score_is_valid(self):
         result = log_attempt(self.base, **{"exam": "ielts-academic",
@@ -193,6 +196,59 @@ class LogAttemptTests(unittest.TestCase):
                              ts="2025-03-04T15:00:00")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(parsed_log(self.base)[0]["session"], "2025-03-04-pm")
+
+    def test_tz_aware_ts_derives_session_from_local_time(self):
+        # Under TZ=America/New_York, 02:00Z on the 11th is 22:00 on the 10th
+        # local time. The derived session must mirror build_report.parse_ts
+        # (normalize to naive local time first) and land in the local-time
+        # evening, not a UTC morning.
+        result = run_script(
+            LOG_ATTEMPT,
+            ["--base", str(self.base), "--exam", "toefl-ibt",
+             "--skill", "reading-use-of-english",
+             "--task-type", "toefl-read-academic", "--level", "B2",
+             "--score", "5", "--max", "6", "--seconds", "300",
+             "--ts", "2026-07-11T02:00:00Z"],
+            env_overrides={"TZ": "America/New_York"},
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(parsed_log(self.base)[0]["session"], "2026-07-10-pm")
+
+    def test_date_only_ts_rejected_with_exit_code_2(self):
+        # A bare date parses (as midnight) but would silently force an 'am'
+        # session, so it must be rejected outright.
+        result = log_attempt(self.base, score=7, max=10, ts="2026-07-10")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("time", result.stderr)
+        self.assertEqual(read_log_lines(self.base), [])
+        self.assertFalse((self.base / "attempts.jsonl").exists())
+
+    def test_raw_bytes_have_no_blank_lines_and_one_trailing_newline(self):
+        # Assert on the raw file bytes (no blank-line-filtering helper): two
+        # appends must yield exactly one newline per record and no blank lines.
+        log_attempt(self.base, score=7, max=10)
+        result = log_attempt(self.base, **{"task-type": "open-cloze",
+                                           "score": 5, "max": 8})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        raw = (self.base / "attempts.jsonl").read_bytes()
+        self.assertNotIn(b"\n\n", raw, "log must never contain blank lines")
+        self.assertTrue(raw.endswith(b"\n"), "log must end with a newline")
+        self.assertEqual(raw.count(b"\n"), 2,
+                         "exactly one newline per record, none extra")
+
+    def test_validation_failure_exit_code_is_2(self):
+        result = log_attempt(self.base, level="D1", score=7, max=10)
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(read_log_lines(self.base), [])
+
+    def test_unwritable_base_exit_code_is_1(self):
+        # The base path is occupied by a regular file, so mkdir must fail and
+        # the write error must exit 1 (distinct from a validation error's 2).
+        base_file = Path(self._tmp.name) / "base-is-a-file"
+        base_file.write_text("occupied", encoding="utf-8")
+        result = log_attempt(base_file, score=7, max=10)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("could not write", result.stderr)
 
 
 if __name__ == "__main__":

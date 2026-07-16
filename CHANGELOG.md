@@ -1,6 +1,59 @@
 # Changelog
 
-## 0.1.6 — 2026-07-14
+## 0.1.7 — 2026-07-16
+
+Fixes from a fourth audit (block-wise: per-file review, live factual
+verification of every exam-format claim, cross-cutting invariants,
+completeness critics — every finding adversarially verified). ~43 distinct
+issues fixed; no critical findings survived the previous rounds.
+
+**Exam-fact corrections (all web-verified):**
+- IELTS Speaking Part 2 was mislabelled visual-dependent in the speaking
+  coach; it is a text cue card and is now offered normally, while the
+  genuinely visual Cambridge B1–C2 Part 2 photo tasks are the ones guarded.
+- C2 Proficiency Writing no longer mentions the set-text option (removed by
+  Cambridge in January 2024). B1 Preliminary Speaking Part 3 corrected to
+  ~4 min. TOEFL "Complete the Words" gap density described accurately
+  (~10 targeted words, opening sentence intact). IELTS Academic passage
+  word ranges now sum to the stated total.
+
+**Logging correctness:**
+- `/mock-exam` no longer double-logs: the delegated skill's single silent
+  auto-log now writes under the mock session with split time.
+- The level diagnostic is logged exactly once and is excluded from the
+  "weakest task type" ranking (no more "drill 10 more level diagnostics").
+- TOEFL Build-a-Sentence and Listen-and-Repeat are always percentage-scored
+  (new `OBJECTIVE_TASK_TYPES`), so an item count can never be misread as a
+  1–6 band, even under the holistic writing/speaking skills.
+- A timezone-aware `--ts` derives its session id from local time (matching
+  how reports read it); a date-only `--ts` is rejected.
+
+**Report clarity:**
+- Per-skill trends sort chronologically (back-dated logs no longer invert
+  the direction) and the improving/slipping arrow is derived from the same
+  half-level values that are displayed — `B2 → B2 (improving)` is gone.
+- A lone task type is no longer listed as both strongest and weakest.
+- Legacy TOEFL cut table: unreachable reading/listening rows removed;
+  docstring now describes the actual five-bucket objective mapping.
+
+**Skills & guidance:** correct `${CLAUDE_PLUGIN_ROOT}`-unset fallback in
+four skills; sub-B1 floor for writing/speaking (no more force-fitting A1/A2
+up to B1); reading fallback passage lengths aligned with the format files;
+`--max` = 2× items for out-of-2 tasks; TTS scripts stripped of markup before
+`say`; credit any valid answer on open-ended items; guards for unsupported
+exams and past exam dates; vocabulary review logging rule for mixed-level
+rounds; Leitner/interaction-anchor notes.
+
+**Docs & first-run:** honest security wording (optional macOS TTS writes a
+short-lived temp file); Windows `python`/`py` fallback noted at every
+`python3` call site; macOS "preinstalled Python" claim corrected; progress
+storage (default vs `EXAM_COACH_HOME`/Obsidian) offered in `/start-prep`
+before the first log; canonical listening slugs written out explicitly;
+marketplace metadata version synced.
+
+**Tests:** 61 → 71, covering every behavioural fix above.
+
+## 0.1.6 — 2026-07-15
 
 Fixes from Audit 3 — a comprehensive, per-file + full-matrix pass (one
 reviewer per file and per exam×task, adversarially verified). The sizing
@@ -32,7 +85,7 @@ referencing the calibration anchors — closing a cluster of mis-leveling gaps.
 
 **Tests:** 58 → 61.
 
-## 0.1.5 — 2026-07-13
+## 0.1.5 — 2026-07-14
 
 Fixes from a second, generation-based audit (22 adversarially verified
 findings) that *exercises* the plugin rather than only reading it.

@@ -45,10 +45,17 @@ wants exam-style questions on it.
    format files say so). Honor that count in every mode below — "once"
    means once for IELTS/TOEFL and twice for `cefr-b1`…`cefr-c2`.
    - **TTS (optional, macOS):** if the `say` command exists
-     (`command -v say`), write the script to a temp file and play it at
-     natural speed for the exam's number of plays, e.g.
-     `say -f script.txt` (or `say -o audio.aiff -f script.txt && afplay audio.aiff`).
-     Vary voices per speaker with `-v` when available.
+     (`command -v say`), speak the script at natural speed for the exam's
+     number of plays. First **strip the formatting**: remove markdown
+     (`**`, `>`) and the speaker labels (e.g. `> **Receptionist:**`) so the
+     synthesizer voices only the spoken words, not the markup. Write the
+     cleaned, label-free plain text to a temp file in a temp location
+     (e.g. `tmp="$(mktemp -t listening)"`), then play it, e.g.
+     `say -f "$tmp"` (or `say -o "$tmp.aiff" -f "$tmp" && afplay "$tmp.aiff"`).
+     For a multi-speaker script, split it by speaker and feed each
+     speaker's turns to a separate `say -v <voice>` call so the voices
+     alternate. **Delete the temp script/audio after playback**
+     (`rm -f "$tmp" "$tmp.aiff"`) so nothing is left on disk.
    - **User-side audio:** the user has any TTS or a practice partner → give
      them the script to synthesize/have read aloud, for the exam's number of
      plays.
@@ -72,7 +79,8 @@ wants exam-style questions on it.
      --exam <exam-id> --skill listening-trainer --task-type <slug> \
      --level <anchor> --score <n> --max <total> --seconds <time>
    ```
-   Use the exact `--task-type` slug from `data/task-types.md`.
+   Use the exact `--task-type` slug from `data/task-types.md`. On Windows
+   without `python3`, run the same command with `python` or `py`.
 
 ## Boundaries
 

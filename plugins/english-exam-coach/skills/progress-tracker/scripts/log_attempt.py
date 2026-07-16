@@ -137,6 +137,14 @@ def validate(args):
             datetime.fromisoformat(normalize_ts(args.ts))
         except ValueError:
             errors.append("--ts must be an ISO 8601 timestamp (got %r)" % args.ts)
+        else:
+            # --ts is documented as a full timestamp. A bare date parses (as
+            # midnight) but would be stored verbatim and silently forced to an
+            # 'am' session regardless of when the attempt happened, so reject
+            # a value with no time component.
+            if "T" not in args.ts and ":" not in args.ts:
+                errors.append("--ts must include a time, e.g. "
+                              "2026-07-10T14:30:00 (got %r)" % args.ts)
 
     return errors
 
@@ -170,7 +178,15 @@ def build_record(args, now):
     else:
         # Derive the session from the attempt's own timestamp (not wall-clock
         # now) so a back-dated --ts and its session id never disagree.
-        stamp = datetime.fromisoformat(normalize_ts(args.ts)) if args.ts else now
+        if args.ts:
+            stamp = datetime.fromisoformat(normalize_ts(args.ts))
+            # Mirror build_report.parse_ts: normalize a tz-aware --ts to naive
+            # local time before reading its day/hour, so the session id agrees
+            # with how the reader interprets the same ts.
+            if stamp.tzinfo is not None:
+                stamp = stamp.astimezone().replace(tzinfo=None)
+        else:
+            stamp = now
         record["session"] = default_session(stamp)
     return record
 

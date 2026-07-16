@@ -30,7 +30,7 @@ band. Score reports through ~January 2028 also show a comparable legacy
 
 | Task type | Mechanics |
 |---|---|
-| Complete the Words | C-test cloze: short paragraphs where about every other word has its second half deleted; type the missing letters (~10 gaps per paragraph) |
+| Complete the Words | Cloze task: a short (~70-word) paragraph in which ~10 targeted words have their later letters deleted; type the missing letters to complete each. The opening sentence is left intact for context (only the ~10 target words are gapped, not every other word) |
 | Read in Daily Life | Short practical texts (emails, notices, schedules, posts, ~15–150 words); 2–3 multiple-choice questions each |
 | Read an Academic Passage | Short academic passage (~200 words); ~5 multiple-choice questions (main idea, detail, vocabulary in context, inference) |
 

@@ -19,7 +19,7 @@ seeds; in a live drill, reveal answers only after the learner has responded.
 > 1. "I regret selling my bicycle," said Marco. — **WISHES**
 >    Marco ____ his bicycle.
 >    *(key: wishes he had not / hadn't sold)*
-> 2. The concert was cancelled because so few tickets were sold. — **LACK**
+> 2. Hardly anyone was interested in the concert, so it was cancelled. — **LACK**
 >    The concert was cancelled ____ interest.
 >    *(key: because of / due to / owing to a lack of)*
 > 3. It was wrong of you to open that letter. — **OUGHT**
@@ -76,10 +76,11 @@ opinion-bearing passage and the Yes/No labels.*
 
 **Key:** their · small · grow · flowers · agree · biggest · not · itself ·
 people
-*(Format note: the second half of every other word is deleted, so the visible
-stem is the first half (not just the first letter). Choose words the context
-makes unambiguous, and when scoring, credit any answer that fits both the
-context and the visible letters.)*
+*(Format note: the second half of selected words is deleted (the first
+sentence is left intact as a lead-in), so the visible stem is the first half
+(not just the first letter). Choose words the context makes unambiguous, and
+when scoring, credit any answer that fits both the context and the visible
+letters.)*
 
 ## Inference multiple choice (TOEFL reading format)
 
