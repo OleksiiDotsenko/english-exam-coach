@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.1.8 — 2026-07-28
+
+Phase 0 of the v2.0 roadmap ("Close the loop, honestly"). This is the
+depth-and-hygiene release that lands ahead of the learning loop; nothing here
+changes the log schema.
+
+**Target profile (new):**
+- `profile.py` stores your target exam, target score and exam date in
+  `<base>/profile.json`, written atomically and never required. `/start-prep`
+  now asks once and saves it, so later sessions can talk about the actual gap
+  instead of generic advice.
+- `convert_score.py` translates in both directions between an exam's own
+  scale and CEFR (TOEFL 1–6, the legacy 0–120 concordance, IELTS bands, the
+  Cambridge Scale), so conversions stop being done from memory. Cross-scale
+  hops are labelled indicative.
+
+**TOEFL iBT 2026 depth:**
+- Seed exemplars for the two redesigned task types that had none: **Build a
+  Sentence** (with the design rules that keep the arrangement unique) and
+  **Listen and Choose a Response** (with per-distractor rationales).
+- Listen-and-Choose now has a per-item playback protocol: every ~5-second
+  prompt is pre-rendered before the drill so synthesis pauses cannot leak
+  thinking time into a task whose difficulty is that it goes by once.
+
+**Generation honesty:**
+- Reading passages and listening scripts are now counted mechanically with
+  `wc -w` before being presented, instead of estimated — the failure mode
+  earlier audits measured at 30–71% too short.
+
+**Accuracy:**
+- The router no longer lists B1 Business Preliminary as an unsupported
+  alternative (Cambridge discontinued it in 2023–24); PTE Core, TOEIC and
+  Linguaskill are named instead.
+- Every exam-format file now carries a `last-verified` stamp, so the annual
+  re-verification pass has something to check against.
+
+**Tests:** 71 → 89.
+
 ## 0.1.7 — 2026-07-16
 
 Fixes from a fourth audit (block-wise: per-file review, live factual

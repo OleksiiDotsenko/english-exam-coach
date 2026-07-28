@@ -37,7 +37,9 @@ wants exam-style questions on it.
    duration**: a spoken passage runs ~130–160 words per minute, so a ~4-min
    monologue/interview is ~550–650 words and a short 30–40 s exchange is
    ~80–110 words. A script that is too short makes the drill easier than the
-   real test.
+   real test. **Count the script mechanically before delivering it** — write
+   it to a temp file and run `wc -w` (see the reading skill for the pattern);
+   a self-estimated count is the failure this guards against.
 
 3. **Deliver the audio, best available mode.** First, set the **number of
    plays from the exam**: IELTS and TOEFL iBT play each recording **once**;
@@ -56,6 +58,18 @@ wants exam-style questions on it.
      speaker's turns to a separate `say -v <voice>` call so the voices
      alternate. **Delete the temp script/audio after playback**
      (`rm -f "$tmp" "$tmp.aiff"`) so nothing is left on disk.
+   - **Per-item mode (TOEFL Listen and Choose a Response):** these are not
+     one script — each item is an independent ~5-second prompt heard once,
+     with the four options read on screen, not aloud. Pre-render every
+     prompt to its own file *before* the drill starts, then play them one at
+     a time, collecting the answer after each and never replaying:
+     ```bash
+     d="$(mktemp -d)"; i=1
+     # one say -o per prompt, then: afplay "$d/item$i.aiff"
+     ```
+     Pre-rendering matters because synthesis pauses would otherwise leak
+     thinking time into a task whose whole difficulty is that it goes by
+     once. Delete the directory (`rm -rf "$d"`) when the drill ends.
    - **User-side audio:** the user has any TTS or a practice partner → give
      them the script to synthesize/have read aloud, for the exam's number of
      plays.

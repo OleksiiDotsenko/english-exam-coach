@@ -1,5 +1,7 @@
 # TOEFL iBT — format facts (redesigned test, from 21 January 2026)
 
+<!-- last-verified: 2026-07-21 | verified-against: the exam provider's own published format pages. Re-verify every release cycle; exam formats change without notice. -->
+
 Factual description of the test format in use since January 21, 2026. No
 official test content. Figures marked "approx." are consistent
 prep-community reporting where ETS publishes no exact number; confirm

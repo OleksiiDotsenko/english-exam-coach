@@ -33,6 +33,29 @@ to log and no base exists yet, ask that same question before the first write.
 - After ANY task is scored by another skill → log the attempt, silently.
 - When the user asks for results, trends, streaks, or weakest areas → build
   and show a report.
+- When advice needs the learner's target ("am I on track?", "is B2 enough?")
+  → read the profile; when they state a target or an exam date → save it.
+
+## Target profile and score scales
+
+`profile.py` stores the target exam, target score and exam date in
+`<base>/profile.json`; every other script works fine without it.
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/profile.py" show
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/profile.py" set \
+  --exam toefl-ibt --target-score 4.5 --exam-date 2026-09-12
+```
+
+`convert_score.py` translates between an exam's own scale and CEFR in either
+direction — use it instead of doing the conversion from memory:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/convert_score.py" \
+  --from toefl --score 4.5            # -> about CEFR B2
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/convert_score.py" \
+  --from cefr --level C1 --to ielts   # -> about 7.0-8.0
+```
 
 ## Logging an attempt
 

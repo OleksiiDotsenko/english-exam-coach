@@ -1,5 +1,7 @@
 # IELTS Academic — format facts
 
+<!-- last-verified: 2026-07-21 | verified-against: the exam provider's own published format pages. Re-verify every release cycle; exam formats change without notice. -->
+
 Factual description of the test format only (task types, counts, timing,
 scales). No official test content. Figures are for orientation; formats
 occasionally change — confirm details with the exam provider before test day.

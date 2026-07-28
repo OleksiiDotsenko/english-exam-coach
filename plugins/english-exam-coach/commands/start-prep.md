@@ -32,10 +32,20 @@ the arguments or the conversation.
    migration, work, general proof of level) and recommend one, using the
    `exam-router` skill's knowledge.
 
-4. **Level.** For `cefr-*` exams the level is implied — skip this question.
-   For IELTS/TOEFL ask for their current working level (B1/B2/C1/C2) or
-   target band/score; if they do not know, offer the 15-minute diagnostic
-   (`/assess-level`) and use its result.
+4. **Level and target.** For `cefr-*` exams the level is implied — skip the
+   level question. For IELTS/TOEFL ask for their current working level
+   (B1/B2/C1/C2); if they do not know, offer the 15-minute diagnostic
+   (`/assess-level`) and use its result. Also ask what score they need and
+   when they sit the exam, then save it once so every later session can be
+   specific about the gap:
+   ```bash
+   python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/profile.py" set \
+     --exam <exam-id> --target-score <score> --exam-date <YYYY-MM-DD> \
+     --current-level <CEFR>
+   ```
+   Omit any flag they cannot answer — a partial profile is fine, and the
+   command prints the target translated into CEFR. If they do not have a
+   target or a date, skip this and do not ask twice.
 
 5. **Section.** Ask what to work on: Writing, Speaking,
    Reading / Use of English, Listening, or Vocabulary — or a full timed

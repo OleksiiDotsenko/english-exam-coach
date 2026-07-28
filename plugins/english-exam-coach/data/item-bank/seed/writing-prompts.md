@@ -96,3 +96,36 @@ paraphrase, not the official instruction.)*
 > through the day's events. To slow the news deliberately is to decide on
 > their behalf what they are ready to know, and that quiet paternalism is a
 > poor trade for the speed a free press can offer. *(≈100 words)*
+
+## TOEFL iBT (2026 format) — Build a Sentence (10 items, ~6–7 min total)
+
+Objective task, not band-scored: the learner arranges the given tiles into
+one grammatical sentence. Score out of 10 (one mark per item).
+
+**Design rules for generating new items — these keep the key unique:**
+- Capitalise the opening tile and put the full stop on the closing tile.
+  Together they pin both ends of the sentence.
+- Never include two noun phrases that could each be the subject
+  (`[someone] [you] [should have asked]` has two valid readings — reject it).
+- Use phrase-level tiles, not single words, once a clause gets long.
+- After drafting, try to build a *different* grammatical sentence from the
+  same tiles. If you succeed, the item is broken — redesign it.
+
+> 1. *Context:* "I couldn't find the lecture hall."
+>    Tiles: `asked` · `You` · `have` · `should` · `someone.`
+>    *(key: You should have asked someone.)*
+> 2. *Context:* "Are you coming to the study group?"
+>    Tiles: `be` · `I'll` · `there` · `in ten minutes.`
+>    *(key: I'll be there in ten minutes.)*
+> 3. Tiles: `closes` · `The library` · `earlier` · `on Sundays.`
+>    *(key: The library closes earlier on Sundays.)*
+> 4. Tiles: `I` · `Because the printer was broken,` · `emailed` ·
+>    `the assignment instead.`
+>    *(key: Because the printer was broken, I emailed the assignment instead.)*
+> 5. Tiles: `did` · `Not until the results were published` · `the department` ·
+>    `announce the change.`
+>    *(key: Not until the results were published did the department announce
+>    the change.) — tests subject–auxiliary inversion after a fronted negative.*
+
+*(Items 1–2 are replies inside a short exchange, which is the commonest shape;
+3–4 are standalone sentences; 5 is the harder end of the range. Mix them.)*

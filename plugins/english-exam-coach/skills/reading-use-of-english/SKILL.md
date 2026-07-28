@@ -68,6 +68,18 @@ a reading answer is what it is.
      more (B1 Part 4) — the surplus fits no gap and is a deliberate distractor.
      Removed paragraphs run ~50–80 words each.
 
+   **Verify the length mechanically, do not estimate it.** Before presenting,
+   write the passage to a temp file and count it — self-estimated word counts
+   are exactly the failure this guards against:
+   ```bash
+   tmp="$(mktemp)"; cat > "$tmp" <<'PASSAGE'
+   ...passage text...
+   PASSAGE
+   wc -w "$tmp"; rm -f "$tmp"
+   ```
+   If the count is below the target range, extend the passage and re-count
+   before showing it. Never present a passage you have not counted.
+
 3. **Withhold the key.** Present only the passage, the items, and the time
    budget. Ask the user to answer all items (e.g. "1 B, 2 A, …") and note
    how long they took.

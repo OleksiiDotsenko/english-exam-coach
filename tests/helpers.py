@@ -11,6 +11,8 @@ SCRIPTS = (REPO_ROOT / "plugins" / "english-exam-coach" / "skills"
            / "progress-tracker" / "scripts")
 LOG_ATTEMPT = SCRIPTS / "log_attempt.py"
 BUILD_REPORT = SCRIPTS / "build_report.py"
+PROFILE = SCRIPTS / "profile.py"
+CONVERT_SCORE = SCRIPTS / "convert_score.py"
 
 
 def run_script(script, args, env_overrides=None):

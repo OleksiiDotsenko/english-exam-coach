@@ -89,7 +89,8 @@ to this SKILL.md file, two directories up).
   doesn't exist.
 - **Only the seven exams in the Supported-exams table are supported.** If
   the user names a different English exam (Duolingo English Test, PTE
-  Academic, OET, LanguageCert, Cambridge A2 Key / B1 Business, etc.), say
+  Academic, PTE Core, OET, TOEIC, Linguaskill, LanguageCert, Cambridge
+  A2 Key, etc.), say
   plainly it isn't directly supported, name the closest supported exam whose
   skills transfer, and offer that — never present another exam's format as
   if it were the requested one.
