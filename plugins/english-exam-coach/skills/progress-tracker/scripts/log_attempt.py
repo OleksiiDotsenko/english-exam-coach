@@ -28,6 +28,15 @@ import state
 LOG_NAME = "attempts.jsonl"
 CEFR_LEVELS = ("A1", "A2", "B1", "B2", "C1", "C2")
 
+# How the logged time was obtained. An estimate and a script-run clock must
+# never look alike in the data, or pacing analysis is built on sand.
+TIMING_SOURCES = ("script", "wall-clock", "self-reported", "estimated")
+
+# How much of the performance was actually observable. A speaking estimate
+# from a typed-from-memory transcript is weaker evidence than one from a
+# recording, and the log has to say so rather than average them together.
+EVIDENCE_GRADES = ("full", "partial", "self-reported")
+
 
 def default_base():
     env = os.environ.get("EXAM_COACH_HOME", "").strip()
@@ -82,7 +91,49 @@ def build_parser():
     parser.add_argument("--base", default=None,
                         help="progress directory (default: $EXAM_COACH_HOME "
                              "or ~/english-exam-coach)")
+    parser.add_argument("--criteria", default=None,
+                        help="per-criterion CEFR levels, the judgement the "
+                             "evaluator already made: "
+                             '"task_response=B2,coherence=C1,lexis=B2"')
+    parser.add_argument("--timing-source", default=None, dest="timing_source",
+                        choices=TIMING_SOURCES,
+                        help="how --seconds was obtained (default: unstated)")
+    parser.add_argument("--evidence-grade", default=None, dest="evidence_grade",
+                        choices=EVIDENCE_GRADES,
+                        help="how much of the performance was actually "
+                             "observable (default: unstated)")
+    parser.add_argument("--draft", type=int, default=None,
+                        help="draft number for a revise-and-resubmit cycle "
+                             "(1 = first attempt)")
     return parser
+
+
+def parse_criteria(raw):
+    """'task_response=B2,coherence=C1' -> {'task_response': 'B2', ...}.
+
+    Raises ValueError with a human-readable message on anything malformed:
+    a half-parsed criteria map is worse than none, because it would silently
+    under-report which criterion is holding the learner back.
+    """
+    criteria = {}
+    for chunk in str(raw).split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        if "=" not in chunk:
+            raise ValueError("expected name=LEVEL pairs, got %r" % chunk)
+        name, _, level = chunk.partition("=")
+        name = name.strip().lower().replace(" ", "_").replace("-", "_")
+        level = level.strip().upper()
+        if not name:
+            raise ValueError("missing criterion name in %r" % chunk)
+        if level not in CEFR_LEVELS:
+            raise ValueError("criterion %r must be one of %s (got %r)"
+                             % (name, "/".join(CEFR_LEVELS), level))
+        criteria[name] = level
+    if not criteria:
+        raise ValueError("no criteria found")
+    return criteria
 
 
 def validate(args):
@@ -133,6 +184,15 @@ def validate(args):
     if args.session is not None and not args.session.strip():
         errors.append("--session must not be blank (omit it to auto-derive one)")
 
+    if args.criteria is not None:
+        try:
+            parse_criteria(args.criteria)
+        except ValueError as exc:
+            errors.append("--criteria: %s" % exc)
+
+    if args.draft is not None and args.draft < 1:
+        errors.append("--draft must be 1 or more (1 = the first attempt)")
+
     if args.ts is not None:
         try:
             datetime.fromisoformat(normalize_ts(args.ts))
@@ -173,7 +233,15 @@ def build_record(args, now):
         record["band_estimate"] = args.band_estimate.strip()
     if args.cefr_estimate:
         record["cefr_estimate"] = args.cefr_estimate.strip().upper()
+    if args.criteria:
+        record["criteria"] = parse_criteria(args.criteria)
+    if args.draft is not None:
+        record["draft"] = args.draft
     record["seconds"] = as_number(args.seconds)
+    if args.timing_source:
+        record["timing_source"] = args.timing_source
+    if args.evidence_grade:
+        record["evidence_grade"] = args.evidence_grade
     if args.session and args.session.strip():
         record["session"] = args.session.strip()
     else:

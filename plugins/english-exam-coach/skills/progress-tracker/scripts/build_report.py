@@ -515,6 +515,118 @@ def skill_trends(rows):
     return lines
 
 
+def display_criterion(name):
+    return str(name).replace("_", " ").capitalize()
+
+
+def criterion_rows(rows):
+    """[(skill, criterion, values_in_time_order)] for rows carrying criteria."""
+    ordered = sorted(rows, key=lambda r: (parse_ts(r) is None,
+                                          parse_ts(r) or datetime.min))
+    grouped = {}
+    for row in ordered:
+        criteria = row.get("criteria")
+        if not isinstance(criteria, dict):
+            continue
+        skill = str(row.get("skill"))
+        for name, level in criteria.items():
+            value = CEFR_NUM.get(str(level).strip().upper())
+            if value is not None:
+                grouped.setdefault((skill, str(name)), []).append(value)
+    return [(skill, name, values) for (skill, name), values in grouped.items()]
+
+
+def criterion_lines(rows):
+    """Per-criterion levels and trends, grouped by skill.
+
+    This is the judgement the evaluator already made and used to throw away;
+    it is what turns "your writing is B2" into "your writing is B2 because
+    grammar is holding it there".
+    """
+    entries = criterion_rows(rows)
+    if not entries:
+        return []
+    lines = []
+    for skill in sorted({skill for skill, _n, _v in entries}):
+        skill_entries = sorted((e for e in entries if e[0] == skill),
+                               key=lambda e: e[1])
+        lines.append("")
+        lines.append("**%s**" % display_skill(skill))
+        for _skill, name, values in skill_entries:
+            level = cefr_label(round(mean(values) * 2) / 2)
+            detail = "%s over %s" % (level, plural(len(values), "attempt"))
+            if len(values) >= 4:
+                half = len(values) // 2
+                first = round(mean(values[:half]) * 2) / 2
+                last = round(mean(values[half:]) * 2) / 2
+                arrow = trend_arrow(first, last)
+                if arrow and arrow != "steady":
+                    detail = "%s → %s (%s) over %s" % (
+                        cefr_label(first), cefr_label(last), arrow,
+                        plural(len(values), "attempt"))
+            lines.append("- **%s:** %s" % (display_criterion(name), detail))
+    return lines
+
+
+def ceiling_observation(rows):
+    """Name the criterion sitting lowest, as an observation — not a diagnosis.
+
+    Only speaks up with enough data to be worth saying, and only when one
+    criterion is genuinely below the others.
+    """
+    entries = criterion_rows(rows)
+    if not entries:
+        return None
+    # Only criteria with a couple of data points can be called lowest; a
+    # single bad day should never be presented as a standing weakness.
+    scored = [(mean(values), skill, name, len(values))
+              for skill, name, values in entries if len(values) >= 2]
+    if len(scored) < 2:
+        return None
+    scored.sort()
+    lowest, skill, name, count = scored[0]
+    others = mean([value for value, _s, _n, _c in scored[1:]])
+    if others is None or others - lowest < 0.5:
+        return None  # nothing is clearly holding the rest back
+    return ("**Lowest criterion:** %s in %s, about %s across %s — an "
+            "observation from what you have logged, not a diagnosis."
+            % (display_criterion(name).lower(), display_skill(skill).lower(),
+               cefr_label(round(lowest * 2) / 2), plural(count, "attempt")))
+
+
+def evidence_line(rows):
+    """State what the estimates are actually built on.
+
+    A level derived from a typed-from-memory speaking transcript is weaker
+    evidence than one from a recording, and a report that hides the
+    difference is quietly overclaiming.
+    """
+    total = len(rows)
+    if not total:
+        return None
+    with_criteria = sum(1 for r in rows if isinstance(r.get("criteria"), dict))
+    timing = {}
+    for row in rows:
+        source = row.get("timing_source")
+        if source:
+            timing[source] = timing.get(source, 0) + 1
+    partial = sum(1 for r in rows
+                  if r.get("evidence_grade") in ("partial", "self-reported"))
+
+    parts = ["%d of %s carry per-criterion detail" % (with_criteria,
+                                                      plural(total, "attempt"))]
+    if timing:
+        detail = ", ".join("%d %s" % (count, source)
+                           for source, count in sorted(timing.items(),
+                                                       key=lambda kv: -kv[1]))
+        parts.append("timing: %s" % detail)
+    if partial:
+        parts.append("%d %s on partial evidence (a typed transcript or a "
+                     "self-report rather than an observed performance)"
+                     % (partial, "rests" if partial == 1 else "rest"))
+    return "**Evidence:** %s." % "; ".join(parts)
+
+
 def exam_lines(rows):
     lines = []
     for exam, exam_rows in sorted(group_by(rows, "exam").items()):
@@ -556,6 +668,13 @@ def build_overview_report(rows):
     if trends:
         parts += ["## CEFR trend per skill", ""] + trends + [""]
 
+    criteria = criterion_lines(rows)
+    if criteria:
+        parts += ["## Criterion detail"] + criteria + [""]
+        ceiling = ceiling_observation(rows)
+        if ceiling:
+            parts += [ceiling, ""]
+
     parts += ["## Exams practised", ""] + exam_lines(rows) + [""]
 
     ranked = rank_task_types(rows)
@@ -581,6 +700,9 @@ def build_overview_report(rows):
     levels = level_summary(rows)
     if levels:
         parts += ["**Estimated current level:** %s" % levels, ""]
+    evidence = evidence_line(rows)
+    if evidence:
+        parts += [evidence, ""]
     parts += ["**Next:** %s" % recommendation(rows), "", DISCLAIMER, ""]
     return "\n".join(parts)
 
