@@ -83,7 +83,23 @@ answer they spoke (pasted as transcript or provided as an audio file).
      --seconds <time-on-task>
    ```
    On Windows, if `python3` isn't found, use `python` or `py` instead.
-   Use the exact `--task-type` slug from `data/task-types.md`.
+   Use the exact `--task-type` slug from `data/task-types.md`. Add
+   `--criteria "fluency=B2,lexis=B2,grammar=B1,..."` with the per-aspect
+   levels you just judged, and be honest about the evidence:
+   `--evidence-grade partial` for a transcript typed from memory (the content
+   survived, the delivery did not), `full` only when it came from audio.
+
+6. **Run the clock, and close the loop.** For a timed task, run it under the
+   real exam clock instead of "start when ready" — that constraint is most of
+   the task's difficulty:
+   ```bash
+   python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/timed_speak.py" \
+     --exam <exam-id> --task <slug>
+   ```
+   It prints the seconds to log and `--timing-source script`. Afterwards log
+   2–5 mistakes with `log_error.py`, run `queue.py sync`, and offer a second
+   attempt at the same task, reporting the per-aspect delta. Full protocol:
+   `../progress-tracker/references/the-loop.md`.
    For TOEFL estimate the 1–6 band scale: `--score <band> --max 6`
    (half bands allowed; official CEFR alignment: 4 ≈ B2, 5 ≈ C1, 6 = C2).
 

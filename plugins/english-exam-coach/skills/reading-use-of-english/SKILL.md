@@ -104,6 +104,12 @@ a reading answer is what it is.
      --exam <exam-id> --skill reading-use-of-english --task-type <slug> \
      --level <anchor> --score <n> --max <total> --seconds <time>
    ```
+   Then, for each item the user missed, log **why** it was missed — a
+   `comprehension` subtype (detail, inference, paraphrase, distractor,
+   location, instruction) with a `--point` a fresh item could re-test, e.g.
+   "not recognising a paraphrase of 'decline'" — and run `queue.py sync`.
+   The item number is not re-testable; the reason is. Full protocol:
+   `../progress-tracker/references/the-loop.md`.
    Use the exact `--task-type` slug from `data/task-types.md` so attempts
    aggregate across sessions. (On Windows, if `python3` isn't found, use
    `python` or `py`.)

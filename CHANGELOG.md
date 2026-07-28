@@ -1,5 +1,65 @@
 # Changelog
 
+## 2.0.0 — 2026-07-28
+
+**Close the loop, honestly.** Until now the plugin scored well and forgot
+everything: it graded a task, explained it, wrote one number to the log, and
+threw the diagnosis away. v2.0 is one product — a closed learning loop:
+
+```
+attempt → per-criterion judgement → error ledger → spaced re-testing with a
+FRESHLY GENERATED item → one explainable drill choice → honest trends
+```
+
+The point that comes back is the *point*, never the item: a regenerated
+question cannot be answered from memory of the answer.
+
+**The loop:**
+- **Error ledger** (`log_error.py` → `errors.jsonl`). Each mistake is recorded
+  against a closed two-level taxonomy (8 categories, 42 subtypes) plus a
+  required free-text point naming what a fresh item must test. The enum is
+  closed on purpose: free-form tags drift until nothing groups, and a
+  mis-tagged error drills the wrong thing for weeks.
+- **Spaced re-testing** (`queue.py` → `queue.json`), reusing the vocabulary
+  Leitner intervals. A point that reappears is pulled back to box 1, because
+  repetition means the explanation did not stick. The script owns every write
+  and rebuilds from the ledger if the file is ever corrupted.
+- **One drill selector** (`drill_context.py`). Every "what should I practise?"
+  surface asks the same question and gets the same answer, with a reason:
+  due re-tests, then a recurring error type, then the weakest task type, and
+  an honest cold start when there is no evidence yet.
+- **Revise and resubmit** for writing and speaking: a second draft of the same
+  task, judged against the same criteria, reported as a per-criterion delta —
+  and honest when a criterion did not move.
+
+**Honest scoring:**
+- Per-criterion levels are now persisted (`--criteria`) and reported, so a
+  band comes with *which criterion is holding it there*, stated as an
+  observation rather than a diagnosis.
+- Two-pass judging: gather evidence with no level attached, then judge and
+  argue the opposite case before fixing a range.
+- `--timing-source` and `--evidence-grade` mean a script-timed performance and
+  a typed-from-memory transcript are never averaged together silently. The
+  report says what the estimates rest on.
+- `timed_speak.py` runs the real prep/answer clocks with audible cues and logs
+  the task's own elapsed time.
+
+**Foundations:**
+- `state.py` is the state-directory contract: append-only logs, additive-only
+  fields, atomic JSON writes, tolerant reads, quarantine of corrupt state, and
+  preservation of unknown keys. Every script writes through it. A v0.1.1-era
+  log still reads, and there are tests that keep it that way.
+- Skill instructions stay within a line budget; the loop protocol lives in
+  `references/the-loop.md` and `references/tagging-examples.md`.
+
+**Tests:** 71 → 121, including an end-to-end simulation of the whole loop.
+`DOGFOOD.md` covers what tests cannot: whether the tagging, the regenerated
+items, and the band ranges are actually sound.
+
+**Deliberately not in 2.0:** no new exams. PTE, Duolingo, TOEIC and Linguaskill
+all scored well on reach, but seven format files is already an annual
+re-verification burden, and depth in the loop beats breadth in the catalogue.
+
 ## 0.1.8 — 2026-07-28
 
 Phase 0 of the v2.0 roadmap ("Close the loop, honestly"). This is the

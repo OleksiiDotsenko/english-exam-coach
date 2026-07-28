@@ -66,6 +66,11 @@ kept.
      --level <level> --score <n> --max <asked> --seconds <time>
    ```
    (On Windows without `python3`, use `python` or `py` instead.)
+   When an item is missed for a reason worth re-testing beyond the word
+   itself — a wrong form, a collocation, a register slip — log it with
+   `log_error.py` under `vocabulary` and run `queue.py sync`; the word stays
+   in the Leitner box, the *pattern* enters the queue. See
+   `../progress-tracker/references/the-loop.md`.
    A due-based round often mixes levels, but the log takes one `--level` and
    one `--exam`: set `--level` to the modal (most common) level of the items
    quizzed and `--exam` to the user's target exam (or the `cefr-<level>` file

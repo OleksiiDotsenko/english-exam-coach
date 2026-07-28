@@ -93,6 +93,10 @@ wants exam-style questions on it.
      --exam <exam-id> --skill listening-trainer --task-type <slug> \
      --level <anchor> --score <n> --max <total> --seconds <time>
    ```
+   For each missed item, also log why with `log_error.py` (a `comprehension`
+   subtype and a re-testable `--point`, e.g. "misses numbers said as
+   'fifteen' vs 'fifty'"), then run `queue.py sync` — see
+   `../progress-tracker/references/the-loop.md`.
    Use the exact `--task-type` slug from `data/task-types.md`. On Windows
    without `python3`, run the same command with `python` or `py`.
 

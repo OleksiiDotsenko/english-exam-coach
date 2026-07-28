@@ -78,36 +78,49 @@ def sync_from_errors(base, queue, today=None):
     today = today or date.today()
     rows, _skipped = state.read_jsonl(base / ERROR_LOG,
                                       required_keys=("category", "subtype", "point"))
-    by_id = {item["id"]: item for item in queue["items"] if item.get("id")}
-    added, bumped = 0, 0
+    # Count occurrences straight from the ledger rather than tracking them
+    # incrementally: errors.jsonl is the durable source, timestamps only have
+    # second resolution (one scoring pass logs several errors in the same
+    # second), and counting makes sync idempotent — running it twice cannot
+    # inflate anything.
+    groups = {}
     for row in rows:
         ident = item_id(row["category"], row["subtype"], row["point"])
-        seen_at = str(row.get("ts") or "")
+        groups.setdefault(ident, []).append(row)
+
+    by_id = {item["id"]: item for item in queue["items"] if item.get("id")}
+    added, bumped = 0, 0
+    for ident, group in groups.items():
+        count = len(group)
+        latest = max((str(r.get("ts") or "") for r in group), default="")
+        first = group[0]
         existing = by_id.get(ident)
         if existing is None:
             item = {
                 "id": ident,
-                "category": row["category"],
-                "subtype": row["subtype"],
-                "point": str(row["point"]).strip(),
+                "category": first["category"],
+                "subtype": first["subtype"],
+                "point": str(first["point"]).strip(),
                 "box": 1,
                 "due": today.isoformat(),
-                "added": seen_at or datetime.now().isoformat(timespec="seconds"),
-                "occurrences": 1,
+                "added": str(first.get("ts") or
+                             datetime.now().isoformat(timespec="seconds")),
+                "occurrences": count,
                 "reviews": 0,
                 "lapses": 0,
-                "last_seen": seen_at,
+                "last_seen": latest,
             }
             for key in ("exam", "skill", "task_type", "level"):
-                if row.get(key):
-                    item[key] = row[key]
+                if first.get(key):
+                    item[key] = first[key]
             queue["items"].append(item)
             by_id[ident] = item
             added += 1
-        elif seen_at and seen_at > str(existing.get("last_seen") or ""):
-            # The same point again: it is more urgent, not just more numerous.
-            existing["occurrences"] = int(existing.get("occurrences", 1)) + 1
-            existing["last_seen"] = seen_at
+        elif count > int(existing.get("occurrences", 1)):
+            # The same point again: it is more urgent, not just more numerous,
+            # so it goes back to the front of the schedule.
+            existing["occurrences"] = count
+            existing["last_seen"] = latest
             if int(existing.get("box", 1)) > 1:
                 existing["box"] = 1
                 existing["due"] = today.isoformat()

@@ -36,25 +36,40 @@ to log and no base exists yet, ask that same question before the first write.
 - When advice needs the learner's target ("am I on track?", "is B2 enough?")
   → read the profile; when they state a target or an exam date → save it.
 
-## Target profile and score scales
+## The learning loop
 
-`profile.py` stores the target exam, target score and exam date in
-`<base>/profile.json`; every other script works fine without it.
+Scores alone are amnesia: every session grades, explains, and forgets. The
+loop turns each mistake into a scheduled re-test on a freshly generated item.
+The full protocol — two-pass judging, the error taxonomy, the queue, and the
+revise-and-resubmit cycle — is in
+[`references/the-loop.md`](references/the-loop.md). Read it when scoring
+anything or when asked what to practise next.
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/profile.py" show
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/profile.py" set \
-  --exam toefl-ibt --target-score 4.5 --exam-date 2026-09-12
+python3 ".../scripts/log_error.py" --category <cat> --subtype <sub> \
+  --point "<the specific, re-testable target>"   # one line per mistake
+python3 ".../scripts/queue.py" sync              # fold new points in
+python3 ".../scripts/queue.py" due               # what is due today
+python3 ".../scripts/drill_context.py"           # ONE explainable next step
+python3 ".../scripts/state.py" validate          # check the directory is sound
 ```
 
-`convert_score.py` translates between an exam's own scale and CEFR in either
-direction — use it instead of doing the conversion from memory:
+`log_error.py --list-taxonomy` prints the closed enum. Never invent a tag —
+the queue groups by it.
+
+## Target profile and score scales
+
+`profile.py` stores the target exam, score and exam date in
+`<base>/profile.json`; everything works without it. `convert_score.py`
+translates between an exam's own scale and CEFR in either direction — use it
+instead of converting from memory.
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/convert_score.py" \
-  --from toefl --score 4.5            # -> about CEFR B2
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/convert_score.py" \
-  --from cefr --level C1 --to ielts   # -> about 7.0-8.0
+python3 ".../scripts/profile.py" show
+python3 ".../scripts/profile.py" set --exam toefl-ibt --target-score 4.5 \
+  --exam-date 2026-09-12
+python3 ".../scripts/convert_score.py" --from toefl --score 4.5   # ≈ CEFR B2
+python3 ".../scripts/convert_score.py" --from cefr --level C1 --to ielts
 ```
 
 ## Logging an attempt

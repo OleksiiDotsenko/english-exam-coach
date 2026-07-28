@@ -61,6 +61,11 @@ writing task in a named exam format, OR asked how to improve exam writing.
    `data/cefr/calibration-anchors.md` and pick the nearest anchor per
    criterion — criteria may land on different levels (say so if they do).
    Never show anchor texts to the user as model answers.
+   **Judge in two passes** (see `../progress-tracker/references/the-loop.md`):
+   first quote 3–6 concrete features of the response with no level attached,
+   then place them against the anchors and argue the opposite case once
+   before fixing the range. Naming a level first turns everything after it
+   into confirmation.
 
 4. **Return, in this order:**
    - (a) estimate as a RANGE (e.g. "IELTS ~6.5–7.0", "on track for a C1
@@ -78,8 +83,13 @@ writing task in a named exam format, OR asked how to improve exam writing.
    python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/log_attempt.py" \
      --exam <exam-id> --skill writing-evaluator --task-type <slug> \
      --level <target-level> --band-estimate "<low>-<high>" --cefr-estimate <cefr> \
-     --seconds <time-on-task>
+     --seconds <time-on-task> \
+     --criteria "<criterion>=<CEFR>,..." --evidence-grade full \
+     --timing-source <wall-clock|self-reported>
    ```
+   `--criteria` carries the per-criterion levels you just judged, using the
+   exam's own criterion names — this is what makes the report able to say
+   *which* criterion is holding the band down instead of only naming a level.
    (On Windows, if `python3` isn't found, run the same command with `python`
    or `py`.)
    **`--level` is the task's TARGET level from step 1** (e.g. C1 for a cefr-c1
@@ -93,6 +103,14 @@ writing task in a named exam format, OR asked how to improve exam writing.
    TOEFL Build a Sentence task, `--max 10`).
    If time on task is unknown, ask the user — never substitute the task's
    nominal time limit, which would corrupt the "min on task" totals.
+
+6. **Record the mistakes, then offer a second draft.** Log 2–5 specific
+   errors with `log_error.py` (closed taxonomy; `--point` must name something
+   a fresh item can re-test), run `queue.py sync`, then offer a revision of
+   the *same* task. Judge the revision against the same criteria, report the
+   delta per criterion, and log it with `--draft 2`. Say plainly when a
+   criterion did not move. Full protocol and examples:
+   `../progress-tracker/references/the-loop.md`.
 
 **TOEFL Build a Sentence** is objective, not band-scored: present the 10
 scrambled items, mark each correct/incorrect, and log with

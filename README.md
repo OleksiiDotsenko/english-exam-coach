@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/OleksiiDotsenko/english-exam-coach/tests.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
-  <img src="https://img.shields.io/badge/version-0.1.8-F97316?style=flat-square" alt="version 0.1.8">
+  <img src="https://img.shields.io/badge/version-2.0.0-F97316?style=flat-square" alt="version 2.0.0">
   <img src="https://img.shields.io/badge/license-MIT-FB923C?style=flat-square" alt="MIT license">
   <img src="https://img.shields.io/badge/python-stdlib%20only-FDBA74?style=flat-square" alt="python stdlib only">
   <img src="https://img.shields.io/badge/network%20calls-zero-EA580C?style=flat-square" alt="zero network calls">
@@ -23,6 +23,27 @@ thing to drill next.
 > them. This project is not affiliated with, endorsed by, or connected to
 > IELTS, ETS/TOEFL, Cambridge English, or any exam board; exam names are
 > used nominatively to describe compatibility.
+
+## 🔁 It remembers what you got wrong
+
+Most tools grade you and forget. This one keeps a private ledger of your
+actual mistakes, schedules them for re-testing, and — the part nothing else
+does — **generates a brand-new item on the same point** when it comes back,
+so you can never answer from memory of the card.
+
+```text
+You:    /daily-drill
+Claude: Re-testing 3 points you have missed before — "past perfect after
+        'by the time'" is due today; you have got it wrong twice.
+        [three fresh items, none of them the ones you saw before]
+You:    [your answers]
+Claude: 2 right. "By the time" is promoted to next week; the article point
+        comes back tomorrow. Attempt and errors logged.
+```
+
+Every score also decomposes: instead of "your writing is B2", the report
+tells you *which criterion* is holding it there, and says what the estimate
+rests on — a typed transcript and a real recording never count the same.
 
 ## 🧡 What you can do
 
@@ -143,14 +164,22 @@ confirm details with the exam provider before test day.
 
 ## 📈 Your progress, on your disk
 
-Two layers, both plain files in your own workspace (never inside the plugin):
+Plain files in your own workspace (never inside the plugin):
 
 - `attempts.jsonl` — append-only log, one line per scored attempt.
   **Source of truth.** The tooling only ever appends; "clearing progress"
   is a deliberate manual action (delete the file yourself), never a side
   effect.
+- `errors.jsonl` — append-only ledger of the specific points you got wrong.
+- `queue.json` — when each of those points is due to come back.
+- `profile.json` — your target exam, score and date.
 - `reports/*.md` — session reports and an all-time overview, regenerable
   at any time.
+
+Nothing here is required and nothing is ever rewritten behind your back: the
+logs are append-only, JSON state is written atomically, and a file that
+somehow gets corrupted is set aside rather than silently discarded. Run
+`state.py validate` to check the directory at any time.
 
 Cross-exam trends are normalized to CEFR — an IELTS band and a TOEFL score
 are never merged into one number.
