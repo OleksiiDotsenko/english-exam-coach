@@ -23,6 +23,8 @@ import sys
 from datetime import datetime, date
 from pathlib import Path
 
+import state
+
 PROFILE_NAME = "profile.json"
 PROFILE_VERSION = 1
 CEFR_LEVELS = ("A1", "A2", "B1", "B2", "C1", "C2")
@@ -49,26 +51,18 @@ def resolve_base(base_arg):
 
 
 def read_profile(base):
-    """Return the stored profile, or an empty dict. Never raises on bad data."""
-    path = base / PROFILE_NAME
-    if not path.exists():
-        return {}
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (ValueError, OSError):
-        return {}
-    return data if isinstance(data, dict) else {}
+    """Return the stored profile, or an empty dict. Never raises on bad data.
+
+    Tolerant per the state contract: an unreadable profile reads as empty
+    rather than blocking a practice session over an optional file.
+    """
+    data, _note = state.read_json(base / PROFILE_NAME, default={})
+    return data
 
 
 def write_profile(base, profile):
-    """Atomically replace the profile file (write temp, then rename)."""
-    base.mkdir(parents=True, exist_ok=True)
-    path = base / PROFILE_NAME
-    tmp = base / (PROFILE_NAME + ".tmp")
-    tmp.write_text(json.dumps(profile, indent=2, ensure_ascii=False,
-                              allow_nan=False) + "\n", encoding="utf-8")
-    os.replace(tmp, path)
-    return path
+    """Atomically replace the profile file (state contract rule 3)."""
+    return state.write_json(base / PROFILE_NAME, profile)
 
 
 def parse_date(value):

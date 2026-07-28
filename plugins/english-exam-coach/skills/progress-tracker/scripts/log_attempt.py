@@ -17,12 +17,13 @@ Example:
 """
 
 import argparse
-import json
 import math
 import os
 import sys
 from datetime import datetime
 from pathlib import Path
+
+import state
 
 LOG_NAME = "attempts.jsonl"
 CEFR_LEVELS = ("A1", "A2", "B1", "B2", "C1", "C2")
@@ -205,23 +206,12 @@ def main(argv=None):
 
     now = datetime.now()
     record = build_record(args, now)
-    # allow_nan=False is a last-line defense: strict JSON only, so the
-    # append-only log can never hold NaN/Infinity that a reader would choke on.
-    line = json.dumps(record, ensure_ascii=False, allow_nan=False)
 
     try:
-        base.mkdir(parents=True, exist_ok=True)
-        # If a prior write left the file without a trailing newline, our append
-        # would concatenate onto that partial line and corrupt both records.
-        prefix = ""
-        if log_path.exists() and log_path.stat().st_size > 0:
-            with open(log_path, "rb") as fh:
-                fh.seek(-1, 2)
-                if fh.read(1) != b"\n":
-                    prefix = "\n"
-        # Append mode only — the log must never be truncated or rewritten.
-        with open(log_path, "a", encoding="utf-8") as log:
-            log.write(prefix + line + "\n")
+        # state.append_jsonl owns the append-only invariant for every log:
+        # append mode only, strict JSON (no NaN), and a repair for a previous
+        # write that left no trailing newline.
+        state.append_jsonl(log_path, record)
     except OSError as exc:
         print("error: could not write %s: %s" % (log_path, exc), file=sys.stderr)
         return 1
