@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.0.1 — 2026-07-28
+
+Four TOEFL 2026 task-shape fixes, all found by dogfooding generated practice
+and all verified against the published task descriptions. Each was a case of
+the plugin generating something *plausible* that the real task does not look
+like — so each is now pinned by a test as well as fixed in the seeds.
+
+- **Complete the Words** now states the two rules that make the item
+  answerable: the visible stem is the word's **first 3–5 letters**, and the
+  number of underscores **equals the missing letters, exactly**. The seed had
+  two-letter stems (`gr__`) and 9 gaps; it now has ten gaps and a correct
+  count on every one. Generation counts the letters instead of eyeballing.
+- **Build a Sentence** always shows **two sentences** — a question or
+  statement to read, then the chunks you arrange into a reply. Three of the
+  five seed items had no first sentence, which is a different task. Chunk
+  count (5–7) and all-or-nothing scoring are now stated too.
+- **Listen and Repeat** is **one scenario** across all seven sentences, with a
+  short spoken introduction, and the sentences lengthen from ~5–6 words to the
+  upper teens. The seed was seven unrelated campus sentences.
+- **Take an Interview** opens with a **brief scenario** and asks four
+  questions on that single everyday topic (habits, travel, study, work), not
+  four unrelated academic ones. Answer volume for a 45-second turn is stated:
+  roughly 90–130 words. The format file's "academic/campus topics" was wrong
+  and is corrected.
+
+**Tests:** 121 → 135, including a checker that re-derives every C-test gap
+from its answer key.
+
 ## 2.0.0 — 2026-07-28
 
 **Close the loop, honestly.** Until now the plugin scored well and forgot

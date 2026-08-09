@@ -112,9 +112,14 @@ writing task in a named exam format, OR asked how to improve exam writing.
    criterion did not move. Full protocol and examples:
    `../progress-tracker/references/the-loop.md`.
 
-**TOEFL Build a Sentence** is objective, not band-scored: present the 10
-scrambled items, mark each correct/incorrect, and log with
-`--task-type toefl-build-a-sentence --score <n> --max 10`.
+**TOEFL Build a Sentence** is objective, not band-scored. **Every item is two
+sentences:** the learner reads one complete sentence — a question or a
+statement about an everyday situation — then arranges 5–7 chunks into a second
+sentence that responds to it. An item with no first sentence is the wrong
+task. Scoring is all-or-nothing per item (one chunk out of place = 0). Present
+10 items, mark each right/wrong, and log with
+`--task-type toefl-build-a-sentence --score <n> --max 10`. Worked examples and
+the uniqueness rules: `data/item-bank/seed/writing-prompts.md`.
 
 ## Boundaries
 

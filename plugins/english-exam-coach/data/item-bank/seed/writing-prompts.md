@@ -99,33 +99,46 @@ paraphrase, not the official instruction.)*
 
 ## TOEFL iBT (2026 format) — Build a Sentence (10 items, ~6–7 min total)
 
-Objective task, not band-scored: the learner arranges the given tiles into
-one grammatical sentence. Score out of 10 (one mark per item).
+Objective task, not band-scored. Score out of 10, **all or nothing per item**:
+every chunk must sit in the right position, so a single misplaced chunk scores
+zero for that item.
+
+**Every item is TWO sentences.** The learner reads one complete sentence — a
+question or a statement about an everyday situation — and then arranges the
+chunks into a second sentence that *responds to it*. An item with no first
+sentence is not this task: the context is what makes one word order the
+natural one. Never generate a bare set of chunks.
 
 **Design rules for generating new items — these keep the key unique:**
-- Capitalise the opening tile and put the full stop on the closing tile.
+- Give 5–7 chunks. Fewer is trivial; more turns it into a puzzle rather than
+  a language item.
+- Capitalise the opening chunk and put the full stop on the closing chunk.
   Together they pin both ends of the sentence.
 - Never include two noun phrases that could each be the subject
   (`[someone] [you] [should have asked]` has two valid readings — reject it).
-- Use phrase-level tiles, not single words, once a clause gets long.
+- Use phrase-level chunks, not single words, once a clause gets long.
 - After drafting, try to build a *different* grammatical sentence from the
-  same tiles. If you succeed, the item is broken — redesign it.
+  same chunks. If you succeed, the item is broken — redesign it.
 
-> 1. *Context:* "I couldn't find the lecture hall."
->    Tiles: `asked` · `You` · `have` · `should` · `someone.`
+> 1. *You read:* "I couldn't find the lecture hall."
+>    Chunks: `asked` · `You` · `have` · `should` · `someone.`
 >    *(key: You should have asked someone.)*
-> 2. *Context:* "Are you coming to the study group?"
->    Tiles: `be` · `I'll` · `there` · `in ten minutes.`
+> 2. *You read:* "Are you coming to the study group?"
+>    Chunks: `be` · `I'll` · `there` · `in` · `ten minutes.`
 >    *(key: I'll be there in ten minutes.)*
-> 3. Tiles: `closes` · `The library` · `earlier` · `on Sundays.`
->    *(key: The library closes earlier on Sundays.)*
-> 4. Tiles: `I` · `Because the printer was broken,` · `emailed` ·
->    `the assignment instead.`
->    *(key: Because the printer was broken, I emailed the assignment instead.)*
-> 5. Tiles: `did` · `Not until the results were published` · `the department` ·
->    `announce the change.`
->    *(key: Not until the results were published did the department announce
->    the change.) — tests subject–auxiliary inversion after a fronted negative.*
+> 3. *You read:* "The library closes at six on Sundays."
+>    Chunks: `we` · `Then` · `should` · `meet` · `earlier` · `tomorrow.`
+>    *(key: Then we should meet earlier tomorrow.)*
+> 4. *You read:* "Why didn't you hand in the assignment?"
+>    Chunks: `I` · `Because the printer was broken,` · `emailed` · `it` ·
+>    `instead.`
+>    *(key: Because the printer was broken, I emailed it instead.)*
+> 5. *You read:* "When did the department announce the change?"
+>    Chunks: `did` · `Not until the results were published` · `they` ·
+>    `announce` · `it.`
+>    *(key: Not until the results were published did they announce it.)
+>    — tests subject–auxiliary inversion after a fronted negative.*
 
-*(Items 1–2 are replies inside a short exchange, which is the commonest shape;
-3–4 are standalone sentences; 5 is the harder end of the range. Mix them.)*
+*(1–2 are the commonest shape, a reply in a short exchange; 3–4 respond to a
+statement or a question with a consequence or a reason; 5 is the harder end of
+the range. Mix them, and keep the situations everyday.)*

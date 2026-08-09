@@ -20,29 +20,52 @@ are NOT from any official exam.
 
 ## TOEFL iBT (2026 format) — Take an Interview (4 questions, 45 s each, no prep)
 
-Simulated campus interview; questions arrive one at a time, spoken:
+**The four questions share ONE everyday topic, opened by a short scenario.**
+Four unrelated questions is the wrong shape: the task is a single interview,
+and the later questions build on the earlier ones. Keep topics ordinary —
+habits, travel, study routines, work preferences — not academic content.
 
-> 1. Tell me about a class or course that changed how you think.
-> 2. Describe a time you had to work with someone whose style was very
->    different from yours. How did you handle it?
-> 3. Some students prefer studying alone, others in groups. Which works
->    better for you, and why?
-> 4. If your university gave you funding for a small project, what would
->    you do with it?
+> **Scenario (read first):** "You have agreed to take part in a short research
+> study about how students travel to and from campus. I'll ask you four
+> questions. Answer each one in about 45 seconds."
+>
+> 1. How do you usually get to campus, and why do you travel that way?
+> 2. Tell me about a journey to campus that took much longer than you
+>    expected. What happened?
+> 3. Some universities want to reduce the number of cars coming onto campus.
+>    How would a change like that affect students like you?
+> 4. If you could change one thing about getting around your city, what would
+>    it be, and who would benefit most?
+
+*(Shape of a good set: 1 personal and concrete → 2 a specific past experience
+→ 3 an opinion on a change → 4 a hypothetical. **Volume:** 45 seconds is
+roughly 90–130 words at a natural pace — about 5–8 sentences. Answers far
+short of that read as underdeveloped; racing past it gets cut off mid-sentence,
+which costs more than stopping early.)*
 
 ## TOEFL iBT (2026 format) — Listen and Repeat (7 sentences, heard once each)
 
-Read each sentence aloud once at natural speed (or use TTS); the learner
-repeats it exactly, from memory. Rising difficulty:
+**All seven sentences belong to ONE scenario, introduced by a short line.**
+Seven unrelated sentences make the task harder than the real one and remove
+the context the learner is meant to hold each sentence against.
 
-> 1. The library opens at nine.
-> 2. Could you send me the notes from class?
-> 3. The professor moved the deadline to Friday afternoon.
-> 4. If the lab is full, we can book a study room instead.
-> 5. Students who register early usually get their first choice of seminar.
-> 6. Despite the rain, the campus tour went ahead as planned.
-> 7. The committee recommended revising the proposal before submitting it
->    to the department for final approval.
+The sentences **lengthen as they go** — about 5–6 words at the start, into the
+upper teens by the last two, picking up extra clauses and harder vocabulary.
+
+> **Introduction (read first, not repeated):** "You will hear part of a
+> library orientation tour. Repeat each sentence exactly as you hear it."
+>
+> 1. Welcome to the main library. *(5 words)*
+> 2. The entrance desk is on your left. *(7)*
+> 3. You will need your student card to borrow anything. *(9)*
+> 4. Study rooms on the second floor can be booked online. *(10)*
+> 5. If a book is already out on loan, you can reserve it here. *(13)*
+> 6. Printing credit is added to your account at the start of every term. *(13)*
+> 7. Anyone returning a laptop after closing time should leave it in the
+>    secure locker beside the main entrance. *(18)*
+
+*(Other scenarios that work: a campus tour, check-in instructions at a
+residence, step-by-step directions to a building, a lab safety briefing.)*
 
 ## B2/C1-level collaborative task (paired discussion, ~3 min)
 

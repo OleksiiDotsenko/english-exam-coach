@@ -62,6 +62,13 @@ a reading answer is what it is.
      **each**; IELTS General Training sections vary — see `ielts-general.md`. A
      too-short passage is the most common failure — a C2 Part 6 gapped text must
      be ~750 words, not ~450.
+   - **TOEFL Complete the Words** (~70 words, exactly 10 gaps): show the
+     **first 3–5 letters** of each gapped word, then **one underscore per
+     missing letter, counted exactly** — `flow___` = flow + 3 = "flowers".
+     Count the answer's letters and subtract the stem for every gap; an
+     eyeballed count gives the learner a different puzzle from the key. Leave
+     the opening sentence intact. Worked example:
+     `data/item-bank/seed/reading-use-of-english-items.md`.
    - Cloze / word formation: ~150–220 words. TOEFL academic passage ~200;
      TOEFL daily-life texts 15–150.
    - **Gapped text always has ONE more option than gaps** (B2/C1/C2) or three

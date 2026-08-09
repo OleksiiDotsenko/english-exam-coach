@@ -32,7 +32,7 @@ band. Score reports through ~January 2028 also show a comparable legacy
 
 | Task type | Mechanics |
 |---|---|
-| Complete the Words | Cloze task: a short (~70-word) paragraph in which ~10 targeted words have their later letters deleted; type the missing letters to complete each. The opening sentence is left intact for context (only the ~10 target words are gapped, not every other word) |
+| Complete the Words | Cloze task: a short (~70-word) paragraph with **exactly 10** gapped words. Each gapped word shows its **first 3–5 letters**, followed by an input box for the missing letters; the opening sentence is left intact for context. Spelling must be exact; each gap is right/wrong with no partial credit and no penalty for a wrong answer |
 | Read in Daily Life | Short practical texts (emails, notices, schedules, posts, ~15–150 words); 2–3 multiple-choice questions each |
 | Read an Academic Passage | Short academic passage (~200 words); ~5 multiple-choice questions (main idea, detail, vocabulary in context, inference) |
 
@@ -53,7 +53,7 @@ Audio plays once; notes allowed.
 
 | Task | Items | Time | Mechanics |
 |---|---|---|---|
-| Build a Sentence | 10 | ~6–7 min total | Arrange scrambled words/phrases into a grammatical sentence, often a reply in a short exchange |
+| Build a Sentence | 10 | 6 min 50 s total (~41 s per item) | **Every item shows two sentences.** You read one complete sentence — a question or a statement about an everyday situation — then arrange 5–7 scrambled word chunks into the second sentence, which responds to it. All-or-nothing scoring: every chunk must be in the right position for the mark |
 | Write an Email | 1 | 7 min | Email for an academic/social situation; 3 required content points are given |
 | Write for an Academic Discussion | 1 | 10 min | Read a professor's forum question + two student posts; contribute your own post with a supported opinion |
 
@@ -64,8 +64,8 @@ tasks anywhere in the redesigned test.
 
 | Task | Items | Mechanics |
 |---|---|---|
-| Listen and Repeat | 7 | Hear short sentences of rising difficulty (once each); repeat each exactly (~8–12 s window, approx.) |
-| Take an Interview | 4 | Simulated interview on academic/campus topics; 45 s per answer, no preparation time |
+| Listen and Repeat | 7 | **All seven sentences belong to ONE scenario** (a campus tour, a set of step-by-step instructions), introduced by a short scene-setting line. Each plays once; repeat it exactly (~8–12 s window, approx.). They lengthen as they go: ~5–6 words at the start, into the upper teens by the last two |
+| Take an Interview | 4 | Simulated interview, **opened by a brief scenario** ("You have agreed to take part in a research study about smartphone use"), then 4 open-ended questions on that one topic. Topics are deliberately everyday — habits, travel, study, work — not academic lecture content. 45 s per answer, no preparation time |
 
 All four old speaking tasks (independent opinion + three integrated tasks)
 are gone.

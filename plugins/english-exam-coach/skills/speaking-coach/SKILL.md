@@ -41,6 +41,17 @@ answer they spoke (pasted as transcript or provided as an audio file).
    compare-photographs; C2 Part 2 picture discussion) can't be rendered here;
    say so and offer a non-visual part instead of faking it. IELTS Speaking uses
    no visual prompts — its Part 2 is a text cue card and IS fully renderable.
+   **The two TOEFL 2026 speaking tasks are single-scenario tasks — generate
+   them as one whole, never as a list of unrelated items:**
+   - *Listen and Repeat* — one scenario for all 7 sentences (a library
+     orientation, a campus tour, step-by-step directions), introduced by a
+     short line that is read but not repeated. Sentences grow from ~5–6 words
+     to the upper teens.
+   - *Take an Interview* — open with a brief scenario ("you have agreed to
+     take part in a study about…"), then 4 questions on that one everyday
+     topic: concrete → past experience → opinion → hypothetical. 45 s each is
+     about 90–130 words.
+   See `data/item-bank/seed/speaking-tasks.md` for worked examples of both.
    Tell the user how to respond, in order of preference:
    - **record themselves** (any voice recorder) and paste an accurate
      transcript, noting hesitations/self-corrections honestly;

@@ -70,17 +70,32 @@ opinion-bearing passage and the Yes/No labels.*
 ## Complete the Words (TOEFL 2026 reading format: C-test cloze)
 
 > Community gardens have become popular in many cities. People without a
-> garden of the\_\_ own can rent a sma\_\_ plot and gr\_\_ vegetables or
-> flow\_\_\_. Most gardeners agr\_\_ that the bigg\_\_\_ benefit is no\_ the
-> harvest its\_\_\_ but the peo\_\_\_ they meet.
+> garden of the\_\_ own can rent a sma\_\_ plot and grow\_\_\_ vegetables or
+> flow\_\_\_. Most garde\_\_\_\_ agre\_ that the bigg\_\_\_ benefit is not
+> the harv\_\_\_ itse\_\_ but the peop\_\_ they meet.
 
-**Key:** their · small · grow · flowers · agree · biggest · not · itself ·
-people
-*(Format note: the second half of selected words is deleted (the first
-sentence is left intact as a lead-in), so the visible stem is the first half
-(not just the first letter). Choose words the context makes unambiguous, and
-when scoring, credit any answer that fits both the context and the visible
-letters.)*
+**Key:** their · small · growing · flowers · gardeners · agree · biggest ·
+harvest · itself · people
+
+*(Ten gaps, as in the real task.)*
+
+**Format rules — a generated item is broken if it breaks either of these:**
+
+1. **The visible stem is the first 3–5 letters** of the word — never one or
+   two. `gr\_\_` for "grow" is wrong; `grow\_` for "growing" is right.
+2. **The number of underscores equals the number of missing letters,
+   exactly.** `flow\_\_\_` = "flow" + 3 letters = "flowers" ✅.
+   `flo\_\_\_` would claim "flo" + 3 = a 6-letter word, and the learner
+   counting the gaps is then solving a different puzzle than the key.
+
+Count the letters of the answer, subtract the stem, and write that many
+underscores — do not eyeball it. The real test uses an input box rather than
+underscores, so an exact count is a small extra hint; that is the right
+trade in a terminal, where an inconsistent count is simply unanswerable.
+
+Choose words the context makes unambiguous. Spelling must be exact — the real
+task gives no partial credit — but there is no penalty for a wrong answer, so
+tell the learner to fill every gap.
 
 ## Inference multiple choice (TOEFL reading format)
 
