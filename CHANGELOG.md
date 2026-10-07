@@ -1,5 +1,22 @@
 # Changelog
 
+## 3.0.1 — 2026-10-07
+
+Two wording fixes for the surfaces where a plugin's commands load as skills
+(chat), found by reading the directory's current documentation after 3.0.0.
+
+- **Commands name the skill the way every surface lists it.** The hand-over
+  paragraph said only `english-exam-coach:english-exam-coach`, which is how
+  Claude Code and Cowork name a plugin's skill. It now says "the skill named
+  `english-exam-coach`" first and gives the prefixed form as the variant.
+- **`SKILL.md` says where the tool is when the path variable is not filled
+  in.** A chat sandbox copies the skill's folder in whole and leaves
+  `${CLAUDE_SKILL_DIR}` as written; the file is `scripts/coach.py` beside
+  `SKILL.md`. It also says that every command and script is listed on that
+  page — a test session spent three calls listing the folder to find them.
+
+No change to scripts, data or progress files.
+
 ## 3.0.0 — 2026-10-07
 
 **One skill, a tutor's workflow, and task shapes taken from the source.**

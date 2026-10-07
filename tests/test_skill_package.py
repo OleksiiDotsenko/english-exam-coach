@@ -279,6 +279,7 @@ class CommandFileTests(unittest.TestCase):
         # both searching the disk and improvising.
         for path in COMMANDS_DIR.glob("*.md"):
             body = " ".join(front_matter(path)[1].split())
+            self.assertTrue("skill named `english-exam-coach`" in body, path.name)
             self.assertTrue("`english-exam-coach:english-exam-coach`" in body, path.name)
             self.assertTrue("${CLAUDE_PLUGIN_ROOT}/skills/english-exam-coach/SKILL.md"
                             in body, path.name)

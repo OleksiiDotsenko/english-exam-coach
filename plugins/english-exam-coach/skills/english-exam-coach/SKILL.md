@@ -60,10 +60,13 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/coach.py <command> [options]
 ```
 
 Below and in every reference file this is written **`coach <command>`**.
-On Windows use `python` or `py` if `python3` is missing. Quote the path if
-it contains spaces. If `${CLAUDE_SKILL_DIR}` appears literally instead of a
-real path, use the folder this file was read from. `coach <command> --help`
-shows a command's options.
+The file is `scripts/coach.py` beside this one: where the path above still
+shows `${CLAUDE_SKILL_DIR}` literally (a chat sandbox copies this folder in
+whole and does not fill it in), use the folder this file was read from. On
+Windows use `python` or `py` if `python3` is missing. Quote the path if it
+contains spaces. `coach <command> --help` shows a command's options; every
+command and every script is listed on this page, so there is no need to
+search the folder.
 
 | Command | Use it to |
 |---|---|
