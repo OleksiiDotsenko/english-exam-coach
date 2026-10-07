@@ -1,19 +1,21 @@
 ---
-description: Quick CEFR level diagnostic across reading/use of English and writing
+description: A 15-minute check of your CEFR level from use-of-English items and a writing sample
 argument-hint: "[optional: target exam, e.g. toefl-ibt]"
 ---
 
 Assess my English level: $ARGUMENTS
 
-Use the `exam-router` skill's level diagnostic (its step 4): a compact
-~15-minute probe — 8 graded use-of-english items and a short writing sample
-(the primary evidence) — anchored to the paraphrased CEFR descriptors and
-calibration anchors in `${CLAUDE_PLUGIN_ROOT}/data/cefr/`.
+**First load the coach.** This command is only a shortcut: the instructions
+and the tools live in the skill `english-exam-coach:english-exam-coach`.
+Invoke that skill now (it is a different thing from this command). If it
+cannot be invoked here, read
+`${CLAUDE_PLUGIN_ROOT}/skills/english-exam-coach/SKILL.md` instead and treat
+the folder it is in as the skill folder. Do not search the disk for it, and
+do not improvise the workflow from memory: if neither works, say so and
+stop.
 
-Report a SINGLE blended CEFR range (e.g. "B2, approaching C1"), consistent
-with the exam-router diagnostic's method (the writing sample is the primary
-evidence, the items refine it), say clearly that it is an indicative
-self-practice estimate and that listening and speaking were not measured, and
-— if the user named a target exam — state the gap to that exam's typical pass
-level and suggest the first drill. The diagnostic is logged exactly once by
-exam-router step 4; do not log it again here.
+Then follow the skill's `references/level-check.md`. Report one blended
+CEFR range, say that it is an indicative estimate and that listening and
+speaking were not measured, and — if a target exam was named — state the gap
+to that exam's usual pass level and suggest the first drill. Log the check
+exactly once.

@@ -4,18 +4,21 @@
 
 <p align="center">
   <a href="https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/OleksiiDotsenko/english-exam-coach/tests.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
-  <img src="https://img.shields.io/badge/version-2.0.1-F97316?style=flat-square" alt="version 2.0.1">
+  <img src="https://img.shields.io/badge/version-3.0.0-F97316?style=flat-square" alt="version 3.0.0">
   <img src="https://img.shields.io/badge/license-MIT-FB923C?style=flat-square" alt="MIT license">
   <img src="https://img.shields.io/badge/python-stdlib%20only-FDBA74?style=flat-square" alt="python stdlib only">
   <img src="https://img.shields.io/badge/network%20calls-zero-EA580C?style=flat-square" alt="zero network calls">
 </p>
 
 **English Exam Coach** turns [Claude Code](https://claude.com/claude-code)
-into your personal English exam tutor. It generates original practice tasks
-in the exact format of your exam, grades your answers with feedback that
-actually tells you what to fix, and keeps a practice log on your own disk —
-so every session shows you your trend, your weakest task type, and the one
-thing to drill next.
+into an English exam tutor. It sets original practice in the exact format of
+your exam, grades it with feedback that tells you what to fix, and keeps a
+record on your own disk — so every session knows your trend, your weakest
+task type, and the one thing to drill next.
+
+New in 3.0: it works for **tutors** too. Log a student's full test from any
+platform, review it against their earlier tests, see which mistakes are
+habits, and print practice sheets with answer keys.
 
 > [!IMPORTANT]
 > **Indicative, not official.** All scores and level estimates are
@@ -28,8 +31,8 @@ thing to drill next.
 
 Most tools grade you and forget. This one keeps a private ledger of your
 actual mistakes, schedules them for re-testing, and — the part nothing else
-does — **generates a brand-new item on the same point** when it comes back,
-so you can never answer from memory of the card.
+does — **writes a brand-new item on the same point** when it comes back, so
+you can never answer from memory of the card.
 
 ```text
 You:    /daily-drill
@@ -45,40 +48,67 @@ Every score also decomposes: instead of "your writing is B2", the report
 tells you *which criterion* is holding it there, and says what the estimate
 rests on — a typed transcript and a real recording never count the same.
 
+## 🧑‍🏫 For tutors: full tests, habits, paper
+
+A single drill says how one task went. A run of full tests is the only
+honest trend line — and laying every mistake across that run is what
+separates a slip from a habit.
+
+```text
+You:    /review-test Dana "Mock 6"      [score report + her writing attached]
+Claude: Logged: R 5.5 · L 5.5 · W 5.5 · S 4.0 → overall 5.0, her record.
+        4 mistakes in 4 points — 1 new, 3 seen before:
+          missing article before a singular count noun   in 6 of 6 tests
+          purpose questions answered with the topic      in 5 of 6 tests
+          "adapted" confused with "adopted"              back after 3 clean tests
+        Stayed away: third-person -s — 1 clean test, 3 to go.
+You:    /worksheet Dana articles
+Claude: sheet.html (with key) and sheet-learner.html written — open in a
+        browser and print, or save as PDF.
+```
+
+- **`coach log-test`** records a test's scores exactly as the test gave them.
+- **`coach tests`** shows the history: records, first half against second
+  half, per-task detail — and refuses to call two tests a trend.
+- **`coach catalog`** is the error catalog: every mistake ranked, a
+  point-by-test matrix, mistakes repeated word for word, mistakes carried
+  over from the first language, and a **habit state** for every point.
+  One rule throughout: a point is *closed* only after **four clean tests in
+  a row**. Two clean tests is not closed.
+- **`coach render`** turns any report or worksheet into a page that prints
+  cleanly — answer key on its own page, or left out for the learner's copy.
+- **`--learner <name>`** keeps each student in a folder of their own.
+
 ## 🧡 What you can do
 
-- 📝 **Writing** — paste your essay, email, or report; get a band range, a
+- 📝 **Writing** — paste your essay, email or report; get a band range, a
   CEFR level, and rewrites built from *your own sentences*
-- 🗣️ **Speaking** — exam-format prompts with real timings; feedback on a
-  transcript or recording description
+- 🗣️ **Speaking** — exam-format prompts under the real clock; feedback on a
+  transcript, or on a recording if you have a local speech recogniser
 - 📖 **Reading & Use of English** — cloze, key word transformations,
   matching, True/False/Not Given… scored objectively, every answer explained
-- 🎧 **Listening** — generated scripts with exam-style questions (spoken
-  aloud on macOS, read-along elsewhere)
-- 🧠 **Vocabulary** — leveled word sets with spaced repetition that
-  remembers what you keep forgetting
+- 🎧 **Listening** — original scripts with exam-style questions, spoken by
+  your computer's own voices on macOS and Linux, read-once elsewhere
+- 🧠 **Vocabulary** — levelled word sets with spaced repetition
 - 🗓️ **Study plan** — tell it your exam date; get a week-by-week plan it
   checks you against
 - 📈 **Progress** — every attempt logged locally; reports show trends and
   pick your next drill
+- 🧾 **Full-test review, error catalog, printable sheets** — see above
 
 ## 🚀 Get started in 2 minutes
 
-You need [Claude Code](https://claude.com/claude-code) and Python 3. Most
-Linux distros include it; on macOS you may be prompted to install the
-Command Line Tools the first time (`xcode-select --install`) or grab it from
-[python.org](https://www.python.org/downloads/); on Windows, install from
-[python.org](https://www.python.org/downloads/) and use `py -3 …` (or
-`python …`) if `python3` isn't found.
+You need [Claude Code](https://claude.com/claude-code) and Python 3.8 or
+newer. Most Linux distros include it; on macOS you may be prompted to
+install the Command Line Tools the first time (`xcode-select --install`) or
+grab it from [python.org](https://www.python.org/downloads/); on Windows,
+install from [python.org](https://www.python.org/downloads/).
 
 **1.** Open a terminal and start Claude Code:
 
 ```bash
 claude
 ```
-
-*(New to Claude Code? [Install it first](https://claude.com/claude-code),
-then run `claude` from any folder.)*
 
 **2.** Inside Claude Code, run these two commands **one at a time** —
 paste the first, press Enter, wait for the ✔, then paste the second:
@@ -100,8 +130,7 @@ paste the first, press Enter, wait for the ✔, then paste the second:
 > claude plugin install english-exam-coach@english-exam-coach
 > ```
 
-**3.** Restart Claude Code (type `/exit`, then `claude` again — or just
-open a new session in the app) and type:
+**3.** Start a new session and type:
 
 ```
 /start-prep
@@ -109,40 +138,20 @@ open a new session in the app) and type:
 
 That's it — it asks which exam you're preparing for, finds your level, and
 starts your first task. Prefer talking? Just say *"help me prepare for
-TOEFL"* or *"here's my IELTS essay: …"* — the right skill fires on its own.
+TOEFL"* or *"here's my IELTS essay: …"*.
 
 | Say / run | What happens |
 |---|---|
-| `/start-prep` | Guided start: pick exam → level → section → practice |
-| `/assess-level toefl-ibt` | 15-minute CEFR diagnostic, logged as your baseline |
+| `/start-prep` | Guided start: exam → level → section → practice |
+| `/assess-level toefl-ibt` | 15-minute CEFR check, logged as your baseline |
 | "Give me a C1 key word transformation drill" | Original items, objective scoring, explanations, logged |
-| "Here's my IELTS Task 2 essay: …" | Criteria-based feedback, band range + CEFR level, prioritized rewrites, logged |
-| `/mock-exam cefr-c1 reading` | Full timed section, no hints, scored and logged |
-| `/daily-drill` | 10–15 min drill on your weakest task type from the log |
-| `/session-report` · `/progress` | Markdown reports for the session / all time |
-
-## 🕹️ Example session
-
-```text
-You:    /start-prep
-Claude: Which exam are you preparing for? (IELTS Academic / IELTS General /
-        TOEFL iBT / CEFR B1–C2)
-You:    TOEFL, writing
-Claude: TOEFL iBT Writing has three task types: Build a Sentence,
-        Write an Email (7 min), Academic Discussion (10 min).
-        Practice a new task, or get feedback on something you wrote?
-You:    new email task
-Claude: [original Write-an-Email task: scenario + 3 required content
-        points, 7-minute timer starts when you say go]
-You:    [your email]
-Claude: Band estimate: 4.5–5.0 / 6 (≈ B2, borderline C1).
-        All 3 content points covered; register consistent.
-        Priority fixes: (1) …, (2) …, (3) … — each shown as a rewrite
-        of your own sentences. Attempt logged.
-You:    /session-report
-Claude: [table of today's attempts, time on task, weakest task type,
-        one recommended next drill]
-```
+| "Here's my IELTS Task 2 essay: …" | Criteria-based feedback, band range + CEFR level, prioritised rewrites, logged |
+| `/mock-exam toefl-ibt full` | A timed mock — one section or the whole test |
+| `/daily-drill` | 10–15 minutes on what your own log says is weakest |
+| `/session-report` · `/progress` | Reports for the session / all time |
+| `/review-test` | Log and review a full test taken elsewhere |
+| `/error-catalog` | What keeps going wrong across tests |
+| `/worksheet` | A printable practice sheet with an answer key |
 
 ## 📚 Supported exams
 
@@ -157,39 +166,48 @@ Claude: [table of today's attempts, time on task, weakest task type,
 | `cefr-c2` | C2 Proficiency | C2 | Cambridge English Scale |
 
 Format facts (task types, item counts, timings, word counts, scales) live in
-[data/exam-formats/](plugins/english-exam-coach/data/exam-formats/) and were
-verified against official sources in July 2026 — including the redesigned
-TOEFL iBT (adaptive sections, 1–6 band scale). Formats change occasionally;
+[data/exam-formats/](plugins/english-exam-coach/skills/english-exam-coach/data/exam-formats/).
+The TOEFL iBT file was re-verified in October 2026 against the exam
+provider's published test specifications and its full-length practice test;
+the task shapes it describes are pinned by the test suite. Formats change —
 confirm details with the exam provider before test day.
+
+**TOEFL item shapes are built by rule.** *Complete the Words* and *Build a
+Sentence* have a mechanical shape that is easy to get subtly wrong by hand —
+a blank too many, a frame that does not match its tiles. `coach ctest` and
+`coach sentence` cut a plain paragraph or sentence into the exact shape and
+mark the answers, so an item is always answerable.
 
 ## 📈 Your progress, on your disk
 
-Plain files in your own workspace (never inside the plugin):
+Plain files in a folder of your own (never inside the plugin):
 
-- `attempts.jsonl` — append-only log, one line per scored attempt.
-  **Source of truth.** The tooling only ever appends; "clearing progress"
-  is a deliberate manual action (delete the file yourself), never a side
-  effect.
-- `errors.jsonl` — append-only ledger of the specific points you got wrong.
-- `queue.json` — when each of those points is due to come back.
+- `attempts.jsonl` — one line per scored attempt.
+- `errors.jsonl` — the specific points you got wrong.
+- `tests.jsonl` — the scores of full tests.
+- `queue.json` — when each point is due to come back.
 - `profile.json` — your target exam, score and date.
-- `reports/*.md` — session reports and an all-time overview, regenerable
-  at any time.
+- `reports/` — session reports, the all-time overview, test reviews and the
+  error catalog, as Markdown (and HTML when you render them). Always
+  regenerable.
+- `learners/<name>/` — the same layout again, one per student, in tutor
+  mode.
 
-Nothing here is required and nothing is ever rewritten behind your back: the
-logs are append-only, JSON state is written atomically, and a file that
-somehow gets corrupted is set aside rather than silently discarded. Run
-`state.py validate` to check the directory at any time.
+The three logs are **append-only**: nothing is rewritten behind your back,
+and a correction is a new line (`--amend`, `--void`) rather than an edit.
+JSON state is written atomically, and a file that somehow gets corrupted is
+set aside rather than silently discarded. `coach state validate` checks the
+directory; `coach state export` packs it into one zip to move or back up.
 
-Cross-exam trends are normalized to CEFR — an IELTS band and a TOEFL score
+Cross-exam trends are normalised to CEFR — an IELTS band and a TOEFL score
 are never merged into one number.
 
 **Where the files live** (first match wins): the `--base` flag →
-`EXAM_COACH_HOME` env var → `~/english-exam-coach/` (created on first use).
+`EXAM_COACH_HOME` → `~/english-exam-coach/` (created on first use).
 
 > [!TIP]
 > **Obsidian user?** Point `EXAM_COACH_HOME` at a folder inside your vault
-> and the reports' YAML frontmatter (`type`, `date`, `session`, `tasks`,
+> and the reports' YAML front matter (`type`, `date`, `session`, `tasks`,
 > `minutes`, `exams`) makes Dataview tables and trend views work with no
 > extra code.
 
@@ -198,15 +216,15 @@ are never merged into one number.
 <details>
 <summary><b>Does it cost anything extra?</b></summary>
 
-No separate account, API key, or subscription — it runs inside your
-existing Claude Code session.
+No separate account, API key or subscription — it runs inside your
+existing Claude session.
 </details>
 
 <details>
 <summary><b>Where does my data go?</b></summary>
 
 Nowhere. The plugin makes zero network calls and sends no telemetry. Your
-practice log is a local file in a folder you choose.
+practice log is a set of local files in a folder you choose.
 </details>
 
 <details>
@@ -215,6 +233,42 @@ practice log is a local file in a folder you choose.
 No — and be suspicious of anything that claims to. Estimates are honest
 ranges tied to public CEFR descriptors: good enough to steer your practice,
 not an official measurement.
+</details>
+
+<details>
+<summary><b>I'm a tutor. Where do my students' results go?</b></summary>
+
+Into <code>learners/&lt;name&gt;/</code> inside your progress folder — one
+folder per student, never mixed, never uploaded. Use
+<code>coach state export --learner &lt;name&gt;</code> to hand a student
+their own history.
+</details>
+
+<details>
+<summary><b>Can it make a PDF?</b></summary>
+
+It makes a self-contained HTML page laid out for print. Open it in any
+browser and print it, or choose "Save as PDF" in the print dialog. No PDF
+library is bundled, by design: the scripts are standard library only.
+</details>
+
+<details>
+<summary><b>Can it play listening audio?</b></summary>
+
+On macOS (<code>say</code>) and Linux (<code>espeak</code>) it speaks
+scripts with the system voices, a different voice per speaker. Elsewhere
+listening drills fall back to read-once scripts — or bring your own audio
+and it builds questions for that.
+</details>
+
+<details>
+<summary><b>Can it listen to my speaking?</b></summary>
+
+It never records you. If you give it a recording and you already have a
+local speech recogniser installed (<code>whisper-cli</code> or
+<code>whisper</code>), it transcribes the file on your machine and measures
+pace and pauses. Otherwise you paste a transcript. Pronunciation is never
+scored.
 </details>
 
 <details>
@@ -243,16 +297,7 @@ The <code>/plugin</code> dialog only exists in the terminal version of
 Claude Code. In the desktop or web app, run the equivalent commands from
 any terminal: <code>claude plugin marketplace add
 OleksiiDotsenko/english-exam-coach</code>, then <code>claude plugin
-install english-exam-coach@english-exam-coach</code>. The plugin then
-works in every Claude Code surface on that machine.
-</details>
-
-<details>
-<summary><b>Can it play listening audio?</b></summary>
-
-On macOS it speaks scripts aloud via the built-in <code>say</code> command.
-Elsewhere, listening drills degrade gracefully to read-once scripts —
-or bring your own audio/podcast and it builds questions for that.
+install english-exam-coach@english-exam-coach</code>.
 </details>
 
 <details>
@@ -265,40 +310,63 @@ Update: <code>/plugin marketplace update english-exam-coach</code>, then
 yours and are never touched by either.
 </details>
 
+<details>
+<summary><b>Upgrading from 2.x</b></summary>
+
+Your progress folder is read as it is — the logs are additive-only by
+contract. What changed is the packaging: the eight skills are now one,
+<code>english-exam-coach</code>, and the commands are unchanged. Nothing to
+migrate.
+</details>
+
 ## 🔒 Security & privacy
 
-- **No network access.** No network calls, no telemetry; everything runs
-  locally in your Claude session.
-- **No MCP servers, no hooks, no background processes** — just Markdown
-  skills/commands, two Python scripts invoked explicitly, and (only for
-  optional macOS listening audio) the built-in `say`/`afplay`.
-- **Persistent data goes only to your progress directory** — the attempt
-  log is opened in append mode only, and nothing else on disk is modified.
-  The optional macOS listening feature additionally writes a short-lived
-  temporary script/audio file (via the built-in `say`/`afplay`) used only
-  for playback.
-- **Standard library only.** The scripts import nothing outside Python's
-  stdlib, so there is no supply-chain surface.
+- **No network access.** No network calls, no telemetry, nothing
+  downloaded. Everything runs locally in your Claude session.
+- **No MCP servers, no hooks, no background processes.**
+- **One bookkeeping tool, provably inert.** `coach.py` and everything it
+  can import use the Python standard library only, start no other program
+  and open no connection. That is not a promise but a test: the suite
+  walks the import graph and fails on any module that could.
+- **It writes in one place.** Your progress directory, plus a page or an
+  archive you ask for. The logs are opened in append mode only.
+- **Harmless wherever it is pointed.** A learner's essay is untrusted text.
+  `coach.py` reads only working files (`.txt`, `.md`, `.json`, `.jsonl`,
+  links followed), writes pages only to `.html` and archives only to `.zip`,
+  and replaces an existing file only if it wrote it. Export and import move
+  the files of the progress layout and nothing else. No tool is
+  pre-approved — you decide what runs without asking.
+- **Three optional helpers start programs already on your machine**, and
+  only when a task needs them: `speak.py` and `timed_speak.py` (the system
+  speech synthesiser and an audio player), and `transcribe.py` (a speech
+  recogniser you installed, on a recording you provide). Audio is rendered
+  to a temporary folder and deleted after the drill. Nothing records you.
+- **Nothing a report contains can run.** The print renderer escapes all
+  HTML, loads no scripts, fonts or images, and links only to ordinary web
+  and mail addresses.
 
 ## 🧩 What's inside
 
-- **8 skills**, organized by macro-skill, not by exam (exam differences are
-  reference data, not code): `exam-router`, `writing-evaluator`,
-  `speaking-coach`, `reading-use-of-english`, `listening-trainer`,
-  `vocabulary-builder`, `study-planner`, `progress-tracker`.
-- **6 commands:** `/start-prep`, `/mock-exam`, `/daily-drill`,
-  `/assess-level`, `/session-report`, `/progress`.
-- **Data:** exam format facts, paraphrased public CEFR descriptors, and a
-  small bank of original seed items used as format references.
-- **Scripts:** `log_attempt.py` and `build_report.py` — Python 3 standard
-  library only.
+- **One self-contained skill**, `english-exam-coach`: a short router
+  (`SKILL.md`), a reference file per area loaded on demand, reference data,
+  and the scripts — all in one folder, so it works wherever a skill's own
+  folder is all there is.
+- **9 commands:** `/start-prep`, `/assess-level`, `/daily-drill`,
+  `/mock-exam`, `/session-report`, `/progress`, `/review-test`,
+  `/error-catalog`, `/worksheet`.
+- **Data:** exam format facts, paraphrased public CEFR descriptors,
+  calibration anchors, a closed error taxonomy, and original seed items
+  used as format references.
+- **Scripts:** `coach.py` and the modules behind its 15 commands, plus the
+  three optional helpers. Python 3 standard library only.
 
 ## ⚖️ Content and IP policy
 
 - **No official exam content.** No past papers, official item banks, or
   official mark schemes anywhere in this repository. All practice items are
   original, generated to match public *format facts* (task types, counts,
-  timings, scales — facts are not copyrightable).
+  timings, scales — facts are not copyrightable). Task instructions are
+  written in our own words.
 - **Public descriptors only.** Evaluation anchors are condensed and adapted
   from the public CEFR framework (© Council of Europe, freely published);
   criterion *names* are used nominatively. Some short phrases stay close to
@@ -315,11 +383,13 @@ open an issue — it will be treated as a bug.
 ```bash
 python3 -m unittest discover -s tests      # from the repo root
 claude plugin validate . --strict
+claude plugin validate ./plugins/english-exam-coach --strict
 python3 tools/make_banner.py               # regenerate assets/banner.svg
 ```
 
-Design notes: skills are procedures, exam differences are reference data
-loaded on demand; the progress log is append-only and reports are derived.
+Design notes: one skill routes to reference files; exam differences are
+data, not code; the logs are append-only and every report is derived from
+them. [DOGFOOD.md](DOGFOOD.md) lists what the tests cannot prove.
 See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## License

@@ -14,9 +14,9 @@ import sys
 import unittest
 from pathlib import Path
 
-from helpers import SCRIPTS
+from helpers import REFERENCES, SCRIPTS
 
-FIXTURE = (SCRIPTS.parent / "references" / "tagging-examples.md")
+FIXTURE = REFERENCES / "tagging-examples.md"
 
 sys.path.insert(0, str(SCRIPTS))
 import log_error  # noqa: E402

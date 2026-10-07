@@ -1,5 +1,171 @@
 # Changelog
 
+## 3.0.0 — 2026-10-07
+
+**One skill, a tutor's workflow, and task shapes taken from the source.**
+
+Three things drove this release. The plugin as packaged could only work in
+Claude Code, because its eight skills reached outside their own folders. Its
+author turned out to use it as a *tutor* — reviewing a student's full tests
+by hand, because the plugin had no path for that. And two earlier "fixes" to
+the TOEFL task shapes, taken from prep-site summaries, were themselves wrong.
+
+### Breaking: eight skills became one
+
+- The plugin now ships **one self-contained skill**, `english-exam-coach`: a
+  short router (`SKILL.md`), one reference file per area, the reference
+  data, and the scripts, all in one folder. Nothing reaches outside it, so
+  it works wherever only a skill's own folder is available.
+- The eight old skill names (`exam-router`, `writing-evaluator`, …) no
+  longer exist as skills. The six commands are unchanged, and three are new.
+  **Progress data needs no migration** — the logs are additive-only.
+- All bookkeeping goes through **one tool**, `coach.py` (`coach log-attempt`,
+  `coach report`, …). It and everything it can import use the standard
+  library only, start no other program and open no connection — and a test
+  now walks the import graph to keep it that way.
+- `queue.py` and `profile.py` shadowed Python's own modules of those names
+  and are now `review_queue.py` and `learner_profile.py`.
+- **Each command now loads the skill by its full name, with a path to read
+  if it cannot.** A command is not the skill: told only to "use the
+  skill", a test session re-invoked the command itself, never found the
+  skill's folder, and improvised its own files. Every command now names
+  `english-exam-coach:english-exam-coach`, gives the fallback path, and
+  forbids both searching the disk and improvising.
+
+### Harmless wherever it is pointed
+
+`coach.py` is a command a user allows once and stops reading, and a
+learner's essay is untrusted text. So the tool itself is fenced in:
+
+- It **reads only working files** — `.txt`, `.md`, `.json`, `.jsonl`, after
+  following links — and will not print a key file or a shell profile back,
+  whatever it is called on the command line.
+- It **writes a page only to `.html` and an archive only to `.zip`**, and
+  replaces an existing file only if it wrote it.
+- `coach state export` and `import` move **the files of the progress layout
+  and nothing else** — not the rest of the folder a progress directory may
+  sit in, and not whatever an archive from elsewhere happens to contain.
+- **Nothing is pre-approved.** The skill grants itself no tools.
+- The helpers are fenced too: `speak.py` will not render into a folder it
+  did not make, and `transcribe.py` hands a converter only audio files and
+  confines it to local files.
+
+### New: full tests, and what keeps going wrong across them
+
+- **`coach log-test`** records a whole test — a mock platform, an official
+  practice test, the real exam — with its section scores exactly as given,
+  the overall, and per-task detail. A computed overall is labelled as
+  computed. Corrections are new lines (`--amend`, `--void`).
+- **`coach tests`** reports the history: records, the best score in each
+  section added up, first half against second half (only from four tests —
+  with fewer it says a difference is not a trend), per-task detail; and
+  `--test NAME` reviews one test against the ones before it — which mistakes
+  are new, which were seen before and in how many tests, which stayed away.
+- **`coach catalog`** is the error catalog: categories, error types and
+  specific points ranked with "in N of M tests", a point-by-test matrix,
+  mistakes repeated word for word, mistakes carried over from the first
+  language, and a **habit state** for every point — chronic, returned,
+  recurring, new, fading, closed, one-off. One rule throughout: a point is
+  closed only after **four clean tests in a row**.
+- **`coach log-error --batch`** imports a reviewed test's mistakes in one
+  go, all-or-nothing. `--transfer` records what in the learner's first
+  language produces an error.
+- **The taxonomy grew from 42 to 52 tags**, each added because a catalog of
+  several hundred real mistakes had a recurring group with no honest home:
+  `comprehension/purpose`, `main-idea`, `negation`, `structure`,
+  `vocabulary`; `lexis/non-word`, `redundancy`; `grammar/pronoun`,
+  `omission`; `delivery/repetition`. It now has a reference file
+  (`data/error-taxonomy.md`) that a test keeps identical to the code.
+- **Corrections for an append-only ledger.** Every mistake has an id;
+  `coach log-error --void` withdraws one and `--amend` replaces it, as new
+  lines. The queue and the catalog follow.
+
+### New: tutor mode
+
+- **`--learner <name>`** (or `$EXAM_COACH_LEARNER`) keeps each student in a
+  folder of their own under `learners/`, with exactly the solo layout.
+  `coach state learners` lists them.
+- **`coach state export` / `import`** packs a progress directory into one
+  zip and restores it — how progress survives a session whose files do not
+  persist, and how it moves between machines.
+
+### New: paper
+
+- **`coach render`** turns any report or a Markdown worksheet into one
+  self-contained HTML page laid out for print: A4 or Letter, portrait or
+  landscape, page numbers, an answer key that starts on its own page or is
+  left out for the learner's copy (`--no-key`). The page loads nothing and
+  runs nothing; all source HTML is escaped. No PDF library — the browser's
+  print dialog saves the PDF.
+- A new reference, `practice-sheets.md`, and a `/worksheet` command: sheets
+  aimed at a learner's known mistakes, built around their own sentences.
+
+### Fixed: TOEFL task shapes, re-derived from the exam provider's own material
+
+Verified against the published 2026 test specifications and the official
+full-length practice test. The previous two releases were wrong here.
+
+- **Complete the Words is a C-test.** The first sentence is whole; then the
+  second half of *every second word* is removed until ten are gapped; a word
+  of *n* letters keeps `n // 2` of them, so a stem can be a single letter;
+  one blank per missing letter. v0.1.7 said "not every other word" and
+  v2.0.1 said "the first 3–5 letters" — both wrong. Items are now **built by
+  `coach ctest make`** from a plain paragraph and marked by `coach ctest
+  check`, never laid out by hand.
+- **Build a Sentence** shows the reply as a frame of 5–7 blanks, sometimes
+  with a word or two pre-printed, with lower-case tiles and — in a few items
+  — one extra tile that is not used. Most replies are questions. Items are
+  **built by `coach sentence make`** and marked all-or-nothing by `coach
+  sentence check`.
+- **Listen and Repeat** sentences grow loosely from 5–7 to 11–14 words and
+  do not reach "the upper teens" (v2.0.1). The scenario line gives a role
+  and a speaker; there is no preparation time.
+- **Take an Interview**: after the first, every question is led into by one
+  to three sentences — interviewer turns of 35–60 words, not one-liners —
+  and the four climb from a fact, to a reaction, to agree/disagree, to a
+  policy opinion.
+- **Section facts** now come from the published blueprint: Reading 50 items
+  (30 of them Complete-the-Words gaps), Listening 47, raw points per
+  section, router and second-module timings, two questions per conversation
+  and announcement, four per talk, no going back in Listening. Build a
+  Sentence's "6 min 50 s" was a prep-site figure; none is published.
+- Email and discussion seeds now have the real layout (situation, three
+  bullets, To/Subject filled in; a professor's post and two students on
+  different sides, at least 100 words). Instructions are in our own words.
+
+### New: sound, where there is any
+
+Three optional helper scripts, kept out of `coach.py` because they start
+other programs:
+
+- **`speak.py`** speaks a script with the system voices — `say` on macOS,
+  `espeak` on Linux — a different voice per speaker, rendered first and
+  played afterwards so synthesis never leaks thinking time. Replaces the
+  ad-hoc shell the listening instructions used to improvise.
+- **`timed_speak.py --audio`** plays each prompt and then runs the answer
+  clock, so Listen and Repeat and the interview run hands-free.
+- **`transcribe.py`** transcribes a recording the learner provides with a
+  recogniser already installed (`whisper-cli` or `whisper`), locally, and
+  measures pace, start delay and long pauses. It never records.
+- **`coach repeat`** compares a repeated sentence with the one heard, word
+  for word, and names the first sentence that broke down.
+
+### Fixed
+
+- **Points written in a non-Latin alphabet collapsed into one.** The
+  grouping key kept only `a–z0–9`, so every point named in, say, Ukrainian
+  became the same empty key. Grouping is now Unicode-aware; Latin points
+  group exactly as before, and the queue re-keys itself on the next sync.
+- `state.py export` left derived reports out only at the top level.
+- Tests could be steered into real data by a developer's own
+  `EXAM_COACH_LEARNER`.
+- The tools no longer write Python bytecode into the skill's own folder.
+
+**Tests:** 135 → 473, on Python 3.9 and 3.14. Two end-to-end runs were made
+in a real session before release — a drill, and a tutor's test review
+through `/review-test`; the first attempt at the second is what found the
+command hand-over problem described above.
+
 ## 2.0.1 — 2026-07-28
 
 Four TOEFL 2026 task-shape fixes, all found by dogfooding generated practice

@@ -18,10 +18,10 @@ from helpers import SCRIPTS, run_script
 
 LOG_ATTEMPT = SCRIPTS / "log_attempt.py"
 LOG_ERROR = SCRIPTS / "log_error.py"
-QUEUE = SCRIPTS / "queue.py"
+QUEUE = SCRIPTS / "review_queue.py"
 DRILL_CONTEXT = SCRIPTS / "drill_context.py"
 BUILD_REPORT = SCRIPTS / "build_report.py"
-PROFILE = SCRIPTS / "profile.py"
+PROFILE = SCRIPTS / "learner_profile.py"
 
 
 class LoopEndToEndTests(unittest.TestCase):

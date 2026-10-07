@@ -1,9 +1,9 @@
 ---
-description: Show all-time progress - CEFR trends, streak, strongest and weakest task types
+description: Show the error catalog - what keeps going wrong across full tests, and which habits are closed
 argument-hint: "[optional: learner name, for a tutor]"
 ---
 
-Show the all-time progress overview: $ARGUMENTS
+Show the error catalog: $ARGUMENTS
 
 **First load the coach.** This command is only a shortcut: the instructions
 and the tools live in the skill `english-exam-coach:english-exam-coach`.
@@ -14,8 +14,9 @@ the folder it is in as the skill folder. Do not search the disk for it, and
 do not improvise the workflow from memory: if neither works, say so and
 stop.
 
-Then, with the skill's `references/progress.md`: run `coach report --scope
-all` (with `--learner <name>` if a learner was named), show the report and
-say where it was written. Keep the indicative-scores footer. If full tests
-are logged, mention that `coach tests` has their history. If the log is
-empty, say so and offer the level check to set a baseline.
+Then, with the skill's `references/test-review.md` (sections 4 and 5): run
+`coach catalog` (with `--learner <name>` if a learner was named), present it
+in the user's language with the numbers copied exactly, and explain the
+habit states by the rule in force: a point is closed only after four clean
+tests in a row. If fewer than two tests are logged, say what is missing
+instead of guessing a trend.

@@ -5,18 +5,17 @@ argument-hint: "[optional: session id, e.g. 2026-07-08-am]"
 
 Build the session report: $ARGUMENTS
 
-Run:
-`python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/build_report.py" --scope session`
-(append `--session $ARGUMENTS` if a session id was given; otherwise it uses
-the most recent session in the log).
-If `python3` is not found (common on Windows), run the same command with
-`python` or `py` instead.
+**First load the coach.** This command is only a shortcut: the instructions
+and the tools live in the skill `english-exam-coach:english-exam-coach`.
+Invoke that skill now (it is a different thing from this command). If it
+cannot be invoked here, read
+`${CLAUDE_PLUGIN_ROOT}/skills/english-exam-coach/SKILL.md` instead and treat
+the folder it is in as the skill folder. Do not search the disk for it, and
+do not improvise the workflow from memory: if neither works, say so and
+stop.
 
-Show the report body to the user and mention where it was written
-(`<base>/reports/session-<id>.md`). If the script reports no attempts yet,
-offer `/daily-drill` instead of improvising numbers.
-
-If no session id was given and the most recent session in the log is **not
-from today**, say so explicitly ("no attempts logged today — this is your
-last session, from <date>") before showing it, and offer `/daily-drill`, so
-a stale session is never presented as if it were today's.
+Then, with the skill's `references/progress.md`: run `coach report --scope
+session` (add `--session <id>` if one was given; otherwise it reports the
+most recent session). Show the report and say where it was written. If the
+most recent session is not from today, say so before showing it. If nothing
+is logged yet, offer a drill instead of improvising numbers.

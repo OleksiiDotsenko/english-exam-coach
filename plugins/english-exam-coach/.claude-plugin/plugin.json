@@ -1,12 +1,13 @@
 {
   "name": "english-exam-coach",
-  "version": "2.0.1",
-  "homepage": "https://github.com/OleksiiDotsenko/english-exam-coach",
-  "repository": "https://github.com/OleksiiDotsenko/english-exam-coach",
-  "description": "CEFR-aligned prep for IELTS, TOEFL iBT, and B1-C2 English exams: writing/speaking feedback, reading & use-of-english drills, listening, vocabulary, study planning, and progress tracking. Original content only.",
+  "displayName": "English Exam Coach",
+  "version": "3.0.0",
+  "description": "Exam coach for IELTS, TOEFL iBT and Cambridge B1-C2: original practice with criteria-based feedback, mistakes re-tested on fresh items, full-test reviews with an error catalog, and printable practice sheets. Local files only, original content only.",
   "author": {
     "name": "Oleksii Dotsenko"
   },
+  "homepage": "https://github.com/OleksiiDotsenko/english-exam-coach",
+  "repository": "https://github.com/OleksiiDotsenko/english-exam-coach",
   "license": "MIT",
   "keywords": [
     "english",
@@ -14,9 +15,11 @@
     "exam-prep",
     "ielts",
     "toefl",
+    "cambridge",
     "writing",
     "speaking",
     "vocabulary",
+    "tutor",
     "learning"
   ]
 }

@@ -1,38 +1,20 @@
 ---
-description: Run a timed mock section of an English exam, score it, and log the result
-argument-hint: "[exam-id] [section]  e.g. cefr-c1 reading"
+description: Run a timed mock - one section or a whole test - then score and log it
+argument-hint: "[exam-id] [section or 'full']  e.g. toefl-ibt reading"
 ---
 
-Run a timed mock exam section: $ARGUMENTS
+Run a timed mock: $ARGUMENTS
 
-1. Parse the arguments as exam id and section. If either is missing, use the
-   `exam-router` skill to resolve them from the user's goals (or ask once).
-   Valid exam ids: ielts-academic, ielts-general, toefl-ibt, cefr-b1,
-   cefr-b2, cefr-c1, cefr-c2.
-2. Load the exact section format from
-   `${CLAUDE_PLUGIN_ROOT}/data/exam-formats/<exam-id>.md` and announce the
-   rules: parts, item counts, and the real time limit. Note the start time.
-3. Run the section at full length using the matching skill
-   (reading-use-of-english, writing-evaluator, speaking-coach, or
-   listening-trainer) with ORIGINAL items only. No hints, no feedback, and
-   no answer key until the section is finished. Each of those skills already
-   ends with a single silent auto-log — for a mock, tell the skill to make
-   that its ONE log, writing under `--session mock-<exam-id>-<date>` with the
-   split `--seconds` from step 4. Do not add a second log; one row per task
-   type, in the mock session, with split time.
-4. When the user submits (or declares time up), score the whole section and
-   give per-part feedback and explanations. The single per-task log is the
-   delegated skill's own silent auto-log from step 3 (under `--session
-   mock-<exam-id>-<date>`, using the canonical `--task-type` slugs from
-   `data/task-types.md`) — do not log a separate attempt here. A section runs
-   under ONE clock, so **split the real elapsed time across the task types**
-   (e.g. proportional to item count) and pass each task's share as the
-   `--seconds` for that log — do not log the full section time on every row,
-   or the report's "min on task" will be inflated N-fold.
-   - **If the user quits mid-section:** offer to score only the fully
-     completed parts and log those task types with the real elapsed time
-     and the same session id. Never fabricate answers for unattempted items.
-     If nothing was completed, log nothing and say so.
-5. Finish with the session report:
-   `python3 "${CLAUDE_PLUGIN_ROOT}/skills/progress-tracker/scripts/build_report.py" --scope session --session mock-<exam-id>-<date>`.
-   (On Windows, if `python3` isn't found, use `python` or `py` instead.)
+**First load the coach.** This command is only a shortcut: the instructions
+and the tools live in the skill `english-exam-coach:english-exam-coach`.
+Invoke that skill now (it is a different thing from this command). If it
+cannot be invoked here, read
+`${CLAUDE_PLUGIN_ROOT}/skills/english-exam-coach/SKILL.md` instead and treat
+the folder it is in as the skill folder. Do not search the disk for it, and
+do not improvise the workflow from memory: if neither works, say so and
+stop.
+
+Then follow the **Mock** workflow in the skill's `references/workflows.md`.
+Read the exam's format file first, announce the real rules and time limit,
+give no hints and no key until the section is finished, and log one row per
+task type under a single mock session id.

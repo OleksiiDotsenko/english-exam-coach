@@ -4,14 +4,14 @@
     "name": "Oleksii Dotsenko"
   },
   "metadata": {
-    "description": "Skills for CEFR-based English exam preparation.",
-    "version": "2.0.1"
+    "description": "English Exam Coach: preparation for IELTS, TOEFL iBT and Cambridge B1-C2 exams.",
+    "version": "3.0.0"
   },
   "plugins": [
     {
       "name": "english-exam-coach",
       "source": "./plugins/english-exam-coach",
-      "description": "CEFR-aligned prep for IELTS, TOEFL iBT, and B1-C2 English exams: writing/speaking feedback, reading & use-of-english drills, listening, vocabulary, study planning, and progress tracking. Original content only.",
+      "description": "Exam coach for IELTS, TOEFL iBT and Cambridge B1-C2: original practice with criteria-based feedback, mistakes re-tested on fresh items, full-test reviews with an error catalog, and printable practice sheets. Local files only, original content only.",
       "author": {
         "name": "Oleksii Dotsenko"
       },
@@ -22,9 +22,11 @@
         "exam-prep",
         "ielts",
         "toefl",
+        "cambridge",
         "writing",
         "speaking",
         "vocabulary",
+        "tutor",
         "learning"
       ]
     }
