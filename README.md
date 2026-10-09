@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/OleksiiDotsenko/english-exam-coach/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/OleksiiDotsenko/english-exam-coach/tests.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
-  <img src="https://img.shields.io/badge/version-3.0.1-F97316?style=flat-square" alt="version 3.0.1">
+  <img src="https://img.shields.io/badge/version-3.0.2-F97316?style=flat-square" alt="version 3.0.2">
   <img src="https://img.shields.io/badge/license-MIT-FB923C?style=flat-square" alt="MIT license">
   <img src="https://img.shields.io/badge/python-stdlib%20only-FDBA74?style=flat-square" alt="python stdlib only">
   <img src="https://img.shields.io/badge/network%20calls-zero-EA580C?style=flat-square" alt="zero network calls">
@@ -385,6 +385,7 @@ python3 -m unittest discover -s tests      # from the repo root
 claude plugin validate . --strict
 claude plugin validate ./plugins/english-exam-coach --strict
 python3 tools/make_banner.py               # regenerate assets/banner.svg
+python3 tools/make_icon.py                 # regenerate the listing icon
 ```
 
 Design notes: one skill routes to reference files; exam differences are

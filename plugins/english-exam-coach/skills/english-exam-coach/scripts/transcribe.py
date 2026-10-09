@@ -28,7 +28,6 @@ before judging accuracy from it.
 
 import argparse
 import json
-import os
 import re
 import shutil
 import subprocess
@@ -72,12 +71,11 @@ def find_engine():
 
 
 def find_model(explicit=None):
-    """A whisper.cpp model file: the one named, $WHISPER_MODEL, or the best
-    one found in the usual folders. Returns a Path or None."""
-    for candidate in (explicit, os.environ.get("WHISPER_MODEL")):
-        if candidate:
-            path = Path(candidate).expanduser()
-            return path if path.is_file() else None
+    """A whisper.cpp model file: the one named with --model, or the best one
+    found in the usual folders. Returns a Path or None."""
+    if explicit:
+        path = Path(explicit).expanduser()
+        return path if path.is_file() else None
     found = []
     for folder in MODEL_DIRS:
         directory = Path(folder).expanduser()
@@ -241,8 +239,8 @@ def main(argv=None):
     parser.add_argument("files", nargs="+",
                         help="recordings to transcribe, or the word `check`")
     parser.add_argument("--model", default=None,
-                        help="a whisper.cpp model file (default: $WHISPER_MODEL, "
-                             "or the best one found on this machine)")
+                        help="a whisper.cpp model file (default: the best "
+                             "one found on this machine)")
     parser.add_argument("--language", default="en")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
@@ -258,7 +256,7 @@ def main(argv=None):
             return NO_ENGINE
         if needs_model and not model:
             print("%s is installed but no model file was found. Pass --model "
-                  "or set WHISPER_MODEL. Ask for a typed transcript." % engine)
+                  "<file>. Ask for a typed transcript." % engine)
             return NO_ENGINE
         converter = "ffmpeg" if shutil.which("ffmpeg") else \
             "afconvert" if shutil.which("afconvert") else "none (wav/mp3/flac/ogg only)"

@@ -98,6 +98,13 @@ telemetry, and has no MCP server, no hook and no background process.**
 
 Nothing is downloaded, installed or updated by the plugin.
 
+**Environment variables.** The plugin reads two, both optional and both
+plain settings, not credentials: `EXAM_COACH_HOME` (the folder to keep
+progress in) and `EXAM_COACH_LEARNER` (which learner's sub-folder to use).
+It reads no token, key, password or account detail from the environment or
+from any file, and — having no network code at all — could not send one
+anywhere.
+
 ## Your data
 
 Practice data stays on your machine, in files you can read, move, back up

@@ -1,7 +1,7 @@
 {
   "name": "english-exam-coach",
   "displayName": "English Exam Coach",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Exam coach for IELTS, TOEFL iBT and Cambridge B1-C2: original practice with criteria-based feedback, mistakes re-tested on fresh items, full-test reviews with an error catalog, and printable practice sheets. Local files only, original content only.",
   "author": {
     "name": "Oleksii Dotsenko"

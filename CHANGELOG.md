@@ -1,5 +1,23 @@
 # Changelog
 
+## 3.0.2 — 2026-10-09
+
+What the directory's scan of 3.0.1 asked for.
+
+- **A listing icon.** `.claude-plugin/icon.png`, a 1024 px square in the
+  banner's style, written by `tools/make_icon.py` with the standard library
+  alone. Until now the listing fell back to the publisher's own picture.
+- **Nothing passes through the environment any more.** `coach.py` used to
+  hand `--base` and `--learner` on to its commands by setting environment
+  variables; it now passes them as ordinary options, and neither sets nor
+  needs one. `transcribe.py` no longer looks at `$WHISPER_MODEL` — name the
+  model with `--model`, or let it find one on disk. The scan flags a plugin
+  that reads the environment as possibly reading a credential; the only two
+  variables still read are `EXAM_COACH_HOME` and `EXAM_COACH_LEARNER`, both
+  optional settings, and the README now says so in as many words.
+
+No change to data, instructions or progress files.
+
 ## 3.0.1 — 2026-10-07
 
 Two wording fixes for the surfaces where a plugin's commands load as skills

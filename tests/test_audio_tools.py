@@ -423,6 +423,18 @@ class TranscribeTests(ToolCase):
         self.assertIn("whisper-cli with ggml-large-v3-turbo.bin", check.stdout)
         self.assertIn("converter: ffmpeg", check.stdout)
 
+    def test_a_model_can_be_named_and_a_missing_one_is_not_silently_replaced(self):
+        self.install("whisper-cli", "ffmpeg")
+        self.model("ggml-large-v3.bin")
+        chosen = self.model("ggml-tiny.bin", "elsewhere")
+        check = self.run_tool(TRANSCRIBE, "check", "--model", chosen)
+        self.assertIn("whisper-cli with ggml-tiny.bin", check.stdout)
+        missing = self.run_tool(TRANSCRIBE, "check", "--model", self.dir / "nope.bin")
+        self.assertEqual(missing.returncode, 3)
+        # ...and the environment is not consulted for it.
+        ignored = self.run_tool(TRANSCRIBE, "check", WHISPER_MODEL=str(chosen))
+        self.assertIn("ggml-large-v3.bin", ignored.stdout)
+
     def test_a_recording_becomes_a_transcript_with_delivery_figures(self):
         self.install("whisper-cli", "ffmpeg")
         model = self.model()

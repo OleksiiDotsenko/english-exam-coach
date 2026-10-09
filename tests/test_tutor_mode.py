@@ -9,6 +9,7 @@ connection. That last promise is checked here, statically.
 
 import ast
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -134,6 +135,39 @@ class DispatcherBehaviourTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((self.base / "learners" / "dana-k" / "errors.jsonl").is_file())
         self.assertFalse((self.base / "errors.jsonl").exists())
+
+    def test_every_command_accepts_the_location_options(self):
+        # They are handed on as the command's own --base / --learner, so a
+        # command that did not accept them would fail on every call.
+        subcommands = {"queue": ("sync", "due", "show", "review"),
+                       "profile": ("show", "set"), "state": ("show",),
+                       "ctest": ("make", "check"), "sentence": ("make", "check")}
+        for command in coach_module.COMMANDS:
+            for sub in subcommands.get(command, (None,)):
+                args = [command] + ([sub] if sub else [])
+                result = coach(self.base, *args, learner="dana")
+                self.assertNotIn("unrecognized arguments", result.stderr, args)
+                self.assertNotIn("Traceback", result.stderr, args)
+
+    def test_options_are_forwarded_as_arguments_not_through_the_environment(self):
+        self.assertEqual(
+            coach_module.forward({"base": "/tmp/x", "learner": "dana"}, ["sync"]),
+            ["sync", "--base", "/tmp/x", "--learner", "dana"])
+        self.assertEqual(coach_module.forward({}, ["show"]), ["show"])
+        before = dict(os.environ)
+        coach(self.base, "state", "show", learner="dana")
+        self.assertEqual(dict(os.environ), before)
+        self.assertNotIn("os.environ", (SCRIPTS / "coach.py").read_text(encoding="utf-8"))
+
+    def test_an_option_after_the_command_wins(self):
+        self.assertEqual(
+            coach_module.forward({"learner": "anna"}, ["show", "--learner", "ben"]),
+            ["show", "--learner", "ben"])
+        self.assertEqual(
+            coach_module.forward({"base": "/a"}, ["show", "--base=/b"]),
+            ["show", "--base=/b"])
+        result = coach(self.base, "state", "show", "--learner", "ben", learner="anna")
+        self.assertIn(str(self.base / "learners" / "ben"), result.stdout)
 
     def test_equals_form_of_global_options(self):
         result = run_script(SCRIPTS / "coach.py",

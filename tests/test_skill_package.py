@@ -15,6 +15,7 @@ import ast
 import json
 import re
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -31,6 +32,8 @@ import transcribe  # noqa: E402
 SKILL = SKILL_DIR / "SKILL.md"
 COMMANDS_DIR = PLUGIN_DIR / "commands"
 HELPERS = ("speak.py", "timed_speak.py", "transcribe.py")
+IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+ENVIRONMENT_VARIABLES = {"EXAM_COACH_HOME", "EXAM_COACH_LEARNER"}
 SUBCOMMANDS = {"queue": ("sync", "due", "show", "review"),
                "profile": ("show", "set"),
                "state": ("show", "validate", "learners", "export", "import"),
@@ -411,6 +414,32 @@ class DisclosureTests(unittest.TestCase):
                       "not affiliated", "Indicative, not official"):
             self.assertTrue(claim in flat, "the listing does not say: %s" % claim)
 
+    def test_the_environment_is_read_for_two_settings_and_nothing_else(self):
+        # The directory's scan treats a plugin that reads the environment as
+        # one that may be reading a credential. So the reads are counted:
+        # two optional settings, named in the listing, and never written.
+        read, written = set(), []
+        for path in SCRIPTS.glob("*.py"):
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Call) \
+                        and ast.unparse(node.func) in ("os.environ.get", "os.getenv"):
+                    self.assertIsInstance(node.args[0], ast.Constant, path.name)
+                    read.add(node.args[0].value)
+                elif isinstance(node, ast.Subscript) \
+                        and ast.unparse(node.value) == "os.environ":
+                    written.append("%s: %s" % (path.name, ast.unparse(node)))
+                elif isinstance(node, ast.Attribute) and ast.unparse(node) in (
+                        "os.putenv", "os.environ.update", "os.environ.setdefault",
+                        "os.environ.pop", "os.environb"):
+                    written.append("%s: %s" % (path.name, ast.unparse(node)))
+        self.assertEqual(read, ENVIRONMENT_VARIABLES)
+        self.assertEqual(written, [])
+        listing = (PLUGIN_DIR / "README.md").read_text(encoding="utf-8")
+        for name in ENVIRONMENT_VARIABLES:
+            self.assertTrue("`%s`" % name in listing, name)
+        self.assertTrue("not credentials" in " ".join(listing.split()))
+
     def test_only_the_helpers_can_start_a_program(self):
         for path in SCRIPTS.glob("*.py"):
             source = path.read_text(encoding="utf-8")
@@ -456,12 +485,37 @@ class PublishingTests(unittest.TestCase):
     def test_the_plugin_folder_is_small_text_and_free_of_system_files(self):
         files = self.tracked()
         self.assertLess(len(files), 512)
+        images = [path for path in files if path.suffix.lower() in IMAGE_SUFFIXES]
+        self.assertEqual([path.name for path in images], ["icon.png"],
+                         "the icon is the only binary file the plugin ships")
         for path in files:
-            self.assertNotIn(path.name, (".DS_Store", "Thumbs.db"), path)
+            self.assertNotIn(path.name, (".DS_Store", "Thumbs.db", "desktop.ini"), path)
             self.assertNotIn("__MACOSX", path.parts)
             self.assertNotIn("__pycache__", path.parts)
+            if path in images:
+                continue
             self.assertLess(path.stat().st_size, 256 * 1024, path)
-            path.read_text(encoding="utf-8")        # every file is text
+            path.read_text(encoding="utf-8")        # every other file is text
+
+    def test_the_listing_icon_is_what_the_directory_accepts(self):
+        # A square PNG, 512 to 2048 px a side, under 2 MB.
+        icon = PLUGIN_DIR / ".claude-plugin" / "icon.png"
+        data = icon.read_bytes()
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual(data[12:16], b"IHDR")
+        width, height = struct.unpack(">II", data[16:24])
+        self.assertEqual(width, height)
+        self.assertTrue(512 <= width <= 2048, width)
+        self.assertLess(len(data), 2 * 1024 * 1024)
+        self.assertEqual(data[-12:-8], b"\x00\x00\x00\x00")   # a complete file: IEND
+        self.assertEqual(data[-8:-4], b"IEND")
+
+    def test_the_icon_is_reproducible_from_its_generator(self):
+        sys.path.insert(0, str(REPO_ROOT / "tools"))
+        import make_icon
+        self.assertEqual(make_icon.build(),
+                         (PLUGIN_DIR / ".claude-plugin" / "icon.png").read_bytes(),
+                         "run tools/make_icon.py and commit the result")
 
     def test_no_real_learner_data_is_shipped(self):
         for path in self.tracked():

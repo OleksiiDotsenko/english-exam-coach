@@ -15,7 +15,6 @@ Run `coach.py <command> --help` for a command's own options.
 """
 
 import importlib
-import os
 import sys
 
 # Leave nothing behind in the skill's own folder: the only place this tooling
@@ -55,8 +54,7 @@ def split_global_options(argv):
     """Peel --base / --learner off the front; return (options, rest).
 
     They are accepted before the command so one prefix can be reused for
-    every call in a session, and are handed on through the environment, which
-    every script already reads.
+    every call in a session.
     """
     def is_global(token):
         return token in ("--base", "--learner") \
@@ -73,6 +71,22 @@ def split_global_options(argv):
             raise ValueError("%s needs a value" % token)
         options[key.lstrip("-")] = value
     return options, rest
+
+
+def forward(options, arguments):
+    """Hand the location options on as the command's own --base / --learner.
+
+    Every command accepts both. One given after the command wins over the
+    same one given before it. Nothing is passed through the environment: this
+    tool neither sets nor needs any environment variable.
+    """
+    extra = []
+    for name in ("base", "learner"):
+        flag = "--" + name
+        already = any(a == flag or a.startswith(flag + "=") for a in arguments)
+        if name in options and not already:
+            extra += [flag, options[name]]
+    return list(arguments) + extra
 
 
 def main(argv=None):
@@ -93,15 +107,10 @@ def main(argv=None):
               file=sys.stderr)
         return 2
 
-    if "base" in options:
-        os.environ["EXAM_COACH_HOME"] = options["base"]
-    if "learner" in options:
-        os.environ["EXAM_COACH_LEARNER"] = options["learner"]
-
     module = importlib.import_module(COMMANDS[command][0])
     # So each command's own --help reads "coach <command>", not "coach.py".
     sys.argv[0] = "coach %s" % command
-    return module.main(arguments)
+    return module.main(forward(options, arguments))
 
 
 if __name__ == "__main__":
