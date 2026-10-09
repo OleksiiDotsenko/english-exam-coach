@@ -1,5 +1,37 @@
 # Changelog
 
+## 3.0.3 — 2026-10-09
+
+Found by running the plugin in a claude.ai chat for the first time — the
+whole loop worked there (command → skill → a script-built item → marking →
+the log → an export file to keep), and three things did not work well.
+
+- **The skill finds its scripts in a chat sandbox with one bounded lookup.**
+  A chat fills in no path variable, and gives the skill a folder that its
+  file tool can read and its shell cannot see; the shell's copy lives under
+  `~/.claude/plugins/`. Told only to "use the folder this file was read
+  from", the session ran `find /` for `coach.py` — two wasted calls and a
+  search of the whole disk. `SKILL.md` now carries one command that tries
+  the folder it was given and otherwise looks only where skills are
+  installed (`~/.claude/plugins`, `~/.claude/skills`, `/mnt/skills`), and
+  says to stop if that finds nothing.
+- **`coach ctest check` states the gap, its blank count and whether a wrong
+  answer was the right length.** The session marked *which* for `wh_ _ _`
+  correctly as wrong, then explained it with "the gap has four blanks" — it
+  has three, and *which* fits it; the answer was wrong for its meaning. The
+  miscount went into the error ledger as evidence. Each miss now prints
+  `gap: wh_ _ _, 3 blanks; … answered: ich → “which”, the right length`,
+  the JSON carries `gap`, `blanks`, `made` and `fits`, and the reading
+  reference says to explain from those lines and never recount by eye.
+- **Commands say what an unfilled arguments placeholder means.** A chat
+  loads a command as a skill and leaves its placeholder as written; each
+  command now notes that the request is then whatever the user typed. The
+  rule against searching the disk is worded as what it is — a rule about
+  finding the *skill* — since the skill itself now says how to find its
+  scripts.
+
+No change to progress files. `check`'s JSON gains fields; none is removed.
+
 ## 3.0.2 — 2026-10-09
 
 What the directory's scan of 3.0.1 asked for.

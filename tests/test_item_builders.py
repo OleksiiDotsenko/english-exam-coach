@@ -198,6 +198,26 @@ class CtestMarkTests(unittest.TestCase):
         self.assertEqual(ctest.split_answers("ker, n  ight;ile / - ?"),
                          ["ker", "n", "ight", "ile", "", ""])
 
+    def test_fit_reads_an_answer_as_letters_or_as_the_whole_word(self):
+        gap = next(g for g in self.item["gaps"] if g["word"] == "while")
+        self.assertEqual((gap["shown"], gap["blanks"]), ("wh", 3))
+        self.assertEqual(gap["printed"], gaps("wh_ _ _"))
+        self.assertEqual(ctest.fit(gap, "ich"), ("which", True))      # letters
+        self.assertEqual(ctest.fit(gap, "where"), ("where", True))    # whole word
+        self.assertEqual(ctest.fit(gap, "ile"), ("while", True))
+        self.assertEqual(ctest.fit(gap, "il"), (None, False))         # one short
+        self.assertEqual(ctest.fit(gap, "wile"), (None, False))       # neither reading
+        self.assertEqual(ctest.fit(gap, "whilst"), (None, False))     # one too many
+        self.assertEqual(ctest.fit(gap, ""), (None, False))
+
+    def test_every_result_states_its_gap_and_blank_count(self):
+        results, _score = ctest.mark_answers(self.item, self.key)
+        for result, gap in zip(results, self.item["gaps"]):
+            self.assertEqual(result["gap"], gap["printed"])
+            self.assertEqual(result["blanks"], len(gap["missing"]))
+            self.assertEqual(result["gap"].count("_"), result["blanks"])
+            self.assertEqual((result["made"], result["fits"]), (gap["word"], True))
+
 
 class CtestCommandTests(unittest.TestCase):
     def setUp(self):
@@ -230,7 +250,39 @@ class CtestCommandTests(unittest.TestCase):
                        "--answers", "ker n ight wile")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue(result.stdout.startswith("3 / 10"))
-        self.assertIn("wrong   while  (missing letters: ile; answered: wile)", result.stdout)
+        self.assertIn("wrong   while  (gap: %s, 3 blanks; missing letters: ile; "
+                      "answered: wile — 4 letters, the wrong length)"
+                      % gaps("wh_ _ _"), result.stdout)
+        self.assertIn("wrong   her  (gap: %s, 2 blanks; missing letters: er; "
+                      "answered: nothing)" % gaps("h_ _"), result.stdout)
+        self.assertIn(ctest.CHECK_NOTE, result.stdout)
+
+    def test_check_says_when_a_wrong_answer_is_the_right_length(self):
+        # A session once told a learner that "which" could not go in
+        # `wh_ _ _` because the gap had four blanks. It has three, and
+        # "which" fits it: the answer was wrong for its meaning. The check
+        # now states the gap, the count and the fit, so nobody recounts.
+        result = coach(self._tmp.name, "ctest", "check", "--file", self.file,
+                       "--answers", "ker n ight ich")
+        self.assertIn("wrong   while  (gap: %s, 3 blanks; missing letters: ile; "
+                      "answered: ich → “which”, the right length)"
+                      % gaps("wh_ _ _"), result.stdout)
+
+    def test_a_perfect_check_carries_no_note(self):
+        made = json.loads(coach(self._tmp.name, "ctest", "make", "--file",
+                                self.file, "--json").stdout)
+        result = coach(self._tmp.name, "ctest", "check", "--file", self.file,
+                       "--answers", " ".join(g["missing"] for g in made["gaps"]))
+        self.assertTrue(result.stdout.startswith("10 / 10"))
+        self.assertNotIn(ctest.CHECK_NOTE, result.stdout)
+
+    def test_check_json_carries_the_gap_and_the_fit(self):
+        result = coach(self._tmp.name, "ctest", "check", "--file", self.file,
+                       "--answers", "ker n ight which", "--json")
+        fourth = json.loads(result.stdout)["results"][3]
+        self.assertEqual((fourth["gap"], fourth["blanks"], fourth["made"],
+                          fourth["fits"], fourth["correct"]),
+                         (gaps("wh_ _ _"), 3, "which", True, False))
 
     def test_input_errors_are_reported_not_raised(self):
         for args in (["make", "--text", "One sentence only."],

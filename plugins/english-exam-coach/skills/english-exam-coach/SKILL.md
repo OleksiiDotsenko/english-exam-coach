@@ -60,13 +60,29 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/coach.py <command> [options]
 ```
 
 Below and in every reference file this is written **`coach <command>`**.
-The file is `scripts/coach.py` beside this one: where the path above still
-shows `${CLAUDE_SKILL_DIR}` literally (a chat sandbox copies this folder in
-whole and does not fill it in), use the folder this file was read from. On
-Windows use `python` or `py` if `python3` is missing. Quote the path if it
-contains spaces. `coach <command> --help` shows a command's options; every
-command and every script is listed on this page, so there is no need to
-search the folder.
+The file is `scripts/coach.py` beside this one. On Windows use `python` or
+`py` if `python3` is missing. Quote the path if it contains spaces.
+`coach <command> --help` shows a command's options; every command and every
+script is listed on this page, so there is no need to search the folder.
+
+**If the path in that command is not a real folder** — it still begins
+with a dollar sign and a name in braces — nothing has filled it in; a chat
+sandbox does not. The folder you were given for this skill (its base
+directory, or the folder this file was read from) is right for the
+file-reading tool, but the shell may keep its copy of the skill somewhere
+else. Settle that with one command, before the first `coach` call:
+
+```bash
+D="FOLDER"   # the folder you were given for this skill
+[ -f "$D/scripts/coach.py" ] || D="$(find ~/.claude/plugins ~/.claude/skills /mnt/skills -type f -path '*/english-exam-coach/scripts/coach.py' 2>/dev/null | head -n 1 | sed 's|/scripts/coach.py$||')"
+echo "skill folder for the shell: ${D:-not found}"
+```
+
+Use the folder it prints in every shell command from then on, written out
+in full: a shell variable does not last until the next command. The lookup
+covers only the places skills are installed — never widen it to the whole
+disk. If it prints `not found`, say so and stop rather than work without
+the tools.
 
 | Command | Use it to |
 |---|---|

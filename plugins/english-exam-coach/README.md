@@ -73,6 +73,12 @@ telemetry, and has no MCP server, no hook and no background process.**
   only working files (`.txt`, `.md`, `.json`, `.jsonl`) and replaces only
   pages and archives it wrote itself, so it stays harmless wherever it is
   pointed. Nothing is pre-approved: you decide what may run without asking.
+- **One lookup, in a chat sandbox only.** A chat session can be told one
+  folder for the skill while its shell keeps the copy in another. There the
+  assistant runs a single `find` for `scripts/coach.py`, limited to the
+  folders skills are installed in (`~/.claude/plugins`, `~/.claude/skills`,
+  `/mnt/skills`). It matches a file name and opens nothing; the rest of the
+  disk is never searched.
 - **Your progress directory** — plain files in a folder you choose
   (`~/english-exam-coach/` by default, or `$EXAM_COACH_HOME`, or `--base`):
   append-only logs of attempts, mistakes and full tests; the re-test queue;

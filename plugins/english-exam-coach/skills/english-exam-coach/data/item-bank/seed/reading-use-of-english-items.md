@@ -126,7 +126,11 @@ official material uses both styles.
 Mark answers with `coach ctest check` (it rebuilds the key from the same
 paragraph): the missing letters or the whole word are both accepted, spelling
 must be exact, and there is no partial credit. There is no penalty for a
-wrong answer, so tell the learner to fill every gap.
+wrong answer, so tell the learner to fill every gap. For a miss it prints
+the gap, its blank count and whether the answer was the right length —
+`th_ _ _` answered *ose* makes *those*, the right length, and is wrong only
+because the sentence needs *there*. Take those facts from the script when
+you explain; do not count blanks by eye.
 
 ## Inference multiple choice (TOEFL reading format)
 

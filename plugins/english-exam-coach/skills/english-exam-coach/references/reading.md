@@ -125,9 +125,15 @@ again. Pass an unrecoverable technical term with `--keep <word>`.
 Mark with `coach ctest check --file paragraph.txt --answers "…"` (missing
 letters or whole words, in order) or `--filled "<the whole paragraph as the
 learner typed it>"`. Exact spelling, no partial credit, no penalty for a
-wrong answer — tell the learner to fill every gap. Log `--task-type
-toefl-complete-the-words --score <n> --max 10`, and log each miss by its
-cause: `lexis/spelling`, `grammar/agreement`, `comprehension/vocabulary`…
+wrong answer — tell the learner to fill every gap. For each miss the script
+prints the gap as it was shown, its blank count, and whether the answer was
+the right length. **Explain from those lines and never recount blanks
+yourself:** an answer of the right length (*which* in `wh_ _ _`, where the
+key is *while*) is wrong for its meaning or its grammar, not for its
+length, and a reason built on a miscounted gap teaches the learner
+something false. Log `--task-type toefl-complete-the-words --score <n>
+--max 10`, and log each miss by its cause: `lexis/spelling`,
+`grammar/agreement`, `comprehension/vocabulary`…
 
 **Read in Daily Life.** A short everyday text — a notice, a sign, a menu,
 an email, a social-media post, a schedule — of about 15–150 words, with

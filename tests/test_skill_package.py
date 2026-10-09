@@ -136,6 +136,75 @@ class SkillFileTests(unittest.TestCase):
             self.assertFalse(path.read_text(encoding="utf-8").startswith("---"),
                              path.name)
 
+    def test_the_path_variable_appears_only_where_a_path_belongs(self):
+        # Claude Code fills the variable in everywhere in this file. A
+        # sentence *about* the placeholder would then read as a sentence
+        # about a real folder, and send a session off to look for a folder
+        # it already has. So the variable is written only inside the two
+        # commands that use it, and the prose describes it without naming it.
+        text = SKILL.read_text(encoding="utf-8")
+        tails = re.findall(r"\$\{CLAUDE_SKILL_DIR\}(.{0,9})", text)
+        self.assertEqual(tails, ["/scripts/"] * 2)
+        self.assertNotIn("CLAUDE_SKILL_DIR", text.replace("${CLAUDE_SKILL_DIR}", ""))
+        self.assertTrue("a dollar sign and a name in braces" in " ".join(text.split()))
+
+    def lookup_block(self):
+        blocks = [block for block in re.findall(r"```bash\n(.*?)```", self.body, re.S)
+                  if "find " in block]
+        self.assertEqual(len(blocks), 1, "SKILL.md carries exactly one lookup")
+        return blocks[0]
+
+    def run_lookup(self, block, folder, home):
+        script = block.replace('D="FOLDER"', 'D="%s"' % folder)
+        done = subprocess.run(["bash", "-c", script], capture_output=True, text=True,
+                              env={"HOME": str(home), "PATH": "/usr/bin:/bin"})
+        self.assertEqual(done.returncode, 0, done.stderr)
+        prefix = "skill folder for the shell: "
+        self.assertTrue(done.stdout.startswith(prefix), done.stdout)
+        return done.stdout.strip()[len(prefix):]
+
+    def test_the_shell_lookup_is_confined_to_where_skills_are_installed(self):
+        # A chat sandbox fills in no variable, and hands the skill a folder
+        # that its file tool can read and its shell cannot see. Left to work
+        # that out alone, a session ran `find /` for coach.py. The skill now
+        # gives one lookup, and it must never be a search of the whole disk.
+        block = self.lookup_block()
+        self.assertIn('D="FOLDER"', block)
+        roots = re.search(r"find (.*?) -type f", block).group(1).split()
+        self.assertEqual(roots, ["~/.claude/plugins", "~/.claude/skills", "/mnt/skills"])
+        self.assertNotRegex(block, r"find\s+(/|~|\$HOME)\s")
+        prose = " ".join(self.body.split())
+        self.assertTrue("never widen it to the whole disk" in prose)
+        self.assertTrue("`not found`, say so and stop" in prose)
+
+    @unittest.skipUnless(shutil.which("bash"), "the lookup is a shell command")
+    def test_the_shell_lookup_finds_the_folder_in_each_layout(self):
+        block = self.lookup_block()
+        given = "/mnt/skills/plugins/english-exam-coach:english-exam-coach"
+        layouts = {
+            "synced": ".claude/plugins/synced/a_b/english-exam-coach/skills/"
+                      "english-exam-coach",
+            "cache": ".claude/plugins/cache/shop/english-exam-coach/3.0.0/skills/"
+                     "english-exam-coach",
+            "personal": ".claude/skills/english-exam-coach",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            for name, relative in layouts.items():
+                home = Path(tmp) / ("home with a space " + name)
+                folder = home / relative
+                (folder / "scripts").mkdir(parents=True)
+                (folder / "scripts" / "coach.py").write_text("", encoding="utf-8")
+                # The folder the session was given is not there for the shell.
+                self.assertEqual(self.run_lookup(block, given, home), str(folder), name)
+                # The placeholder left as it is still ends in the right place.
+                self.assertEqual(self.run_lookup(block, "FOLDER", home), str(folder), name)
+                # A folder that is right is used as it stands: no search.
+                self.assertEqual(self.run_lookup(block, str(SKILL_DIR), home),
+                                 str(SKILL_DIR), name)
+            empty = Path(tmp) / "empty"
+            empty.mkdir()
+            self.assertEqual(self.run_lookup(block, given, empty), "not found")
+
 
 class InstructionAccuracyTests(unittest.TestCase):
     def test_every_path_an_instruction_names_exists(self):
@@ -291,6 +360,18 @@ class CommandFileTests(unittest.TestCase):
             self.assertLess(body.index("First load the coach"),
                             body.index("Then"), path.name)
         self.assertTrue((PLUGIN_DIR / "skills" / "english-exam-coach" / "SKILL.md").is_file())
+
+    def test_a_command_survives_an_unfilled_arguments_placeholder(self):
+        # A chat surface loads a command as a skill and fills in nothing, so
+        # its first line ends in the bare placeholder. The note that says so
+        # must not contain the placeholder: where arguments are filled in,
+        # every occurrence is.
+        for path in COMMANDS_DIR.glob("*.md"):
+            body = front_matter(path)[1]
+            self.assertEqual(body.count("$ARGUMENTS"), 1, path.name)
+            self.assertTrue(body.lstrip().splitlines()[0].endswith("$ARGUMENTS"),
+                            path.name)
+            self.assertTrue("bare placeholder" in " ".join(body.split()), path.name)
 
     def test_every_command_is_listed_in_both_readmes(self):
         for readme in (REPO_ROOT / "README.md", PLUGIN_DIR / "README.md"):

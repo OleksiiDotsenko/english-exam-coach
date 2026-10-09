@@ -148,7 +148,7 @@ def make_item(text, gaps=DEFAULT_GAPS, style="spaced", keep=()):
             shown, missing, printed = gap_word(core, style)
             found.append({"n": len(found) + 1, "word": core, "shown": shown,
                           "missing": missing, "blanks": len(missing),
-                          "token": position})
+                          "printed": printed, "token": position})
             out.append(lead + printed + trail)
             last_gap = position
         else:
@@ -190,6 +190,26 @@ def normalise(answer):
     return re.sub(r"[^\w]", "", str(answer).lower(), flags=re.UNICODE).replace("_", "")
 
 
+def fit(gap, cleaned):
+    """How an answer sits in its gap: (the word it makes, whether it is the
+    right length). An answer is the right length when it has one letter for
+    each blank, or is a whole word as long as the real one that begins with
+    the letters shown. Anything else makes no word that fits: (None, False).
+
+    This is what an explanation may say about length. An answer of the right
+    length cannot be ruled out by counting blanks — only by meaning, grammar
+    or spelling — and a marker who recounts blanks by eye gets it wrong.
+    """
+    stem = gap["shown"]
+    if not cleaned:
+        return None, False
+    if len(cleaned) == gap["blanks"]:
+        return stem + cleaned, True
+    if cleaned.startswith(stem.lower()) and len(cleaned) == len(gap["word"]):
+        return stem + cleaned[len(stem):], True
+    return None, False
+
+
 def mark_answers(item, answers):
     """Mark a list of answers, one per gap. Each may be the missing letters
     or the whole word. Returns (results, score)."""
@@ -200,8 +220,11 @@ def mark_answers(item, answers):
         correct = bool(cleaned) and cleaned in (gap["missing"].lower(),
                                                 gap["word"].lower())
         score += correct
+        made, fits = fit(gap, cleaned)
         results.append({"n": gap["n"], "word": gap["word"], "missing": gap["missing"],
-                        "given": str(given).strip(), "correct": correct})
+                        "gap": gap["printed"], "blanks": gap["blanks"],
+                        "given": str(given).strip(), "letters": len(cleaned),
+                        "made": made, "fits": fits, "correct": correct})
     return results, score
 
 
@@ -245,15 +268,36 @@ def render_make(item):
     return "\n".join(lines)
 
 
+CHECK_NOTE = ("The gaps and blank counts above are exact: quote them when you "
+              "explain a miss, and never recount blanks by eye. An answer of "
+              "the right length is not ruled out by the blanks — only by "
+              "meaning, grammar or spelling.")
+
+
+def describe_answer(result):
+    """What a wrong answer was, in terms of the gap it went into."""
+    if not result["given"]:
+        return "nothing"
+    if result["fits"]:
+        return "%s → “%s”, the right length" % (result["given"], result["made"])
+    return "%s — %d letter%s, the wrong length" % (
+        result["given"], result["letters"], "" if result["letters"] == 1 else "s")
+
+
 def render_check(results, score):
     lines = ["%d / %d" % (score, len(results)), ""]
     for result in results:
         if result["correct"]:
             lines.append("  %2d  right   %s" % (result["n"], result["word"]))
         else:
-            lines.append("  %2d  wrong   %s  (missing letters: %s; answered: %s)"
-                         % (result["n"], result["word"], result["missing"],
-                            result["given"] or "nothing"))
+            lines.append(
+                "  %2d  wrong   %s  (gap: %s, %d blank%s; missing letters: %s; "
+                "answered: %s)"
+                % (result["n"], result["word"], result["gap"], result["blanks"],
+                   "" if result["blanks"] == 1 else "s", result["missing"],
+                   describe_answer(result)))
+    if score < len(results):
+        lines += ["", CHECK_NOTE]
     return "\n".join(lines)
 
 
